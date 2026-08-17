@@ -1,0 +1,25 @@
+{
+  "target": "Qwen/Qwen2.5-7B-Instruct",
+  "draft": "Qwen/Qwen2.5-0.5B-Instruct",
+  "gpu_info": {
+    "cuda_available": true,
+    "name": "NVIDIA L4",
+    "compute_capability": "8.9",
+    "total_mem_gb": 22.03,
+    "sm_count": 58,
+    "cores_per_sm": 128,
+    "max_sm_clock_mhz": 2040.0,
+    "current_sm_clock_mhz": 2025.0,
+    "temperature_c": 65.0,
+    "driver_version": "580.95.05",
+    "torch_version": "2.13.0+cu130",
+    "cuda_version": "13.0",
+    "theoretical_fp32_tflops": 30.29
+  },
+  "target_step_ms": 72.78387069702148,
+  "draft_step_naive_ms": 34.39718246459961,
+  "draft_step_compiled_ms": 6.030335903167725,
+  "c_naive": 0.47259347620828357,
+  "c_compiled": 0.08285264091367571,
+  "compile_error": null
+}

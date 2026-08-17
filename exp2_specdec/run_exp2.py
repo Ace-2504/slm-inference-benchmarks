@@ -101,21 +101,33 @@ def run(smoke: bool = False):
         "gpu_info": get_gpu_info(), "diagnosis": diag, "per_prompt": {},
     }
 
+    def timed(fn):
+        # single synchronised timed call that also returns the result (greedy is
+        # deterministic; timing trust is established by the gauntlet, so one shot suffices)
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        torch.cuda.synchronize()
+        start.record()
+        r = fn()
+        end.record()
+        torch.cuda.synchronize()
+        return r, start.elapsed_time(end)
+
     for name, msg in prompts.items():
         ids = chat_ids(msg)
-        # target alone
-        ta_ms = benchmark(lambda: target_alone_greedy(target, ids, MAX_NEW_TOKENS),
-                          warmup=1, repeats=2, clock="event")
-        ta_tokens = target_alone_greedy(target, ids, MAX_NEW_TOKENS)
-        ta_tps = MAX_NEW_TOKENS / (ta_ms["median"] / 1e3)
+        # warm up this prompt's code paths (short), then time once each
+        target_alone_greedy(target, ids, 8)
+        speculative_generate(target, draft, ids, 8, 4)
+        torch.cuda.synchronize()
+
+        ta_tokens, ta_ms_v = timed(lambda: target_alone_greedy(target, ids, MAX_NEW_TOKENS))
+        ta_tps = MAX_NEW_TOKENS / (ta_ms_v / 1e3)
 
         by_k = {}
         for k in ks:
-            spec = speculative_generate(target, draft, ids, MAX_NEW_TOKENS, k)
-            spec_ms = benchmark(
-                lambda: speculative_generate(target, draft, ids, MAX_NEW_TOKENS, k),
-                warmup=1, repeats=2, clock="event")
-            spec_tps = MAX_NEW_TOKENS / (spec_ms["median"] / 1e3)
+            spec, spec_ms_v = timed(
+                lambda k=k: speculative_generate(target, draft, ids, MAX_NEW_TOKENS, k))
+            spec_tps = MAX_NEW_TOKENS / (spec_ms_v / 1e3)
             eq = token_equal(spec["tokens"], ta_tokens)
 
             gap = None

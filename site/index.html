@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inference Optimization — Live Demo</title>
+<style>
+  :root{--bg:#0e1116;--panel:#161b22;--line:#2a313c;--fg:#e6edf3;--muted:#9aa7b4;
+        --accent:#f78c6b;--blue:#2166ac;--red:#b2182b;--green:#1b7837;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,sans-serif;
+       max-width:900px;margin:0 auto;padding:24px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);margin-bottom:22px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+         padding:18px;margin-bottom:20px}
+  h2{font-size:16px;margin:0 0 10px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  input[type=text]{flex:1;min-width:200px;background:#0d1117;border:1px solid var(--line);
+       color:var(--fg);border-radius:6px;padding:8px 10px;font-size:14px}
+  input[type=range]{accent-color:var(--accent)}
+  button{background:var(--accent);color:#111;border:0;border-radius:6px;padding:8px 16px;
+         font-weight:600;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.cols{grid-template-columns:1fr}}
+  .card{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .metric{font-variant-numeric:tabular-nums;font-weight:700;font-size:20px}
+  .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .out{font-family:ui-monospace,monospace;font-size:13px;white-space:pre-wrap;color:#cdd9e5;
+       max-height:150px;overflow:auto}
+  .tok{padding:1px 2px;border-radius:3px;border-bottom:2px solid transparent}
+  .draft{background:#1b783722;border-color:var(--green)}
+  .target{background:#b2182b22;border-color:var(--red)}
+  .bonus{background:#2166ac22;border-color:var(--blue)}
+  .legend span{margin-right:12px;font-size:12px;border-bottom:3px solid}
+  .note{color:var(--muted);font-size:12px;margin-top:6px}
+  code{background:#0d1117;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+  <h1>What each inference trick is worth — live</h1>
+  <div class="sub">Runs on an <b>NVIDIA L4</b> via Modal (scale-to-zero — the first request wakes the GPU, give it a moment). Both sides always check they emit the <b>same tokens</b>.</div>
+
+  <div class="panel">
+    <h2>Experiment 1 — KV cache <span class="note">cached vs recompute-every-step, batched</span></h2>
+    <div class="row">
+      <input id="p1" type="text" value="The future of computing is">
+      <label class="note">batch <b id="b1v">1</b></label>
+      <input id="b1" type="range" min="1" max="16" value="1" step="1" oninput="b1v.textContent=this.value">
+      <button id="go1" onclick="run1()">Run</button>
+    </div>
+    <div class="cols">
+      <div class="card"><div class="label">cached</div><div class="metric" id="c1">—</div><div class="note">tok/s</div><div class="out" id="ct1"></div></div>
+      <div class="card"><div class="label">uncached</div><div class="metric" id="u1">—</div><div class="note">tok/s</div><div class="out" id="ut1"></div></div>
+    </div>
+    <div class="note" id="s1"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Experiment 2 — Speculative decoding <span class="note">draft proposes k, 7B verifies</span></h2>
+    <div class="row">
+      <input id="p2" type="text" value="Explain attention in simple terms.">
+      <label class="note">k <b id="k2v">4</b></label>
+      <input id="k2" type="range" min="1" max="8" value="4" step="1" oninput="k2v.textContent=this.value">
+      <button id="go2" onclick="run2()">Run</button>
+    </div>
+    <div class="legend"><span class="draft">draft-accepted</span><span class="target">target-correction</span><span class="bonus">bonus (free)</span></div>
+    <div class="card" style="margin-top:8px"><div class="out" id="toks2" style="max-height:220px"></div></div>
+    <div class="cols" style="margin-top:10px">
+      <div class="card"><div class="label">acceptance</div><div class="metric" id="acc2">—</div></div>
+      <div class="card"><div class="label">speedup</div><div class="metric" id="sp2">—</div><div class="note"><span id="tps2"></span></div></div>
+    </div>
+  </div>
+
+<script>
+// Set to the deployed Modal endpoint base after `modal deploy site/demo_backend.py`.
+const BASE = window.DEMO_BASE || "";
+function url(fn, q){ return `${BASE}${BASE.includes(fn)?"":""}` + fn + "?" + new URLSearchParams(q); }
+
+async function run1(){
+  const btn=go1; btn.disabled=true; c1.textContent=u1.textContent="…";
+  s1.textContent="waking the GPU…"; ct1.textContent=ut1.textContent="";
+  try{
+    const q={prompt:p1.value, batch:b1.value};
+    const r=await fetch(EXP1+"?"+new URLSearchParams(q)); const d=await r.json();
+    c1.textContent=d.cached_tok_s.toFixed(1); u1.textContent=d.uncached_tok_s.toFixed(1);
+    ct1.textContent=d.cached_text; ut1.textContent=d.uncached_text;
+    s1.innerHTML=`cache speedup <b>${d.speedup.toFixed(2)}×</b> at batch ${d.batch} — tokens match: <b>${d.match}</b>`;
+  }catch(e){ s1.textContent="error: "+e; }
+  btn.disabled=false;
+}
+async function run2(){
+  const btn=go2; btn.disabled=true; toks2.textContent="waking the GPU (7B model, ~30s cold)…";
+  acc2.textContent=sp2.textContent="…";
+  try{
+    const q={prompt:p2.value, k:k2.value};
+    const r=await fetch(EXP2+"?"+new URLSearchParams(q)); const d=await r.json();
+    toks2.innerHTML=d.tagged.map(t=>`<span class="tok ${t.tag}">${escapeHtml(t.tok)}</span>`).join("");
+    acc2.textContent=(d.acceptance_rate*100).toFixed(0)+"%";
+    sp2.textContent=d.speedup.toFixed(2)+"×";
+    tps2.textContent=`spec ${d.spec_tok_s.toFixed(1)} vs target ${d.target_tok_s.toFixed(1)} tok/s`;
+  }catch(e){ toks2.textContent="error: "+e; }
+  btn.disabled=false;
+}
+function escapeHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/\n/g,"⏎\n");}
+// deployed Modal L4 endpoints
+const EXP1 = "https://ace-2504--a4-live-demo-demo-exp1.modal.run";
+const EXP2 = "https://ace-2504--a4-live-demo-demo-exp2.modal.run";
+</script>
+</body>
+</html>
