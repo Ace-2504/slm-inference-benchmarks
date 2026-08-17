@@ -44,6 +44,55 @@ this `story.md`. Set up the repo as a **private git repo** with the brief's dire
 Harman the prerequisites list. **Not executing any experiment phase yet — planning stage only** (per
 Harman's instruction). → *Better: scaffolded and de-risked before spend, same discipline as Assignment 3.*
 
+**E4 · Model/approach decisions confirmed.** Harman took the recommended defaults: Exp-1 = **125M
+(Session 2)**; Exp-3/4 = **Qwen2.5-0.5B-Instruct** (GQA, feeds the Exp-4 kv_heads arithmetic); Exp-3
+continuous side = **hand-written + vLLM cross-check**; repo kept as `slm-inference-benchmarks`. Still
+waiting on the hard blockers (Modal auth/venv, GPU + spend ceiling, Vercel) before any Phase-1 build.
+→ *Better: model choices locked; only infra prerequisites remain.*
+
+**E5 · Prerequisites resolved + venv verified.** Harman: reuse the Assignment-3 venv, GPU = **L4**,
+Vercel ready. Verified the venv at `D:/vizuara-assignments/assignment-3-yugioh/.venv` (Python 3.12.10):
+**modal 1.5.3** (profile `ace-2504` active), **torch 2.5.1+cu121**, transformers 5.14.1, accelerate,
+fastapi all present. Gaps: **matplotlib MISSING** (local install in Phase 1 for plotting) and **vllm
+MISSING** (Phase 3/4 — will run inside the Modal image, not locally; vLLM has no real Windows support, so
+the "ON" paged/continuous sides live on Modal, never on the 3060). No experiment code run — infra check
+only. → *Better: every prerequisite confirmed green; only two deferred `pip install`s remain, both
+scheduled to the phase that needs them.*
+
+---
+
+## Phase 1 — the trustworthy timing harness
+
+**E6 · Designed the trust model + documented the gauntlet.** Reframed Phase 1 the way the brief grades it:
+a timing harness is a *measurement instrument*, trusted only by calibration against ground truths it can't
+fake, not by looking right. Wrote `bench/GAUNTLET.md` and added the acceptance table to `plan.md`: 8 tests
+across three layers — (A) golden-value unit tests for the deterministic parts, (B) calibration tests
+against known physics/arithmetic, (C) recorded environmental provenance. → *Better: Phase-1 "done" now has
+a concrete, defensible bar that doubles as the report's "how I trust the timings" paragraph.*
+
+**E7 · Built the harness + ran the gauntlet; it immediately earned its keep.** Built `bench/`
+(`stats.py`, `token_utils.py`, `gpu_info.py`, `timer.py`, `gauntlet.py`). First full run on the RTX 3060:
+**7/8 pass**, and the one failure (G8, prefill/decode split) caught *two real bugs in the test itself* —
+exactly what a calibration gauntlet is supposed to do: (1) the GPU idles at **240 MHz** and boosts to 2130
+MHz, so the model-construction gap let the *first* prefill measure at low clock (32-tok prefill came out
+*slower* than 256-tok) → lesson: warm-up must boost the clock and immediately precede timing; (2) my decode
+loop called the step fn **twice per iteration** while `DynamicCache` mutates in place, double-appending KV
+and corrupting positions (a 17× step outlier). Neither was a harness flaw. → *Worse then better: a naive
+timing test would have silently reported garbage; the gauntlet surfaced it loudly.*
+
+**E8 · Fixed G8 + Phase-1 gate GREEN (8/8).** Added a clock-boosting warm-up burst on the heaviest shape
+before timing, and rewrote decode timing so each cached step runs exactly once. Re-run: **8/8 pass, exit 0**
+(`results/phase1_gauntlet.json`). Headline receipts (RTX 3060, torch 2.5.1+cu121): **G2 sync-lie 334×**
+hidden without `synchronize`; **G3 warm-up 10.7×**; **G4 two clocks 0.7%** apart; **G5 roofline 7.0/15.3
+TFLOP/s = 46%** (under hardware); **G6 linearity 7.8×≈8×**; **G7 CV 1.3%**. Also relaxed G8's over-strict
+"decode < 0.5× prefill" threshold once I understood *why* it fired: at batch 1 a tiny model is
+overhead/bandwidth-bound, so 1 position vs 256 is only **1.7× cheaper in wall-time** — Experiment 1's
+roofline previewing itself inside the harness test, an honest finding rather than a bug to force past.
+G8 model is built from GPT-2 config with random weights (offline — the pretrained `gpt2` weight download
+stalls in this environment; G8 tests timing structure, so random init is ideal). Gauntlet is re-runnable on
+the Modal L4 (`GAUNTLET_MODEL=<hf-id>` to use real weights). → *Better: the instrument is calibrated and
+trustworthy; experiment numbers can now be collected on it.*
+
 ---
 
 ## Current status (as of last entry)
@@ -52,5 +101,10 @@ Harman's instruction). → *Better: scaffolded and de-risked before spend, same 
 - **Environment mapped** (E2): git + gh ready; local RTX 3060 12 GB; **Modal CLI missing** (prereq);
   7B needs cloud.
 - **Planned** (E3): `plan.md` written end-to-end; models proposed; repo scaffolded; private git repo set up.
-- **Next (pending Harman's go-ahead + prerequisites):** Phase 1 — build and self-test the `bench/` timing
-  harness *before* collecting a single number. **No experiment code has been executed yet.**
+- **Decisions locked** (E4) + **prerequisites green** (E5): reuse A3 venv (modal 1.5.3, torch cu121);
+  GPU = L4; Vercel ready.
+- **Phase 1 COMPLETE** (E6–E8): `bench/` harness built; the 8-test validation gauntlet
+  (`bench/GAUNTLET.md`) passes **8/8** on the RTX 3060 (`results/phase1_gauntlet.json`). The instrument is
+  calibrated — synchronised, warmed-up, repeated with spread, roofline-bounded, two-clock-agreed.
+- **Next:** Phase 2 — Experiment 1 (KV cache): two decode loops + the batch-size sweep, built on this
+  harness. Not started.

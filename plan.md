@@ -88,14 +88,29 @@ conclusion, and the diagnosis is the real work.
 - **Gate:** repo structure matches the brief's "What to submit"; plan + story committed.
 
 ### Phase 1 — The timing harness (`bench/`)  ← build this *before* collecting any number
-- `bench/timer.py`: `timed()` context/helper doing sync + warmup + N-repeat + spread; separate prefill/decode.
-- `bench/gpu_info.py`: capture GPU name, VRAM, driver, torch/CUDA versions → stamped into every results JSON.
-- `bench/plotting.py`: shared plot helpers — **every axis labelled, units on**, both-modes-on-one-chart.
-- `bench/request_gen.py`: Poisson/parametric arrival-rate generator with **highly variable output lengths**
-  (uniform lengths hide Exp-3's whole effect). Reused by Exp 3 & 4.
-- `bench/token_equal.py`: token-by-token equality check → (match | first-divergence index + logit-gap context).
+- `bench/timer.py`: `benchmark()` doing sync + warmup + N-repeat + spread; CUDA-Event + wall clocks; separate prefill/decode.
+- `bench/gpu_info.py`: capture GPU name, VRAM, clocks, temp, theoretical FP32 peak, driver, torch/CUDA versions → stamped into every results JSON.
+- `bench/stats.py`: mean/std/min/median/max/p95/coefficient-of-variation.
+- `bench/token_utils.py`: token-position accounting (cached vs uncached arithmetic) + token-equality → (match | first-divergence index + logit-gap context).
+- `bench/plotting.py`, `bench/request_gen.py`: added later (Exp-1 plots; Exp-3/4 arrival generator) — not needed for the gauntlet.
 - **Deliverable:** `bench/` + a paragraph draft for the report on *how I convinced myself the timings are real*.
-- **Gate:** harness self-test — a known op times stably across 3 runs; warmup vs no-warmup difference shown.
+- **Gate — the Phase-1 validation gauntlet** (`bench/gauntlet.py`, documented in [`bench/GAUNTLET.md`](bench/GAUNTLET.md)).
+  A measurement instrument is trusted by calibration against ground truths it cannot fake, not by looking right.
+  Must pass **before** any experiment number is collected:
+
+  | ID | Test | Ground truth known a priori | Hard-fail if |
+  |----|------|-----------------------------|--------------|
+  | G1 | Deterministic unit tests (CPU) | token-position formula, equality-diff index, stats math have closed-form answers | measured ≠ golden |
+  | G2 | Sync-lie detection | timing a big matmul *without* `cuda.synchronize` under-reports vs *with* | sync ≈ no-sync (our sync is a no-op) |
+  | G3 | Warm-up outlier | call #1 carries autotune/alloc/cuBLAS-init overhead | first call *faster* than steady state |
+  | G4 | Two-clock cross-check | `cuda.Event` and post-sync `perf_counter` must agree | disagree beyond tolerance |
+  | G5 | Roofline upper bound | achieved FP32 TFLOP/s **cannot exceed the GPU's spec peak** (TF32 off) | measured > theoretical peak |
+  | G6 | Compute linearity | size-2N matmul ≈ 8× size-N (O(n³)) | ratio outside tolerance band |
+  | G7 | Reproducibility / spread | same config → small coefficient of variation | CV above threshold |
+  | G8 | Prefill/decode split (real model) | prefill scales with prompt length; per-decode-step ≈ flat and ≪ prefill | timers cross-contaminate (step-1 outlier) |
+
+  Runner prints PASS/FAIL + measured numbers, writes `results/phase1_gauntlet.json`, exits non-zero on any hard-fail.
+  The gauntlet **is** the report's "how I trust the timings" paragraph, with receipts. Re-runnable on the Modal L4.
 
 ### Phase 2 — Experiment 1: KV cache (`exp1_kvcache/`)
 - Two decode loops over the **same** model:
@@ -187,10 +202,12 @@ gitignored from the minimal public submission later — decided at Phase 6, mirr
 See the message accompanying this plan. In short: Modal account + CLI/venv, model access (Qwen pair + the
 125M/A1 model), confirm GPU choice (L4 vs A10G) and spend ceiling, and Vercel for the demo (Phase 6).
 
-## 6. Open decisions to confirm
+## 6. Decisions — CONFIRMED (2026-08-17)
 
-- Exp-1 model: **125M (recommended)** vs fine-tuned Assignment-1 model.
-- Exp-3/4 model: **Qwen2.5-0.5B-Instruct (recommended, GQA)** vs 125M.
-- Continuous-batching "ON" side: **implement myself** (better exercise) and/or vLLM comparison.
-- Repo name (created private): `slm-inference-benchmarks` — rename freely.
-- Spend ceiling for Modal.
+- Exp-1 model: **125M (Session 2)**. ✅
+- Exp-3/4 model: **Qwen2.5-0.5B-Instruct** (GQA — feeds Exp-4's kv_heads arithmetic). ✅
+- Continuous-batching "ON" side: **implement myself + vLLM cross-check**. ✅
+- Repo name: **`slm-inference-benchmarks`** (private, on GitHub). ✅
+
+**Still pending from Harman (hard blockers for Phase 1+):** Modal account/CLI + venv choice;
+GPU (L4 vs A10G) + spend ceiling; Vercel confirmation (Phase 6 only).

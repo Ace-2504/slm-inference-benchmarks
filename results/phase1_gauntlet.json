@@ -1,0 +1,196 @@
+{
+  "gpu_info": {
+    "cuda_available": true,
+    "name": "NVIDIA GeForce RTX 3060",
+    "compute_capability": "8.6",
+    "total_mem_gb": 12.0,
+    "sm_count": 28,
+    "cores_per_sm": 128,
+    "max_sm_clock_mhz": 2130.0,
+    "current_sm_clock_mhz": 210.0,
+    "temperature_c": 54.0,
+    "driver_version": "591.86",
+    "torch_version": "2.5.1+cu121",
+    "cuda_version": "12.1",
+    "theoretical_fp32_tflops": 15.268
+  },
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  },
+  "rows": [
+    {
+      "id": "G1",
+      "name": "Deterministic unit tests (CPU golden)",
+      "status": "PASS",
+      "detail": "9/9 golden checks passed"
+    },
+    {
+      "id": "G3",
+      "name": "Warm-up outlier",
+      "status": "PASS",
+      "detail": "first=26.61ms vs steady-median=2.50ms (first is 10.7x steady \u2014 warm-up overhead is real)"
+    },
+    {
+      "id": "G2",
+      "name": "Sync-lie detection",
+      "status": "PASS",
+      "detail": "no-sync=0.057ms (launch only) vs synced=18.927ms (real work) -> 334x hidden without synchronize"
+    },
+    {
+      "id": "G4",
+      "name": "Two-clock cross-check",
+      "status": "PASS",
+      "detail": "cuda.Event=19.065ms vs perf_counter=18.925ms -> 0.7% apart (two independent clocks agree)"
+    },
+    {
+      "id": "G5",
+      "name": "Roofline upper bound (FP32, TF32 off)",
+      "status": "PASS",
+      "detail": "achieved=7.01 TFLOP/s vs FP32 peak=15.27 (46% of peak) \u2014 cannot exceed hardware"
+    },
+    {
+      "id": "G6",
+      "name": "Compute linearity",
+      "status": "PASS",
+      "detail": "t(4096)/t(2048)=7.8x (expect ~8x for O(n^3); band 4.0-12.0x)"
+    },
+    {
+      "id": "G7",
+      "name": "Reproducibility / spread",
+      "status": "PASS",
+      "detail": "CV=1.32% over 12 runs (mean=18.951ms, std=0.251ms; ceil 15%)"
+    },
+    {
+      "id": "G8",
+      "name": "Prefill/decode split (real model)",
+      "status": "PASS",
+      "detail": "[gpt2-124M-arch (random init, offline)] prefill 32tok=8.35ms < 256tok=14.25ms (timer tracks work); decode step=8.22ms, flat (max/med=1.0x); 1 pos vs 256 pos yet only 1.7x cheaper (batch-1 roofline)"
+    }
+  ],
+  "raw": {
+    "G1": {
+      "checks": [
+        {
+          "name": "cached_total==651",
+          "ok": true
+        },
+        {
+          "name": "uncached_total==39584",
+          "ok": true
+        },
+        {
+          "name": "ratio~=60.8",
+          "ok": true
+        },
+        {
+          "name": "equal_match",
+          "ok": true
+        },
+        {
+          "name": "equal_divergence@2",
+          "ok": true
+        },
+        {
+          "name": "equal_prefix_len",
+          "ok": true
+        },
+        {
+          "name": "stats_mean==5.0",
+          "ok": true
+        },
+        {
+          "name": "stats_median==4.5",
+          "ok": true
+        },
+        {
+          "name": "stats_std~=2.138",
+          "ok": true
+        }
+      ],
+      "token_positions_anchor": {
+        "cached_total": 651,
+        "uncached_total": 39584,
+        "ratio_uncached_over_cached": 60.804915514592935
+      }
+    },
+    "G3": {
+      "first_ms": 26.609000000007654,
+      "steady_median_ms": 2.49630000007528,
+      "ratio": 10.659375875978535,
+      "raw_ms": [
+        26.609000000007654,
+        2.2346000000652566,
+        2.558499999850028,
+        2.203199999712524,
+        2.5571999999556283,
+        2.4989000003188266,
+        2.203300000019226,
+        3.043799999886687,
+        2.1997999997438455,
+        2.5544000000081724,
+        2.49630000007528,
+        2.205400000093505
+      ]
+    },
+    "G2": {
+      "nosync_ms": 0.05670000018653809,
+      "synced_ms": 18.92699999962133,
+      "ratio": 333.8095227046409
+    },
+    "G4": {
+      "event_ms": 19.065263748168945,
+      "wall_ms": 18.924749999996493,
+      "rel_diff": 0.007424866810524755
+    },
+    "G5": {
+      "n": 4096,
+      "flops": 137438953472,
+      "median_ms": 19.61675262451172,
+      "achieved_tflops": 7.006203121523076,
+      "peak_tflops": 15.268
+    },
+    "G6": {
+      "t_n_ms": 2.450432062149048,
+      "t_2n_ms": 19.107328414916992,
+      "ratio": 7.797534447112857
+    },
+    "G7": {
+      "cv": 0.01324812277692047,
+      "mean_ms": 18.95128806432088,
+      "std_ms": 0.2510689910569105,
+      "raw_ms": [
+        18.733823776245117,
+        19.323904037475586,
+        18.717695236206055,
+        19.111679077148438,
+        18.776063919067383,
+        18.737152099609375,
+        19.146656036376953,
+        18.792448043823242,
+        19.382272720336914,
+        18.953216552734375,
+        18.66035270690918,
+        19.08019256591797
+      ]
+    },
+    "G8": {
+      "model": "gpt2-124M-arch (random init, offline)",
+      "prefill_p1_ms": 8.350720405578613,
+      "prefill_p2_ms": 14.249728202819824,
+      "decode_step_ms": [
+        7.941120147705078,
+        8.22374439239502,
+        8.441856384277344,
+        8.208383560180664,
+        7.99948787689209,
+        8.043519973754883,
+        8.345376014709473,
+        8.256319999694824
+      ],
+      "decode_median_ms": 8.216063976287842,
+      "step_outlier_ratio": 1.0274818220307382
+    }
+  }
+}
