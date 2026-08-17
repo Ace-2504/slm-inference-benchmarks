@@ -1,0 +1,39 @@
+# --- process / brief (kept local, out of the minimal submission for now) ---
+agent-prompt.md
+costs.md
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- ml / model artifacts (never commit weights) ---
+*.pt
+*.bin
+*.safetensors
+*.gguf
+models/
+checkpoints/
+hf_cache/
+.cache/
+
+# --- secrets / env ---
+.env
+.env.*
+*.key
+
+# --- node / vercel (site/) ---
+node_modules/
+.next/
+.vercel/
+dist/
+
+# --- os / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
