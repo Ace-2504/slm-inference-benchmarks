@@ -30,3 +30,56 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 [1ALoading weights:  57%|█████▋    | 165/290 [00:00<00:00, 345.67it/s]
 [1ALoading weights: 100%|██████████| 290/290 [00:00<00:00, 519.40it/s]
 [transformers] Calling `crop` with a positive value is deprecated and will be removed in version 5.18. Please use a negative integer to remove that number of tokens from the cache instead.
+
+=== Experiment 2 (speculative decoding) on NVIDIA L4 ===
+target=Qwen/Qwen2.5-7B-Instruct (28L)  draft=Qwen/Qwen2.5-0.5B-Instruct (24L)
+step times: target=59.55ms draft=25.49ms -> c=0.428  (layer ratio 0.857)
+
+[copy]  target-alone 16.8 tok/s
+   k  accept  tok/pass  spec tok/s  speedup   pred  exact
+   1     82%      1.80        16.8    1.00x  1.26x   True
+   2     77%      2.51        20.0    1.19x  1.35x   True
+   3     68%      2.98        20.5    1.22x  1.30x  False
+   4     64%      3.46        20.9    1.24x  1.28x  False
+   5     59%      3.88        20.9    1.24x  1.24x   True
+   6     53%      4.13        19.8    1.18x  1.16x   True
+   7     48%      4.27        18.9    1.12x  1.07x  False
+   8     46%      4.57        18.6    1.11x  1.03x  False
+
+[code]  target-alone 16.8 tok/s
+   k  accept  tok/pass  spec tok/s  speedup   pred  exact
+   1     88%      1.88        18.0    1.07x  1.32x   True
+   2     83%      2.67        21.2    1.26x  1.44x   True
+   3     81%      3.37        23.3    1.39x  1.47x   True
+   4     73%      3.88        23.7    1.41x  1.43x   True
+   5     76%      4.74        25.7    1.53x  1.51x  False
+   6     65%      4.74        23.5    1.40x  1.33x  False
+   7     66%      5.33        23.8    1.41x  1.33x  False
+   8     61%      5.82        24.4    1.45x  1.32x  False
+
+[explain]  target-alone 16.8 tok/s
+   k  accept  tok/pass  spec tok/s  speedup   pred  exact
+   1     62%      1.62        15.8    0.94x  1.13x  False
+   2     46%      1.91        15.5    0.92x  1.03x  False
+   3     40%      2.21        15.2    0.90x  0.97x  False
+   4     32%      2.29        13.8    0.82x  0.84x  False
+   5     35%      2.67        14.3    0.85x  0.85x   True
+   6     32%      2.84        14.2    0.84x  0.80x   True
+   7     28%      2.84        12.6    0.75x  0.71x   True
+   8     26%      2.98        12.1    0.72x  0.67x   True
+
+[creative]  target-alone 16.7 tok/s
+   k  accept  tok/pass  spec tok/s  speedup   pred  exact
+   1     60%      1.60        15.5    0.93x  1.12x  False
+   2     49%      1.97        15.9    0.95x  1.06x  False
+   3     44%      2.33        16.6    0.99x  1.02x  False
+   4     35%      2.42        15.3    0.91x  0.89x  False
+   5     20%      2.00        11.4    0.68x  0.64x  False
+   6     17%      2.03        10.2    0.61x  0.57x  False
+   7     24%      2.61        11.8    0.70x  0.65x  False
+   8     22%      2.61        11.2    0.67x  0.59x  False
+
+wrote D:\vizuara-assignments\assignment-4\results\exp2.json
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ace-2504/main/ap-83ApJG4fNK8ZvAJShUuozS

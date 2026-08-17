@@ -48,18 +48,23 @@ class PDF(FPDF):
 
     def footer(self):
         self.set_y(-10)
-        self.set_font("Helvetica", "I", 7)
+        self.set_font("Arial", "I", 7)
         self.set_text_color(130)
         self.cell(0, 5, f"Inference optimization benchmarks — all numbers on {GPU} — "
                         f"Harman Singh Sandhu", align="C")
 
 
 pdf = PDF(orientation="P", unit="mm", format="A4")
+# embed a Unicode TTF so em-dashes / x / ~ etc. render (core Helvetica is latin-1 only)
+_F = "C:/Windows/Fonts"
+pdf.add_font("Arial", "", f"{_F}/arial.ttf")
+pdf.add_font("Arial", "B", f"{_F}/arialbd.ttf")
+pdf.add_font("Arial", "I", f"{_F}/ariali.ttf")
 pdf.set_auto_page_break(True, margin=12)
 pdf.add_page()
-pdf.set_font("Helvetica", "B", 15)
+pdf.set_font("Arial", "B", 15)
 pdf.cell(0, 8, "What each inference trick is worth", new_x="LMARGIN", new_y="NEXT")
-pdf.set_font("Helvetica", "", 9)
+pdf.set_font("Arial", "", 9)
 pdf.set_text_color(60)
 pdf.multi_cell(0, 4.4,
     f"One pipeline, four controlled experiments, each toggling one thing. All numbers on {GPU} "
@@ -91,10 +96,10 @@ rows = [
     ("4  PagedAttention", "reserve-max vs paged blocks",
      f"naive waste {naive_waste:.0f}%; paging fits ~{paged_conc/naive_conc:.0f}x more seqs"),
 ]
-pdf.set_font("Helvetica", "", 8)
+pdf.set_font("Arial", "", 8)
 w = [26, 40, 122]
 for i, row in enumerate(rows):
-    pdf.set_font("Helvetica", "B" if i == 0 else "", 8)
+    pdf.set_font("Arial", "B" if i == 0 else "", 8)
     pdf.set_fill_color(235) if i == 0 else pdf.set_fill_color(250)
     for j, cell in enumerate(row):
         pdf.multi_cell(w[j], 5, cell, border=1, new_x="RIGHT", new_y="TOP",
@@ -116,7 +121,7 @@ def img_row(paths, h=52):
 img_row(["exp1_kvcache/speedup_vs_batch.png", "exp2_specdec/speedup_vs_k.png"])
 img_row(["exp3_batching/utilisation_over_time.png", "exp4_paged/wasted_memory.png"])
 
-pdf.set_font("Helvetica", "", 8)
+pdf.set_font("Arial", "", 8)
 lines = [
     ("Exp 1", "Expected the cache to be a big win everywhere.",
      "At batch 1 it is a wash (0.99x) — the uncached loop does 60x more arithmetic but the GPU was "
@@ -132,19 +137,19 @@ lines = [
      f"~{paged_conc/naive_conc:.0f}x more sequences, and that concurrency is where memory becomes speed."),
 ]
 for tag, exp, meas in lines:
-    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_font("Arial", "B", 8)
     pdf.cell(12, 4.2, tag)
-    pdf.set_font("Helvetica", "I", 8)
+    pdf.set_font("Arial", "I", 8)
     pdf.multi_cell(0, 4.2, f" {exp}  ", new_x="LMARGIN", new_y="NEXT")
-    pdf.set_font("Helvetica", "", 8)
+    pdf.set_font("Arial", "", 8)
     pdf.set_x(pdf.l_margin + 12)
     pdf.multi_cell(pdf.w - 2 * pdf.l_margin - 12, 4.2, meas, new_x="LMARGIN", new_y="NEXT")
     pdf.ln(0.5)
 
 pdf.ln(1)
-pdf.set_font("Helvetica", "B", 9)
+pdf.set_font("Arial", "B", 9)
 pdf.cell(0, 5, "The one measurement that changed how I think about serving:", new_x="LMARGIN", new_y="NEXT")
-pdf.set_font("Helvetica", "", 8.5)
+pdf.set_font("Arial", "", 8.5)
 pdf.multi_cell(0, 4.4,
     "At batch 1 the uncached loop computes 60x more token positions than the cached loop and finishes "
     "in the same wall-clock time. Serving a single stream is memory-bound: the arithmetic units sit idle "

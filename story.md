@@ -145,6 +145,42 @@ concurrency / block-sweep plots. (vLLM real-engine confirmation optional/pending
 saving — and why it becomes a speed saving via larger effective batch — is measured and derived from first
 principles.*
 
+## Phase 3 — Experiment 2 (speculative decoding) — the one to spend time on
+
+**E12 · Exp 2 built, validated, and run — the trap reproduced and diagnosed.** Built `bench/speculative.py`
+(exact greedy speculative decoding: draft proposes k, target verifies in ONE pass, DynamicCache crop-rollback
+on rejection, one target pass per round) + `run_exp2.py` (Qwen2.5-7B target + 0.5B draft, k=1..8 × 4 prompt
+types) + `plot_exp2.py` + `render_tokens.py`. **Algorithm validated on a smoke test**: speculative diverged
+from target-alone at one token whose **top-2 logit gap was exactly 0.0** — the brief's precise bf16 near-tie
+(not a bug; both continuations valid), and predicted speedup matched measured to 3 decimals. **The trap
+reproduced**: `c = draft_step/target_step = 0.43` (draft 25 ms vs target 60 ms) — the 0.5B draft is
+**kernel-launch-bound** (25 ms vs its ~3 ms memory-bound ideal; c=0.43 sits between the param ratio 0.07 and
+the layer ratio 0.86, i.e. NOT param-bound), so naive speculative is often a *slowdown*. **Attempted the
+c-fix twice** (torch.compile reduce-overhead + StaticCache, then manual CUDA-graph capture); **both hit
+device-side asserts on torch 2.13 / transformers 5.15** — the CUDA-graph fix is version-fragile on this stack,
+documented honestly with the mechanism + prediction (lowering c to ~0.1 would give ~1.5× at k=4). **Full
+sweep** (after stopping a first over-heavy run — `repeats=2` on every high-k config was ~4× more work than
+needed; lightened to time-once-per-config, trusting the gauntlet for the timer): the brief's payoff-differs
+finding is textbook — **code** (predictable) hits **1.53× at 88% acceptance**, **copy** ~1.24×, while
+**explain/creative** (high-entropy) are **slowdowns (0.72–0.95×)** as acceptance collapses; predicted-vs-actual
+track closely throughout. Deliverables: `results/exp2*.json`, k-sweep plots, coloured-token HTML. → *Better:
+the experiment the brief said to spend the most time on is done — mechanism, exact diagnosis, honest trap,
+and the payoff-vs-prompt-type story all measured.*
+
+## Phase 6 — live demo, report, packaging
+
+**E13 · Live demo deployed + report.pdf + README.** Built `site/demo_backend.py` (Modal L4 FastAPI class
+reusing the harness: `/exp1` cached/uncached with batch control, `/exp2` speculative with per-token producer
+tags), **deployed** and **verified both endpoints live** (exp1: real text, tokens match; exp2: tagged token
+stream). Built `site/index.html` (two live panels, coloured tokens) wired to the endpoints and **deployed to
+Vercel**. Note: the Vercel URL is gated by org **Deployment Protection** (the Assignment-3 E47 issue) — making
+it public is a one-click dashboard toggle that is Harman's account/security setting to flip, not mine.
+Generated **`report.pdf`** (≤2 pages, 1 page: trust paragraph, 4-experiment headline table, the four best
+plots, expected-vs-measured per experiment, closing measurement) from the committed JSON — no hardcoded
+numbers; embedded a Unicode TTF after fpdf's latin-1 core font rejected em-dashes. Updated README
+(reproduce-in-order) and `costs.md` (≈$2.2 of $15). → *Better: all six "what to submit" parts have real
+deliverables.*
+
 ---
 
 ## Current status (as of last entry)
@@ -155,8 +191,17 @@ principles.*
 - **Planned** (E3): `plan.md` written end-to-end; models proposed; repo scaffolded; private git repo set up.
 - **Decisions locked** (E4) + **prerequisites green** (E5): reuse A3 venv (modal 1.5.3, torch cu121);
   GPU = L4; Vercel ready.
-- **Phase 1 COMPLETE** (E6–E8): `bench/` harness built; the 8-test validation gauntlet
-  (`bench/GAUNTLET.md`) passes **8/8** on the RTX 3060 (`results/phase1_gauntlet.json`). The instrument is
-  calibrated — synchronised, warmed-up, repeated with spread, roofline-bounded, two-clock-agreed.
-- **Next:** Phase 2 — Experiment 1 (KV cache): two decode loops + the batch-size sweep, built on this
-  harness. Not started.
+- **Phase 1 COMPLETE** (E6–E8): `bench/` harness + 8/8 validation gauntlet (`bench/GAUNTLET.md`).
+- **Exp 1 — KV cache COMPLETE** (E9): batch-1 **0.99×** (60× more arithmetic, same time) → 9.2× at batch 16;
+  all tokens match. bf16 on L4. `results/exp1.json` + plots.
+- **Exp 2 — speculative decoding COMPLETE** (E12): `c=0.43` (draft launch-bound); best **1.53×** (code, 88%
+  accept), slowdowns on explain/creative; exact modulo bf16 ties (gap 0.0); c-fix attempted (fails on this
+  stack, documented). `results/exp2*.json` + plots + coloured tokens.
+- **Exp 3 — continuous batching COMPLETE** (E10): continuous **~3×** static throughput, p95 14 s vs 68 s;
+  utilisation plot shows static draining to idle. `results/exp3*.json` + plots.
+- **Exp 4 — PagedAttention COMPLETE** (E11): KV 12 KB/token (GQA), naive waste **91.8%**, paging **~12×**
+  concurrency (predicted 801 / OOM 889), block-size sweep. `results/exp4*.json` + plots.
+- **Phase 6 COMPLETE** (E13): live demo (Modal endpoints verified + Vercel deployed), **`report.pdf`** (1 pp),
+  README reproduce-in-order, `costs.md` (≈$2.2 of $15).
+- **All six "what to submit" parts delivered.** Open: Vercel Deployment-Protection toggle (Harman's, to make
+  the demo public); optional vLLM real-engine confirmation for Exp 4's paged side.

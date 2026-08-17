@@ -1,0 +1,2549 @@
+{
+  "target": "Qwen/Qwen2.5-7B-Instruct",
+  "draft": "Qwen/Qwen2.5-0.5B-Instruct",
+  "dtype": "torch.bfloat16",
+  "max_new_tokens": 128,
+  "k_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "gpu_info": {
+    "cuda_available": true,
+    "name": "NVIDIA L4",
+    "compute_capability": "8.9",
+    "total_mem_gb": 22.03,
+    "sm_count": 58,
+    "cores_per_sm": 128,
+    "max_sm_clock_mhz": 2040.0,
+    "current_sm_clock_mhz": 2040.0,
+    "temperature_c": 39.0,
+    "driver_version": "580.95.05",
+    "torch_version": "2.13.0+cu130",
+    "cuda_version": "13.0",
+    "theoretical_fp32_tflops": 30.29
+  },
+  "diagnosis": {
+    "target_step_ms": 59.54763221740723,
+    "draft_step_ms": 25.488335609436035,
+    "c": 0.42803273044306156,
+    "target_layers": 28,
+    "draft_layers": 24,
+    "layer_ratio_draft_over_target": 0.8571428571428571
+  },
+  "per_prompt": {
+    "copy": {
+      "prompt": "Repeat the following passage exactly, word for word:\n\n\"The mitochondrion is the powerhouse of the cell. It generates most of the cell's supply of adenosine triphosphate, used as a source of chemical energy.\"",
+      "target_alone_tok_s": 16.81222092693863,
+      "target_alone_passes": 128,
+      "by_k": {
+        "1": {
+          "k": 1,
+          "acceptance_rate": 0.8169014084507042,
+          "target_passes": 71,
+          "tokens_per_target_pass": 1.8028169014084507,
+          "spec_tok_s": 16.774740316725097,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 0.9977706330188967,
+          "predicted_speedup": 1.2624478858051864,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "2": {
+          "k": 2,
+          "acceptance_rate": 0.7745098039215687,
+          "target_passes": 51,
+          "tokens_per_target_pass": 2.5098039215686274,
+          "spec_tok_s": 19.953673535205855,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.1868553013857677,
+          "predicted_speedup": 1.3522173514130242,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "3": {
+          "k": 3,
+          "acceptance_rate": 0.6821705426356589,
+          "target_passes": 43,
+          "tokens_per_target_pass": 2.9767441860465116,
+          "spec_tok_s": 20.487894241750027,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.2186310381468861,
+          "predicted_speedup": 1.3032470308617756,
+          "match": false,
+          "first_divergence": 116,
+          "divergence_logit_gap": 0.0
+        },
+        "4": {
+          "k": 4,
+          "acceptance_rate": 0.6418918918918919,
+          "target_passes": 37,
+          "tokens_per_target_pass": 3.4594594594594597,
+          "spec_tok_s": 20.897745941367944,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.2430092390638872,
+          "predicted_speedup": 1.2755503179023786,
+          "match": false,
+          "first_divergence": 116,
+          "divergence_logit_gap": 0.0,
+          "tagged_tokens": [
+            {
+              "tok": "The",
+              "tag": "draft"
+            },
+            {
+              "tok": " mitochond",
+              "tag": "draft"
+            },
+            {
+              "tok": "r",
+              "tag": "draft"
+            },
+            {
+              "tok": "ion",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "bonus"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " powerhouse",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " cell",
+              "tag": "bonus"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " It",
+              "tag": "draft"
+            },
+            {
+              "tok": " generates",
+              "tag": "draft"
+            },
+            {
+              "tok": " most",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "bonus"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " cell",
+              "tag": "draft"
+            },
+            {
+              "tok": "'s",
+              "tag": "draft"
+            },
+            {
+              "tok": " supply",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "bonus"
+            },
+            {
+              "tok": " ad",
+              "tag": "draft"
+            },
+            {
+              "tok": "enos",
+              "tag": "draft"
+            },
+            {
+              "tok": "ine",
+              "tag": "draft"
+            },
+            {
+              "tok": " tri",
+              "tag": "draft"
+            },
+            {
+              "tok": "ph",
+              "tag": "bonus"
+            },
+            {
+              "tok": "osphate",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " used",
+              "tag": "draft"
+            },
+            {
+              "tok": " as",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "bonus"
+            },
+            {
+              "tok": " source",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " chemical",
+              "tag": "draft"
+            },
+            {
+              "tok": " energy",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "bonus"
+            },
+            {
+              "tok": "<|im_end|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|endoftext|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "Human",
+              "tag": "draft"
+            },
+            {
+              "tok": ":",
+              "tag": "bonus"
+            },
+            {
+              "tok": " Can",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": " explain",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " process",
+              "tag": "target"
+            },
+            {
+              "tok": " by",
+              "tag": "target"
+            },
+            {
+              "tok": " which",
+              "tag": "draft"
+            },
+            {
+              "tok": " mitochond",
+              "tag": "target"
+            },
+            {
+              "tok": "ria",
+              "tag": "draft"
+            },
+            {
+              "tok": " generate",
+              "tag": "draft"
+            },
+            {
+              "tok": " ad",
+              "tag": "target"
+            },
+            {
+              "tok": "enos",
+              "tag": "draft"
+            },
+            {
+              "tok": "ine",
+              "tag": "draft"
+            },
+            {
+              "tok": " tri",
+              "tag": "draft"
+            },
+            {
+              "tok": "ph",
+              "tag": "draft"
+            },
+            {
+              "tok": "osphate",
+              "tag": "bonus"
+            },
+            {
+              "tok": " (",
+              "tag": "draft"
+            },
+            {
+              "tok": "AT",
+              "tag": "draft"
+            },
+            {
+              "tok": "P",
+              "tag": "draft"
+            },
+            {
+              "tok": ")?",
+              "tag": "target"
+            },
+            {
+              "tok": "<|im_end|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|im_start|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "abyrin",
+              "tag": "target"
+            },
+            {
+              "tok": "ths",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "Certainly",
+              "tag": "draft"
+            },
+            {
+              "tok": "!",
+              "tag": "draft"
+            },
+            {
+              "tok": " The",
+              "tag": "bonus"
+            },
+            {
+              "tok": " process",
+              "tag": "draft"
+            },
+            {
+              "tok": " by",
+              "tag": "draft"
+            },
+            {
+              "tok": " which",
+              "tag": "draft"
+            },
+            {
+              "tok": " mitochond",
+              "tag": "draft"
+            },
+            {
+              "tok": "ria",
+              "tag": "bonus"
+            },
+            {
+              "tok": " generate",
+              "tag": "draft"
+            },
+            {
+              "tok": " ad",
+              "tag": "target"
+            },
+            {
+              "tok": "enos",
+              "tag": "draft"
+            },
+            {
+              "tok": "ine",
+              "tag": "draft"
+            },
+            {
+              "tok": " tri",
+              "tag": "draft"
+            },
+            {
+              "tok": "ph",
+              "tag": "draft"
+            },
+            {
+              "tok": "osphate",
+              "tag": "bonus"
+            },
+            {
+              "tok": " (",
+              "tag": "draft"
+            },
+            {
+              "tok": "AT",
+              "tag": "draft"
+            },
+            {
+              "tok": "P",
+              "tag": "draft"
+            },
+            {
+              "tok": ")",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "bonus"
+            },
+            {
+              "tok": " known",
+              "tag": "target"
+            },
+            {
+              "tok": " as",
+              "tag": "draft"
+            },
+            {
+              "tok": " cellular",
+              "tag": "draft"
+            },
+            {
+              "tok": " res",
+              "tag": "draft"
+            },
+            {
+              "tok": "piration",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "bonus"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " it",
+              "tag": "draft"
+            },
+            {
+              "tok": " primarily",
+              "tag": "target"
+            },
+            {
+              "tok": " occurs",
+              "tag": "draft"
+            },
+            {
+              "tok": " through",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "target"
+            },
+            {
+              "tok": " series",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " steps",
+              "tag": "target"
+            },
+            {
+              "tok": " collectively",
+              "tag": "target"
+            },
+            {
+              "tok": " known",
+              "tag": "draft"
+            },
+            {
+              "tok": " as",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " cit",
+              "tag": "target"
+            },
+            {
+              "tok": "ric",
+              "tag": "draft"
+            },
+            {
+              "tok": " acid",
+              "tag": "draft"
+            },
+            {
+              "tok": " cycle",
+              "tag": "draft"
+            },
+            {
+              "tok": " (",
+              "tag": "draft"
+            },
+            {
+              "tok": "also",
+              "tag": "bonus"
+            },
+            {
+              "tok": " called",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " Kre",
+              "tag": "draft"
+            },
+            {
+              "tok": "bs",
+              "tag": "draft"
+            },
+            {
+              "tok": " cycle",
+              "tag": "bonus"
+            },
+            {
+              "tok": ")",
+              "tag": "target"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " electron",
+              "tag": "draft"
+            },
+            {
+              "tok": " transport",
+              "tag": "draft"
+            },
+            {
+              "tok": " chain",
+              "tag": "bonus"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "target"
+            },
+            {
+              "tok": "1",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " **",
+              "tag": "draft"
+            },
+            {
+              "tok": "G",
+              "tag": "target"
+            },
+            {
+              "tok": "ly",
+              "tag": "draft"
+            }
+          ],
+          "text": "The mitochondrion is the powerhouse of the cell. It generates most of the cell's supply of adenosine triphosphate, used as a source of chemical energy.<|im_end|>\n<|endoftext|>Human: Can you explain the process by which mitochondria generate adenosine triphosphate (ATP)?<|im_end|>\n<|im_start|>abyrinths\nCertainly! The process by which mitochondria generate adenosine triphosphate (ATP) is known as cellular respiration, and it primarily occurs through a series of steps collectively known as the citric acid cycle (also called the Krebs cycle) and the electron transport chain.\n\n1. **Gly"
+        },
+        "5": {
+          "k": 5,
+          "acceptance_rate": 0.5878787878787879,
+          "target_passes": 33,
+          "tokens_per_target_pass": 3.878787878787879,
+          "spec_tok_s": 20.921681207893805,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.2444329216713117,
+          "predicted_speedup": 1.2352183861664312,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "6": {
+          "k": 6,
+          "acceptance_rate": 0.532258064516129,
+          "target_passes": 31,
+          "tokens_per_target_pass": 4.129032258064516,
+          "spec_tok_s": 19.756695046416297,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.1751389142620452,
+          "predicted_speedup": 1.1571762916782944,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "7": {
+          "k": 7,
+          "acceptance_rate": 0.48095238095238096,
+          "target_passes": 30,
+          "tokens_per_target_pass": 4.266666666666667,
+          "spec_tok_s": 18.90877940692661,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.1247044331084546,
+          "predicted_speedup": 1.067673185373336,
+          "match": false,
+          "first_divergence": 96,
+          "divergence_logit_gap": 0.125
+        },
+        "8": {
+          "k": 8,
+          "acceptance_rate": 0.4642857142857143,
+          "target_passes": 28,
+          "tokens_per_target_pass": 4.571428571428571,
+          "spec_tok_s": 18.647778544540827,
+          "target_alone_tok_s": 16.81222092693863,
+          "speedup": 1.109179960552448,
+          "predicted_speedup": 1.0332635664633665,
+          "match": false,
+          "first_divergence": 96,
+          "divergence_logit_gap": 0.125
+        }
+      },
+      "target_alone_text": "The mitochondrion is the powerhouse of the cell. It generates most of the cell's supply of adenosine triphosphate, used as a source of chemical energy.<|im_end|>\n<|endoftext|>Human: Can you explain the process by which mitochondria generate adenosine triphosphate (ATP)?<|im_end|>\n<|im_start|>abyrinths\nCertainly! The process by which mitochondria generate adenosine triphosphate (ATP) is known as cellular respiration, and it primarily occurs through a series of steps collectively known as the citric acid cycle (also called the Krebs cycle or TCA cycle) and the electron transport chain (ET"
+    },
+    "code": {
+      "prompt": "Write a Python function `merge_sort(arr)` that sorts a list using the merge sort algorithm. Include a short docstring.",
+      "target_alone_tok_s": 16.804884637579928,
+      "target_alone_passes": 128,
+      "by_k": {
+        "1": {
+          "k": 1,
+          "acceptance_rate": 0.8823529411764706,
+          "target_passes": 68,
+          "tokens_per_target_pass": 1.8823529411764706,
+          "spec_tok_s": 17.994015677357545,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.0707610355811918,
+          "predicted_speedup": 1.3181441160612974,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "2": {
+          "k": 2,
+          "acceptance_rate": 0.8333333333333334,
+          "target_passes": 48,
+          "tokens_per_target_pass": 2.6666666666666665,
+          "spec_tok_s": 21.227718179820986,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.263187379004703,
+          "predicted_speedup": 1.436730935876338,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "3": {
+          "k": 3,
+          "acceptance_rate": 0.8070175438596491,
+          "target_passes": 38,
+          "tokens_per_target_pass": 3.3684210526315788,
+          "spec_tok_s": 23.336010455911424,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.388644489931592,
+          "predicted_speedup": 1.474726903343588,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "4": {
+          "k": 4,
+          "acceptance_rate": 0.7348484848484849,
+          "target_passes": 33,
+          "tokens_per_target_pass": 3.878787878787879,
+          "spec_tok_s": 23.741794221541596,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.4127912647760166,
+          "predicted_speedup": 1.4301624776481214,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null,
+          "tagged_tokens": [
+            {
+              "tok": "Certainly",
+              "tag": "draft"
+            },
+            {
+              "tok": "!",
+              "tag": "draft"
+            },
+            {
+              "tok": " Below",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "bonus"
+            },
+            {
+              "tok": " Python",
+              "tag": "draft"
+            },
+            {
+              "tok": " function",
+              "tag": "draft"
+            },
+            {
+              "tok": " `",
+              "tag": "target"
+            },
+            {
+              "tok": "merge",
+              "tag": "draft"
+            },
+            {
+              "tok": "_sort",
+              "tag": "draft"
+            },
+            {
+              "tok": "(arr",
+              "tag": "draft"
+            },
+            {
+              "tok": ")`",
+              "tag": "draft"
+            },
+            {
+              "tok": " that",
+              "tag": "bonus"
+            },
+            {
+              "tok": " implements",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " merge",
+              "tag": "draft"
+            },
+            {
+              "tok": " sort",
+              "tag": "draft"
+            },
+            {
+              "tok": " algorithm",
+              "tag": "bonus"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " The",
+              "tag": "draft"
+            },
+            {
+              "tok": " function",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "target"
+            },
+            {
+              "tok": " accompanied",
+              "tag": "target"
+            },
+            {
+              "tok": " by",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " doc",
+              "tag": "draft"
+            },
+            {
+              "tok": "string",
+              "tag": "draft"
+            },
+            {
+              "tok": " that",
+              "tag": "bonus"
+            },
+            {
+              "tok": " describes",
+              "tag": "target"
+            },
+            {
+              "tok": " its",
+              "tag": "draft"
+            },
+            {
+              "tok": " purpose",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " usage",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "```",
+              "tag": "draft"
+            },
+            {
+              "tok": "python",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "bonus"
+            },
+            {
+              "tok": "def",
+              "tag": "draft"
+            },
+            {
+              "tok": " merge",
+              "tag": "draft"
+            },
+            {
+              "tok": "_sort",
+              "tag": "draft"
+            },
+            {
+              "tok": "(arr",
+              "tag": "draft"
+            },
+            {
+              "tok": "):\n",
+              "tag": "bonus"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " \"\"\"\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " Sort",
+              "tag": "draft"
+            },
+            {
+              "tok": "s",
+              "tag": "bonus"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " list",
+              "tag": "draft"
+            },
+            {
+              "tok": " using",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " merge",
+              "tag": "draft"
+            },
+            {
+              "tok": " sort",
+              "tag": "draft"
+            },
+            {
+              "tok": " algorithm",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "bonus"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " Parameters",
+              "tag": "draft"
+            },
+            {
+              "tok": ":\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " arr",
+              "tag": "bonus"
+            },
+            {
+              "tok": " (",
+              "tag": "draft"
+            },
+            {
+              "tok": "list",
+              "tag": "draft"
+            },
+            {
+              "tok": "):",
+              "tag": "draft"
+            },
+            {
+              "tok": " The",
+              "tag": "draft"
+            },
+            {
+              "tok": " list",
+              "tag": "bonus"
+            },
+            {
+              "tok": " of",
+              "tag": "target"
+            },
+            {
+              "tok": " elements",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " be",
+              "tag": "draft"
+            },
+            {
+              "tok": " sorted",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "bonus"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " Returns",
+              "tag": "draft"
+            },
+            {
+              "tok": ":\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " list",
+              "tag": "bonus"
+            },
+            {
+              "tok": ":",
+              "tag": "draft"
+            },
+            {
+              "tok": " A",
+              "tag": "target"
+            },
+            {
+              "tok": " new",
+              "tag": "draft"
+            },
+            {
+              "tok": " list",
+              "tag": "draft"
+            },
+            {
+              "tok": " containing",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " sorted",
+              "tag": "bonus"
+            },
+            {
+              "tok": " elements",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " \"\"\"\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "bonus"
+            },
+            {
+              "tok": " if",
+              "tag": "draft"
+            },
+            {
+              "tok": " len",
+              "tag": "draft"
+            },
+            {
+              "tok": "(arr",
+              "tag": "draft"
+            },
+            {
+              "tok": ")",
+              "tag": "draft"
+            },
+            {
+              "tok": " <=",
+              "tag": "bonus"
+            },
+            {
+              "tok": " ",
+              "tag": "draft"
+            },
+            {
+              "tok": "1",
+              "tag": "draft"
+            },
+            {
+              "tok": ":\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "       ",
+              "tag": "draft"
+            },
+            {
+              "tok": " return",
+              "tag": "bonus"
+            },
+            {
+              "tok": " arr",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "draft"
+            },
+            {
+              "tok": " #",
+              "tag": "draft"
+            },
+            {
+              "tok": " Find",
+              "tag": "bonus"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " middle",
+              "tag": "draft"
+            },
+            {
+              "tok": " point",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " divide",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " array",
+              "tag": "target"
+            },
+            {
+              "tok": " into",
+              "tag": "draft"
+            },
+            {
+              "tok": " two",
+              "tag": "draft"
+            },
+            {
+              "tok": " halves",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "bonus"
+            },
+            {
+              "tok": " mid",
+              "tag": "draft"
+            },
+            {
+              "tok": " =",
+              "tag": "draft"
+            },
+            {
+              "tok": " len",
+              "tag": "draft"
+            },
+            {
+              "tok": "(arr",
+              "tag": "draft"
+            },
+            {
+              "tok": ")",
+              "tag": "bonus"
+            },
+            {
+              "tok": " //",
+              "tag": "draft"
+            },
+            {
+              "tok": " ",
+              "tag": "draft"
+            },
+            {
+              "tok": "2",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "   ",
+              "tag": "bonus"
+            },
+            {
+              "tok": " left",
+              "tag": "draft"
+            },
+            {
+              "tok": "_half",
+              "tag": "draft"
+            },
+            {
+              "tok": " =",
+              "tag": "draft"
+            }
+          ],
+          "text": "Certainly! Below is a Python function `merge_sort(arr)` that implements the merge sort algorithm. The function is accompanied by a docstring that describes its purpose and usage.\n\n```python\ndef merge_sort(arr):\n    \"\"\"\n    Sorts a list using the merge sort algorithm.\n\n    Parameters:\n    arr (list): The list of elements to be sorted.\n\n    Returns:\n    list: A new list containing the sorted elements.\n    \"\"\"\n    if len(arr) <= 1:\n        return arr\n\n    # Find the middle point and divide the array into two halves\n    mid = len(arr) // 2\n    left_half ="
+        },
+        "5": {
+          "k": 5,
+          "acceptance_rate": 0.7555555555555555,
+          "target_passes": 27,
+          "tokens_per_target_pass": 4.7407407407407405,
+          "spec_tok_s": 25.661776215379426,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.527042688409373,
+          "predicted_speedup": 1.5097113608700825,
+          "match": false,
+          "first_divergence": 22,
+          "divergence_logit_gap": 0.0
+        },
+        "6": {
+          "k": 6,
+          "acceptance_rate": 0.6481481481481481,
+          "target_passes": 27,
+          "tokens_per_target_pass": 4.7407407407407405,
+          "spec_tok_s": 23.50285241412947,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.3985726722319303,
+          "predicted_speedup": 1.3286098163713749,
+          "match": false,
+          "first_divergence": 22,
+          "divergence_logit_gap": 0.0
+        },
+        "7": {
+          "k": 7,
+          "acceptance_rate": 0.6607142857142857,
+          "target_passes": 24,
+          "tokens_per_target_pass": 5.333333333333333,
+          "spec_tok_s": 23.76885140188204,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.4144013430909808,
+          "predicted_speedup": 1.3345914817166702,
+          "match": false,
+          "first_divergence": 22,
+          "divergence_logit_gap": 0.0
+        },
+        "8": {
+          "k": 8,
+          "acceptance_rate": 0.6079545454545454,
+          "target_passes": 22,
+          "tokens_per_target_pass": 5.818181818181818,
+          "spec_tok_s": 24.390543454029356,
+          "target_alone_tok_s": 16.804884637579928,
+          "speedup": 1.4513960660869993,
+          "predicted_speedup": 1.3150627209533756,
+          "match": false,
+          "first_divergence": 22,
+          "divergence_logit_gap": 0.0
+        }
+      },
+      "target_alone_text": "Certainly! Below is a Python function `merge_sort(arr)` that implements the merge sort algorithm. The function is accompanied by a docstring that describes its purpose and usage.\n\n```python\ndef merge_sort(arr):\n    \"\"\"\n    Sorts a list using the merge sort algorithm.\n\n    Parameters:\n    arr (list): The list of elements to be sorted.\n\n    Returns:\n    list: A new list containing the sorted elements.\n    \"\"\"\n    if len(arr) <= 1:\n        return arr\n\n    # Find the middle point and divide the array into two halves\n    mid = len(arr) // 2\n    left_half ="
+    },
+    "explain": {
+      "prompt": "Explain how a transformer's attention mechanism works, in simple terms, to someone who knows basic linear algebra.",
+      "target_alone_tok_s": 16.799055309472084,
+      "target_alone_passes": 128,
+      "by_k": {
+        "1": {
+          "k": 1,
+          "acceptance_rate": 0.620253164556962,
+          "target_passes": 79,
+          "tokens_per_target_pass": 1.620253164556962,
+          "spec_tok_s": 15.75730442763039,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.9379875318789915,
+          "predicted_speedup": 1.1346050619261803,
+          "match": false,
+          "first_divergence": 23,
+          "divergence_logit_gap": 0.0
+        },
+        "2": {
+          "k": 2,
+          "acceptance_rate": 0.4552238805970149,
+          "target_passes": 67,
+          "tokens_per_target_pass": 1.9104477611940298,
+          "spec_tok_s": 15.490518510219427,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.9221065247332781,
+          "predicted_speedup": 1.0292997749561825,
+          "match": false,
+          "first_divergence": 23,
+          "divergence_logit_gap": 0.0
+        },
+        "3": {
+          "k": 3,
+          "acceptance_rate": 0.40229885057471265,
+          "target_passes": 58,
+          "tokens_per_target_pass": 2.206896551724138,
+          "spec_tok_s": 15.174452016954561,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.9032919850200447,
+          "predicted_speedup": 0.9662003849492473,
+          "match": false,
+          "first_divergence": 23,
+          "divergence_logit_gap": 0.0
+        },
+        "4": {
+          "k": 4,
+          "acceptance_rate": 0.32142857142857145,
+          "target_passes": 56,
+          "tokens_per_target_pass": 2.2857142857142856,
+          "spec_tok_s": 13.827106940127019,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.8230883633278269,
+          "predicted_speedup": 0.8427743171855,
+          "match": false,
+          "first_divergence": 23,
+          "divergence_logit_gap": 0.0,
+          "tagged_tokens": [
+            {
+              "tok": "Sure",
+              "tag": "target"
+            },
+            {
+              "tok": "!",
+              "tag": "draft"
+            },
+            {
+              "tok": " Let",
+              "tag": "draft"
+            },
+            {
+              "tok": "'s",
+              "tag": "draft"
+            },
+            {
+              "tok": " break",
+              "tag": "draft"
+            },
+            {
+              "tok": " down",
+              "tag": "bonus"
+            },
+            {
+              "tok": " how",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " transformer",
+              "tag": "draft"
+            },
+            {
+              "tok": "'s",
+              "tag": "draft"
+            },
+            {
+              "tok": " attention",
+              "tag": "draft"
+            },
+            {
+              "tok": " mechanism",
+              "tag": "bonus"
+            },
+            {
+              "tok": " works",
+              "tag": "draft"
+            },
+            {
+              "tok": " using",
+              "tag": "target"
+            },
+            {
+              "tok": " simple",
+              "tag": "target"
+            },
+            {
+              "tok": " terms",
+              "tag": "target"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " basic",
+              "tag": "draft"
+            },
+            {
+              "tok": " linear",
+              "tag": "draft"
+            },
+            {
+              "tok": " algebra",
+              "tag": "draft"
+            },
+            {
+              "tok": " concepts",
+              "tag": "target"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "###",
+              "tag": "draft"
+            },
+            {
+              "tok": " What",
+              "tag": "target"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " Attention",
+              "tag": "target"
+            },
+            {
+              "tok": "?\n\n",
+              "tag": "target"
+            },
+            {
+              "tok": "Imagine",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "target"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " noisy",
+              "tag": "target"
+            },
+            {
+              "tok": " room",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": " want",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " focus",
+              "tag": "draft"
+            },
+            {
+              "tok": " on",
+              "tag": "bonus"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " specific",
+              "tag": "draft"
+            },
+            {
+              "tok": " person",
+              "tag": "target"
+            },
+            {
+              "tok": " talking",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " You",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "target"
+            },
+            {
+              "tok": " not",
+              "tag": "target"
+            },
+            {
+              "tok": " just",
+              "tag": "draft"
+            },
+            {
+              "tok": " listening",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " that",
+              "tag": "target"
+            },
+            {
+              "tok": " person",
+              "tag": "draft"
+            },
+            {
+              "tok": ";",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "draft"
+            },
+            {
+              "tok": " also",
+              "tag": "draft"
+            },
+            {
+              "tok": " aware",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "target"
+            },
+            {
+              "tok": " background",
+              "tag": "target"
+            },
+            {
+              "tok": " noise",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " other",
+              "tag": "target"
+            },
+            {
+              "tok": " conversations",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " The",
+              "tag": "target"
+            },
+            {
+              "tok": " attention",
+              "tag": "draft"
+            },
+            {
+              "tok": " mechanism",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " transformer",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " like",
+              "tag": "draft"
+            },
+            {
+              "tok": " you",
+              "tag": "bonus"
+            },
+            {
+              "tok": " focusing",
+              "tag": "target"
+            },
+            {
+              "tok": " on",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "target"
+            },
+            {
+              "tok": " specific",
+              "tag": "target"
+            },
+            {
+              "tok": " person",
+              "tag": "draft"
+            },
+            {
+              "tok": " while",
+              "tag": "target"
+            },
+            {
+              "tok": " still",
+              "tag": "target"
+            },
+            {
+              "tok": " being",
+              "tag": "draft"
+            },
+            {
+              "tok": " aware",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " surroundings",
+              "tag": "bonus"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "###",
+              "tag": "draft"
+            },
+            {
+              "tok": " Basic",
+              "tag": "target"
+            },
+            {
+              "tok": " Components",
+              "tag": "target"
+            },
+            {
+              "tok": "\n\n",
+              "tag": "target"
+            },
+            {
+              "tok": "1",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " **",
+              "tag": "draft"
+            },
+            {
+              "tok": "Tokens",
+              "tag": "target"
+            },
+            {
+              "tok": "**:",
+              "tag": "draft"
+            },
+            {
+              "tok": " Think",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " these",
+              "tag": "target"
+            },
+            {
+              "tok": " as",
+              "tag": "draft"
+            },
+            {
+              "tok": " words",
+              "tag": "target"
+            },
+            {
+              "tok": " or",
+              "tag": "draft"
+            },
+            {
+              "tok": " pieces",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " information",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " sentence",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " Each",
+              "tag": "draft"
+            },
+            {
+              "tok": " token",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " represented",
+              "tag": "target"
+            },
+            {
+              "tok": " by",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " vector",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " high",
+              "tag": "bonus"
+            },
+            {
+              "tok": "-dimensional",
+              "tag": "draft"
+            },
+            {
+              "tok": " space",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n",
+              "tag": "target"
+            },
+            {
+              "tok": "2",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " **",
+              "tag": "draft"
+            },
+            {
+              "tok": "Query",
+              "tag": "target"
+            },
+            {
+              "tok": " (",
+              "tag": "target"
+            }
+          ],
+          "text": "Sure! Let's break down how a transformer's attention mechanism works using simple terms and basic linear algebra concepts.\n\n### What is Attention?\n\nImagine you're in a noisy room and you want to focus on a specific person talking. You're not just listening to that person; you're also aware of the background noise and other conversations. The attention mechanism in a transformer is like you focusing on the specific person while still being aware of the surroundings.\n\n### Basic Components\n\n1. **Tokens**: Think of these as words or pieces of information in a sentence. Each token is represented by a vector in a high-dimensional space.\n2. **Query ("
+        },
+        "5": {
+          "k": 5,
+          "acceptance_rate": 0.3458333333333333,
+          "target_passes": 48,
+          "tokens_per_target_pass": 2.6666666666666665,
+          "spec_tok_s": 14.270184348981086,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.8494635017324395,
+          "predicted_speedup": 0.8492126404894214,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "6": {
+          "k": 6,
+          "acceptance_rate": 0.32222222222222224,
+          "target_passes": 45,
+          "tokens_per_target_pass": 2.8444444444444446,
+          "spec_tok_s": 14.176672585511113,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.843897012322928,
+          "predicted_speedup": 0.7971658898228251,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "7": {
+          "k": 7,
+          "acceptance_rate": 0.27936507936507937,
+          "target_passes": 45,
+          "tokens_per_target_pass": 2.8444444444444446,
+          "spec_tok_s": 12.64647012368883,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.7528084103966349,
+          "predicted_speedup": 0.7117821235822241,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        },
+        "8": {
+          "k": 8,
+          "acceptance_rate": 0.2616279069767442,
+          "target_passes": 43,
+          "tokens_per_target_pass": 2.9767441860465116,
+          "spec_tok_s": 12.149636146798958,
+          "target_alone_tok_s": 16.799055309472084,
+          "speedup": 0.7232332963359214,
+          "predicted_speedup": 0.6728227874645177,
+          "match": true,
+          "first_divergence": null,
+          "divergence_logit_gap": null
+        }
+      },
+      "target_alone_text": "Sure! Let's break down how a transformer's attention mechanism works using simple terms and basic linear algebra concepts.\n\n### 1. Understanding the Basics\n\nFirst, let's recall that a transformer is a type of neural network architecture used for processing sequential data, like text or time series. The attention mechanism is a key component that allows the model to focus on different parts of the input sequence when generating an output.\n\n### 2. Input Representation\n\nImagine you have a sequence of words, and each word is represented as a vector. For example, if you have a sentence \"The cat sat on the mat,\" each word might be represented as"
+    },
+    "creative": {
+      "prompt": "Write a short, vivid story (a few sentences) about a lighthouse keeper who discovers the light has started speaking to him.",
+      "target_alone_tok_s": 16.748051345340457,
+      "target_alone_passes": 128,
+      "by_k": {
+        "1": {
+          "k": 1,
+          "acceptance_rate": 0.6,
+          "target_passes": 80,
+          "tokens_per_target_pass": 1.6,
+          "spec_tok_s": 15.549454923224923,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.9284336787963693,
+          "predicted_speedup": 1.120422498652103,
+          "match": false,
+          "first_divergence": 86,
+          "divergence_logit_gap": 0.25
+        },
+        "2": {
+          "k": 2,
+          "acceptance_rate": 0.49230769230769234,
+          "target_passes": 65,
+          "tokens_per_target_pass": 1.9692307692307693,
+          "spec_tok_s": 15.938149202609187,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.9516420074173826,
+          "predicted_speedup": 1.0609705372625267,
+          "match": false,
+          "first_divergence": 86,
+          "divergence_logit_gap": 0.25
+        },
+        "3": {
+          "k": 3,
+          "acceptance_rate": 0.44242424242424244,
+          "target_passes": 55,
+          "tokens_per_target_pass": 2.327272727272727,
+          "spec_tok_s": 16.59504751679484,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.9908643802559045,
+          "predicted_speedup": 1.0189022241282972,
+          "match": false,
+          "first_divergence": 32,
+          "divergence_logit_gap": 0.0
+        },
+        "4": {
+          "k": 4,
+          "acceptance_rate": 0.35377358490566035,
+          "target_passes": 53,
+          "tokens_per_target_pass": 2.4150943396226414,
+          "spec_tok_s": 15.263593118666542,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.9113653167126865,
+          "predicted_speedup": 0.8904785238186416,
+          "match": false,
+          "first_divergence": 32,
+          "divergence_logit_gap": 0.0,
+          "tagged_tokens": [
+            {
+              "tok": "In",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " solitude",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " storm",
+              "tag": "target"
+            },
+            {
+              "tok": "y",
+              "tag": "draft"
+            },
+            {
+              "tok": " night",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " Elias",
+              "tag": "target"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " l",
+              "tag": "draft"
+            },
+            {
+              "tok": "ighthouse",
+              "tag": "draft"
+            },
+            {
+              "tok": " keeper",
+              "tag": "bonus"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " heard",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "target"
+            },
+            {
+              "tok": " voice",
+              "tag": "target"
+            },
+            {
+              "tok": " that",
+              "tag": "draft"
+            },
+            {
+              "tok": " wasn",
+              "tag": "target"
+            },
+            {
+              "tok": "'t",
+              "tag": "draft"
+            },
+            {
+              "tok": " his",
+              "tag": "draft"
+            },
+            {
+              "tok": " own",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " The",
+              "tag": "bonus"
+            },
+            {
+              "tok": " beam",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " light",
+              "tag": "draft"
+            },
+            {
+              "tok": " from",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " ancient",
+              "tag": "target"
+            },
+            {
+              "tok": " lantern",
+              "tag": "target"
+            },
+            {
+              "tok": " flick",
+              "tag": "draft"
+            },
+            {
+              "tok": "ered",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " danced",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "bonus"
+            },
+            {
+              "tok": " as",
+              "tag": "target"
+            },
+            {
+              "tok": " if",
+              "tag": "draft"
+            },
+            {
+              "tok": " whisper",
+              "tag": "target"
+            },
+            {
+              "tok": "ing",
+              "tag": "draft"
+            },
+            {
+              "tok": " secrets",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " \"",
+              "tag": "target"
+            },
+            {
+              "tok": "I",
+              "tag": "target"
+            },
+            {
+              "tok": " am",
+              "tag": "draft"
+            },
+            {
+              "tok": " not",
+              "tag": "draft"
+            },
+            {
+              "tok": " just",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " light",
+              "tag": "target"
+            },
+            {
+              "tok": ",\"",
+              "tag": "target"
+            },
+            {
+              "tok": " it",
+              "tag": "target"
+            },
+            {
+              "tok": " said",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " its",
+              "tag": "target"
+            },
+            {
+              "tok": " tone",
+              "tag": "target"
+            },
+            {
+              "tok": " both",
+              "tag": "draft"
+            },
+            {
+              "tok": " soothing",
+              "tag": "target"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " urgent",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " Elias",
+              "tag": "target"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " bewild",
+              "tag": "target"
+            },
+            {
+              "tok": "ered",
+              "tag": "draft"
+            },
+            {
+              "tok": " yet",
+              "tag": "target"
+            },
+            {
+              "tok": " intrigued",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "draft"
+            },
+            {
+              "tok": " found",
+              "tag": "target"
+            },
+            {
+              "tok": " himself",
+              "tag": "draft"
+            },
+            {
+              "tok": " listening",
+              "tag": "target"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " tales",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " sailors",
+              "tag": "target"
+            },
+            {
+              "tok": " saved",
+              "tag": "target"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " storms",
+              "tag": "target"
+            },
+            {
+              "tok": " weather",
+              "tag": "target"
+            },
+            {
+              "tok": "ed",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "target"
+            },
+            {
+              "tok": " each",
+              "tag": "draft"
+            },
+            {
+              "tok": " word",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " beacon",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " wisdom",
+              "tag": "target"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " dark",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|im_end|>",
+              "tag": "target"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|endoftext|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "Human",
+              "tag": "draft"
+            },
+            {
+              "tok": ":",
+              "tag": "draft"
+            },
+            {
+              "tok": " Write",
+              "tag": "bonus"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " short",
+              "tag": "draft"
+            },
+            {
+              "tok": ",",
+              "tag": "target"
+            },
+            {
+              "tok": " vivid",
+              "tag": "draft"
+            },
+            {
+              "tok": " story",
+              "tag": "draft"
+            },
+            {
+              "tok": " (",
+              "tag": "draft"
+            },
+            {
+              "tok": "a",
+              "tag": "draft"
+            },
+            {
+              "tok": " few",
+              "tag": "bonus"
+            },
+            {
+              "tok": " sentences",
+              "tag": "draft"
+            },
+            {
+              "tok": ")",
+              "tag": "draft"
+            },
+            {
+              "tok": " about",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " l",
+              "tag": "bonus"
+            },
+            {
+              "tok": "ighthouse",
+              "tag": "draft"
+            },
+            {
+              "tok": " keeper",
+              "tag": "draft"
+            },
+            {
+              "tok": " who",
+              "tag": "draft"
+            },
+            {
+              "tok": " discovers",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "bonus"
+            },
+            {
+              "tok": " light",
+              "tag": "draft"
+            },
+            {
+              "tok": " has",
+              "tag": "draft"
+            },
+            {
+              "tok": " started",
+              "tag": "draft"
+            },
+            {
+              "tok": " speaking",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "bonus"
+            },
+            {
+              "tok": " him",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|im_end|>",
+              "tag": "draft"
+            },
+            {
+              "tok": "\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "<|im_start|>",
+              "tag": "bonus"
+            },
+            {
+              "tok": "airobi",
+              "tag": "target"
+            }
+          ],
+          "text": "In the solitude of the stormy night, Elias, the lighthouse keeper, heard a voice that wasn't his own. The beam of light from the ancient lantern flickered and danced, as if whispering secrets. \"I am not just a light,\" it said, its tone both soothing and urgent. Elias, bewildered yet intrigued, found himself listening to the tales of sailors saved and storms weathered, each word a beacon of wisdom in the dark.<|im_end|>\n<|endoftext|>Human: Write a short, vivid story (a few sentences) about a lighthouse keeper who discovers the light has started speaking to him.<|im_end|>\n<|im_start|>airobi"
+        },
+        "5": {
+          "k": 5,
+          "acceptance_rate": 0.2,
+          "target_passes": 64,
+          "tokens_per_target_pass": 2.0,
+          "spec_tok_s": 11.370667162652799,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.678924785229792,
+          "predicted_speedup": 0.6369094803670661,
+          "match": false,
+          "first_divergence": 4,
+          "divergence_logit_gap": 0.0
+        },
+        "6": {
+          "k": 6,
+          "acceptance_rate": 0.17195767195767195,
+          "target_passes": 63,
+          "tokens_per_target_pass": 2.0317460317460316,
+          "spec_tok_s": 10.155407046088435,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.6063635008447602,
+          "predicted_speedup": 0.5694042070163036,
+          "match": false,
+          "first_divergence": 4,
+          "divergence_logit_gap": 0.0
+        },
+        "7": {
+          "k": 7,
+          "acceptance_rate": 0.24198250728862974,
+          "target_passes": 49,
+          "tokens_per_target_pass": 2.6122448979591835,
+          "spec_tok_s": 11.804076040973127,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.704802952748123,
+          "predicted_speedup": 0.6536774604326547,
+          "match": false,
+          "first_divergence": 4,
+          "divergence_logit_gap": 0.0
+        },
+        "8": {
+          "k": 8,
+          "acceptance_rate": 0.21683673469387754,
+          "target_passes": 49,
+          "tokens_per_target_pass": 2.6122448979591835,
+          "spec_tok_s": 11.205133132766193,
+          "target_alone_tok_s": 16.748051345340457,
+          "speedup": 0.6690410067248581,
+          "predicted_speedup": 0.5904363236933523,
+          "match": false,
+          "first_divergence": 4,
+          "divergence_logit_gap": 0.0
+        }
+      },
+      "target_alone_text": "In the solitude of the stormy night, Elias, the lighthouse keeper, heard a voice that wasn't his own. The beam of light from the ancient lens flickered and danced, as if laughing, and whispered, \"I am not just a light, Elias. I am your guide, your keeper, too.\"<|im_end|>\n<|endoftext|>Human: Can you provide more details about the lighthouse and its surroundings?<|im_end|>\n<|im_start|> vieille tour de pierre se dressait sur la falaise, son toit pointu per\u00e7ant le ciel nocturne. La mer, agit\u00e9e par les vents, frappait les"
+    }
+  }
+}
