@@ -1,0 +1,30 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ace-2504/main/ap-V0mStYiAbGm38gnI159xwJ
+✓ Created objects.
+├── 🔨 Created mount 
+│   D:\vizuara-assignments\assignment-4\exp1_kvcache\run_exp1.py
+├── 🔨 Created mount PythonPackage:bench
+└── 🔨 Created function run.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1ALoading weights:   0%|          | 0/148 [00:00<?, ?it/s]
+[1ALoading weights:  55%|█████▌    | 82/148 [00:00<00:00, 815.80it/s]
+[1ALoading weights: 100%|██████████| 148/148 [00:00<00:00, 653.66it/s]
+[W817 17:47:58.514215387 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 448790528 bytes (free: 232587264, total: 23659151360).
+[W817 17:48:17.168004855 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 853540864 bytes (free: 278724608, total: 23659151360).
+[W817 17:48:19.825143667 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 891289600 bytes (free: 888995840, total: 23659151360).
+
+=== Experiment 1 (KV cache) on NVIDIA L4 ===
+model=gpt2 prompt=512tok gen=64 | token positions: cached=576 uncached=34784 (60.4x)
+ batch  cached tok/s  uncached tok/s  speedup  match
+     1         105.7           106.7    0.99x   True
+     2         206.7           178.0    1.16x   True
+     4         393.9           203.3    1.94x   True
+     8         795.1           168.9    4.71x   True
+    16        1368.3           149.3    9.17x   True
+
+sample match (batch1): True
+wrote D:\vizuara-assignments\assignment-4\results\exp1.json
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ace-2504/main/ap-V0mStYiAbGm38gnI159xwJ
