@@ -1,0 +1,51 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "dtype": "torch.bfloat16",
+  "context_len": 128,
+  "batch_widths": [
+    1,
+    2,
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64
+  ],
+  "step_ms": {
+    "1": 38.9733772277832,
+    "2": 27.63155174255371,
+    "4": 28.79897689819336,
+    "8": 27.641855239868164,
+    "12": 29.13484764099121,
+    "16": 25.056255340576172,
+    "24": 26.460159301757812,
+    "32": 24.981504440307617,
+    "48": 25.135103225708008,
+    "64": 46.69132614135742
+  },
+  "config": {
+    "num_hidden_layers": 24,
+    "num_attention_heads": 14,
+    "num_key_value_heads": 2,
+    "head_dim": 64,
+    "kv_bytes_per_token": 12288
+  },
+  "gpu_info": {
+    "cuda_available": true,
+    "name": "NVIDIA L4",
+    "compute_capability": "8.9",
+    "total_mem_gb": 22.03,
+    "sm_count": 58,
+    "cores_per_sm": 128,
+    "max_sm_clock_mhz": 2040.0,
+    "current_sm_clock_mhz": 2040.0,
+    "temperature_c": 50.0,
+    "driver_version": "580.95.05",
+    "torch_version": "2.13.0+cu130",
+    "cuda_version": "13.0",
+    "theoretical_fp32_tflops": 30.29
+  }
+}

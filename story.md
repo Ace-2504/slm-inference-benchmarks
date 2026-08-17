@@ -113,6 +113,38 @@ batch 16**; uncached tok/s stays flat (~150–200) because it was never arithmet
 first (thrashing) run mid-flight to save budget. → *Better: the load-bearing roofline result is measured,
 correct, token-matched, and matches the reference once the dtype is realistic.*
 
+## Phase 4 — Experiment 3 (continuous batching)
+
+**E10 · Exp 3 built + run — static loses by being idle, quantified.** Approach: continuous vs static
+batching differ only in *scheduling*, so I measured the one physical input the schedule can't change —
+real decode-step time vs batch width on L4 (Qwen2.5-0.5B) — and fed it into a discrete-event simulator
+(`bench/batching_sim.py`) that runs BOTH policies (both implemented by me) over the same Poisson request
+stream with heavy-tailed (lognormal) output lengths. Measured step times ~25–29 ms flat for widths 2–48
+(memory-bound decode), rising at 64. Re-ran the step-time measurement once after seeing a **batch-1 clock-
+ramp outlier** (52→39 ms) — added a warm-up burst (the G8 lesson again). Result at 3 arrival rates × 2 batch
+sizes: **continuous ≈ 3× static throughput** (B=32: 7.5 vs 2.5 req/s) and **p95 latency 14 s vs 68 s**;
+static throughput is **flat vs arrival rate** (bottlenecked by batch drain, not load). The utilisation plot
+is the brief's exact finding: static sawtooths to full then **drains to ~0.03** while one straggler holds a
+slot; continuous holds slots full and finishes the workload in ~26 s vs ~80 s. Deliverables: `results/exp3*.json`,
+utilisation/queue/throughput/latency plots (labelled units). Documented that prefill is approximated (decode
+dominates) and the sim is driven by measured kernel times. → *Better: the scheduling loss is measured and
+visualised, not asserted.*
+
+## Phase 5 — Experiment 4 (PagedAttention)
+
+**E11 · Exp 4 built + run — 91.8% naive waste, ~12× concurrency from paging.** Naive contiguous allocator
+(implemented by me) + real admit-until-OOM confirmation on L4. **KV = 2·layers·kv_heads·head_dim·2 =
+2·24·2·64·2 = 12,288 bytes/token = 12 KB/token** — stated the **kv_heads=2 (GQA)**, not the 14 attention
+heads, which is the #1 error the brief warns about. Naive reserves 24 MB/seq (max_len 2048) → **predicted 801
+seqs, measured-OOM 889** (the 0.9 safety margin explains the gap: 889×0.9≈800 — arithmetic confirmed against
+hardware). Against a realistic length distribution (mean 168, p95 352 tokens), **naive wastes 91.8%** of
+reserved KV; paging fits **~9,000–9,800 seqs (≈12×)** from the same 18.79 GB budget. Block-size sweep shows
+the textbook trade-off: block=1 → 0% waste but 168 blocks/seq (bookkeeping), block=256 → 43% waste, 1.2
+blocks/seq; vLLM's default 16 → 4.3% waste, 9,360 seqs. Deliverables: `results/exp4*.json` + wasted-memory /
+concurrency / block-sweep plots. (vLLM real-engine confirmation optional/pending.) → *Better: the memory
+saving — and why it becomes a speed saving via larger effective batch — is measured and derived from first
+principles.*
+
 ---
 
 ## Current status (as of last entry)

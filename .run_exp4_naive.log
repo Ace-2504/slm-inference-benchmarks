@@ -1,0 +1,24 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ace-2504/main/ap-K0QAw88lApjL5pKe8mYYi9
+✓ Created objects.
+├── 🔨 Created mount 
+│   D:\vizuara-assignments\assignment-4\exp4_paged\run_exp4_naive.py
+├── 🔨 Created mount PythonPackage:bench
+└── 🔨 Created function run.
+
+[1ALoading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+[1ALoading weights:  18%|█▊        | 53/290 [00:00<00:00, 487.60it/s]
+[1ALoading weights:  40%|████      | 117/290 [00:00<00:00, 557.10it/s]
+[1ALoading weights:  66%|██████▌   | 190/290 [00:00<00:00, 609.74it/s]
+[1ALoading weights: 100%|██████████| 290/290 [00:00<00:00, 769.95it/s]
+[W817 18:02:23.293520431 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 25165824 bytes (free: 41877504, total: 23659151360).
+[W817 18:02:23.293711896 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 25165824 bytes (free: 41877504, total: 23659151360).
+
+=== Exp 4 (naive KV) on NVIDIA L4 — Qwen/Qwen2.5-0.5B-Instruct ===
+layers=24 kv_heads=2 head_dim=64  -> KV = 12288 bytes/token = 12.0 KB/token
+naive reserves 24.0 MB/seq (max_len=2048)
+KV budget 18.79 GB -> predicted 801 seqs, measured (OOM) 889 seqs
+wrote D:\vizuara-assignments\assignment-4\results\exp4_naive.json
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ace-2504/main/ap-K0QAw88lApjL5pKe8mYYi9

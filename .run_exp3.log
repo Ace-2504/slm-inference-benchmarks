@@ -1,0 +1,33 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ace-2504/main/ap-haTp0OpmugK4xGVPYT6FvF
+✓ Created objects.
+├── 🔨 Created mount 
+│   D:\vizuara-assignments\assignment-4\exp3_batching\run_exp3.py
+├── 🔨 Created mount PythonPackage:bench
+└── 🔨 Created function measure.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1ALoading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+[1ALoading weights:  11%|█         | 32/290 [00:00<00:00, 308.28it/s]
+[1ALoading weights:  28%|██▊       | 82/290 [00:00<00:00, 400.78it/s]
+[1ALoading weights:  43%|████▎     | 126/290 [00:00<00:00, 409.07it/s]
+[1ALoading weights:  62%|██████▏   | 179/290 [00:00<00:00, 441.55it/s]
+[1ALoading weights: 100%|██████████| 290/290 [00:00<00:00, 652.03it/s]
+[W817 18:01:54.554265064 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 79691776 bytes (free: 26345472, total: 23659151360).
+
+=== Exp 3 step times on NVIDIA L4 (Qwen/Qwen2.5-0.5B-Instruct) ===
+KV bytes/token = 12288 (layers=24, kv_heads=2, head_dim=64)
+  batch   1: 38.973 ms/step
+  batch   2: 27.632 ms/step
+  batch   4: 28.799 ms/step
+  batch   8: 27.642 ms/step
+  batch  12: 29.135 ms/step
+  batch  16: 25.056 ms/step
+  batch  24: 26.460 ms/step
+  batch  32: 24.982 ms/step
+  batch  48: 25.135 ms/step
+  batch  64: 46.691 ms/step
+wrote D:\vizuara-assignments\assignment-4\results\exp3_steptimes.json
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ace-2504/main/ap-haTp0OpmugK4xGVPYT6FvF

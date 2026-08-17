@@ -1,0 +1,570 @@
+{
+  "target": "Qwen/Qwen2.5-7B-Instruct",
+  "draft": "Qwen/Qwen2.5-0.5B-Instruct",
+  "dtype": "torch.bfloat16",
+  "max_new_tokens": 128,
+  "k_values": [
+    4
+  ],
+  "gpu_info": {
+    "cuda_available": true,
+    "name": "NVIDIA L4",
+    "compute_capability": "8.9",
+    "total_mem_gb": 22.03,
+    "sm_count": 58,
+    "cores_per_sm": 128,
+    "max_sm_clock_mhz": 2040.0,
+    "current_sm_clock_mhz": 2040.0,
+    "temperature_c": 42.0,
+    "driver_version": "580.95.05",
+    "torch_version": "2.13.0+cu130",
+    "cuda_version": "13.0",
+    "theoretical_fp32_tflops": 30.29
+  },
+  "diagnosis": {
+    "target_step_ms": 59.069440841674805,
+    "draft_step_ms": 25.178112030029297,
+    "c": 0.4262459855937146,
+    "target_layers": 28,
+    "draft_layers": 24,
+    "layer_ratio_draft_over_target": 0.8571428571428571
+  },
+  "per_prompt": {
+    "explain": {
+      "prompt": "Explain how a transformer's attention mechanism works, in simple terms, to someone who knows basic linear algebra.",
+      "target_alone_tok_s": 16.952426515870364,
+      "target_alone_passes": 128,
+      "by_k": {
+        "4": {
+          "k": 4,
+          "acceptance_rate": 0.32142857142857145,
+          "target_passes": 56,
+          "tokens_per_target_pass": 2.2857142857142856,
+          "spec_tok_s": 14.365021383356645,
+          "target_alone_tok_s": 16.952426515870364,
+          "speedup": 0.847372579371368,
+          "predicted_speedup": 0.8450010552401016,
+          "match": false,
+          "first_divergence": 23,
+          "divergence_logit_gap": 0.0,
+          "tagged_tokens": [
+            {
+              "tok": "Sure",
+              "tag": "target"
+            },
+            {
+              "tok": "!",
+              "tag": "draft"
+            },
+            {
+              "tok": " Let",
+              "tag": "draft"
+            },
+            {
+              "tok": "'s",
+              "tag": "draft"
+            },
+            {
+              "tok": " break",
+              "tag": "draft"
+            },
+            {
+              "tok": " down",
+              "tag": "bonus"
+            },
+            {
+              "tok": " how",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " transformer",
+              "tag": "draft"
+            },
+            {
+              "tok": "'s",
+              "tag": "draft"
+            },
+            {
+              "tok": " attention",
+              "tag": "draft"
+            },
+            {
+              "tok": " mechanism",
+              "tag": "bonus"
+            },
+            {
+              "tok": " works",
+              "tag": "draft"
+            },
+            {
+              "tok": " using",
+              "tag": "target"
+            },
+            {
+              "tok": " simple",
+              "tag": "target"
+            },
+            {
+              "tok": " terms",
+              "tag": "target"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " basic",
+              "tag": "draft"
+            },
+            {
+              "tok": " linear",
+              "tag": "draft"
+            },
+            {
+              "tok": " algebra",
+              "tag": "draft"
+            },
+            {
+              "tok": " concepts",
+              "tag": "target"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "###",
+              "tag": "draft"
+            },
+            {
+              "tok": " What",
+              "tag": "target"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " Attention",
+              "tag": "target"
+            },
+            {
+              "tok": "?\n\n",
+              "tag": "target"
+            },
+            {
+              "tok": "Imagine",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "target"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " noisy",
+              "tag": "target"
+            },
+            {
+              "tok": " room",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": " want",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " focus",
+              "tag": "draft"
+            },
+            {
+              "tok": " on",
+              "tag": "bonus"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " specific",
+              "tag": "draft"
+            },
+            {
+              "tok": " person",
+              "tag": "target"
+            },
+            {
+              "tok": " talking",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " You",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "target"
+            },
+            {
+              "tok": " not",
+              "tag": "target"
+            },
+            {
+              "tok": " just",
+              "tag": "draft"
+            },
+            {
+              "tok": " listening",
+              "tag": "draft"
+            },
+            {
+              "tok": " to",
+              "tag": "draft"
+            },
+            {
+              "tok": " that",
+              "tag": "target"
+            },
+            {
+              "tok": " person",
+              "tag": "draft"
+            },
+            {
+              "tok": ";",
+              "tag": "target"
+            },
+            {
+              "tok": " you",
+              "tag": "draft"
+            },
+            {
+              "tok": "'re",
+              "tag": "draft"
+            },
+            {
+              "tok": " also",
+              "tag": "draft"
+            },
+            {
+              "tok": " aware",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "target"
+            },
+            {
+              "tok": " background",
+              "tag": "target"
+            },
+            {
+              "tok": " noise",
+              "tag": "draft"
+            },
+            {
+              "tok": " and",
+              "tag": "draft"
+            },
+            {
+              "tok": " other",
+              "tag": "target"
+            },
+            {
+              "tok": " conversations",
+              "tag": "target"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " The",
+              "tag": "target"
+            },
+            {
+              "tok": " attention",
+              "tag": "draft"
+            },
+            {
+              "tok": " mechanism",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " transformer",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " like",
+              "tag": "draft"
+            },
+            {
+              "tok": " you",
+              "tag": "bonus"
+            },
+            {
+              "tok": " focusing",
+              "tag": "target"
+            },
+            {
+              "tok": " on",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "target"
+            },
+            {
+              "tok": " specific",
+              "tag": "target"
+            },
+            {
+              "tok": " person",
+              "tag": "draft"
+            },
+            {
+              "tok": " while",
+              "tag": "target"
+            },
+            {
+              "tok": " still",
+              "tag": "target"
+            },
+            {
+              "tok": " being",
+              "tag": "draft"
+            },
+            {
+              "tok": " aware",
+              "tag": "draft"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " the",
+              "tag": "draft"
+            },
+            {
+              "tok": " surroundings",
+              "tag": "bonus"
+            },
+            {
+              "tok": ".\n\n",
+              "tag": "draft"
+            },
+            {
+              "tok": "###",
+              "tag": "draft"
+            },
+            {
+              "tok": " Basic",
+              "tag": "target"
+            },
+            {
+              "tok": " Components",
+              "tag": "target"
+            },
+            {
+              "tok": "\n\n",
+              "tag": "target"
+            },
+            {
+              "tok": "1",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " **",
+              "tag": "draft"
+            },
+            {
+              "tok": "Tokens",
+              "tag": "target"
+            },
+            {
+              "tok": "**:",
+              "tag": "draft"
+            },
+            {
+              "tok": " Think",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " these",
+              "tag": "target"
+            },
+            {
+              "tok": " as",
+              "tag": "draft"
+            },
+            {
+              "tok": " words",
+              "tag": "target"
+            },
+            {
+              "tok": " or",
+              "tag": "draft"
+            },
+            {
+              "tok": " pieces",
+              "tag": "target"
+            },
+            {
+              "tok": " of",
+              "tag": "draft"
+            },
+            {
+              "tok": " information",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " sentence",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "target"
+            },
+            {
+              "tok": " Each",
+              "tag": "draft"
+            },
+            {
+              "tok": " token",
+              "tag": "draft"
+            },
+            {
+              "tok": " is",
+              "tag": "draft"
+            },
+            {
+              "tok": " represented",
+              "tag": "target"
+            },
+            {
+              "tok": " by",
+              "tag": "target"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " vector",
+              "tag": "draft"
+            },
+            {
+              "tok": " in",
+              "tag": "draft"
+            },
+            {
+              "tok": " a",
+              "tag": "draft"
+            },
+            {
+              "tok": " high",
+              "tag": "bonus"
+            },
+            {
+              "tok": "-dimensional",
+              "tag": "draft"
+            },
+            {
+              "tok": " space",
+              "tag": "draft"
+            },
+            {
+              "tok": ".\n",
+              "tag": "target"
+            },
+            {
+              "tok": "2",
+              "tag": "draft"
+            },
+            {
+              "tok": ".",
+              "tag": "draft"
+            },
+            {
+              "tok": " **",
+              "tag": "draft"
+            },
+            {
+              "tok": "Query",
+              "tag": "target"
+            },
+            {
+              "tok": " (",
+              "tag": "target"
+            }
+          ],
+          "text": "Sure! Let's break down how a transformer's attention mechanism works using simple terms and basic linear algebra concepts.\n\n### What is Attention?\n\nImagine you're in a noisy room and you want to focus on a specific person talking. You're not just listening to that person; you're also aware of the background noise and other conversations. The attention mechanism in a transformer is like you focusing on the specific person while still being aware of the surroundings.\n\n### Basic Components\n\n1. **Tokens**: Think of these as words or pieces of information in a sentence. Each token is represented by a vector in a high-dimensional space.\n2. **Query ("
+        }
+      },
+      "target_alone_text": "Sure! Let's break down how a transformer's attention mechanism works using simple terms and basic linear algebra concepts.\n\n### 1. Understanding the Basics\n\nFirst, let's recall that a transformer is a type of neural network architecture used for processing sequential data, like text or time series. The attention mechanism is a key component that allows the model to focus on different parts of the input sequence when generating an output.\n\n### 2. Input Representation\n\nImagine you have a sequence of words, and each word is represented as a vector. For example, if you have a sentence \"The cat sat on the mat,\" each word might be represented as"
+    }
+  }
+}

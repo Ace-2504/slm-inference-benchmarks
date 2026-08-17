@@ -1,0 +1,77 @@
+{
+  "gpu": "NVIDIA L4",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "max_len": 2048,
+  "kv_bytes_per_token": 12288,
+  "kv_budget_bytes": 20172865536,
+  "length_dist": {
+    "mean": 167.872,
+    "median": 144.0,
+    "p95": 352.0,
+    "max": 1992
+  },
+  "naive": {
+    "bytes_per_seq": 25165824,
+    "concurrency": 801,
+    "measured_concurrency_oom": 889,
+    "waste_frac": 0.91803125
+  },
+  "paged_block_sweep": [
+    {
+      "block_size": 1,
+      "mean_alloc_tokens": 167.872,
+      "waste_frac": 0.0,
+      "concurrency": 9779.30804422417,
+      "blocks_per_seq": 167.872
+    },
+    {
+      "block_size": 4,
+      "mean_alloc_tokens": 169.4032,
+      "waste_frac": 0.009038790294398217,
+      "concurrency": 9690.914929588107,
+      "blocks_per_seq": 42.3508
+    },
+    {
+      "block_size": 8,
+      "mean_alloc_tokens": 171.3728,
+      "waste_frac": 0.020427979235911418,
+      "concurrency": 9579.536542555177,
+      "blocks_per_seq": 21.4216
+    },
+    {
+      "block_size": 16,
+      "mean_alloc_tokens": 175.3888,
+      "waste_frac": 0.04285792479337335,
+      "concurrency": 9360.18719553358,
+      "blocks_per_seq": 10.9618
+    },
+    {
+      "block_size": 32,
+      "mean_alloc_tokens": 183.3536,
+      "waste_frac": 0.0844357569199623,
+      "concurrency": 8953.584767356628,
+      "blocks_per_seq": 5.7298
+    },
+    {
+      "block_size": 64,
+      "mean_alloc_tokens": 199.2064,
+      "waste_frac": 0.15729615112767462,
+      "concurrency": 8241.060528175802,
+      "blocks_per_seq": 3.1126
+    },
+    {
+      "block_size": 128,
+      "mean_alloc_tokens": 231.168,
+      "waste_frac": 0.27380952380952384,
+      "concurrency": 7101.640365448505,
+      "blocks_per_seq": 1.806
+    },
+    {
+      "block_size": 256,
+      "mean_alloc_tokens": 294.5024,
+      "waste_frac": 0.429980876216968,
+      "concurrency": 5574.392602573018,
+      "blocks_per_seq": 1.1504
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ace-2504/main/ap-h4zte1k756Y3irEZ6dd7zC
+✓ Created objects.
+├── 🔨 Created mount 
+│   D:\vizuara-assignments\assignment-4\exp2_specdec\run_exp2.py
+├── 🔨 Created mount PythonPackage:bench
+└── 🔨 Created function run.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+[1AFetching 4 files:  25%|██▌       | 1/4 [01:00<03:00, 60.09s/it]
+[1AFetching 4 files:  50%|█████     | 2/4 [01:04<00:55, 27.59s/it]
+[1AFetching 4 files:  75%|███████▌  | 3/4 [01:07<00:16, 16.09s/it]
+[1AFetching 4 files: 100%|██████████| 4/4 [01:11<00:00, 11.51s/it]
+[1AFetching 4 files: 100%|██████████| 4/4 [01:11<00:00, 17.96s/it]
+
+[1ALoading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+[1ALoading weights:  86%|████████▌ | 292/339 [00:00<00:00, 2918.72it/s]
+[1ALoading weights: 100%|██████████| 339/339 [00:00<00:00, 3316.84it/s]
+
+[1ALoading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+[1ALoading weights: 100%|██████████| 290/290 [00:00<00:00, 3626.39it/s]
+[transformers] Calling `crop` with a positive value is deprecated and will be removed in version 5.18. Please use a negative integer to remove that number of tokens from the cache instead.
+
+=== Experiment 2 (speculative decoding) on NVIDIA L4 ===
+target=Qwen/Qwen2.5-7B-Instruct (28L)  draft=Qwen/Qwen2.5-0.5B-Instruct (24L)
+step times: target=59.07ms draft=25.18ms -> c=0.426  (layer ratio 0.857)
+
+[explain]  target-alone 17.0 tok/s
+   k  accept  tok/pass  spec tok/s  speedup   pred  exact
+   4     32%      2.29        14.4    0.85x  0.85x  False
+
+wrote D:\vizuara-assignments\assignment-4\results\exp2_smoke.json
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ace-2504/main/ap-h4zte1k756Y3irEZ6dd7zC
