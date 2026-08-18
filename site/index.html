@@ -286,7 +286,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
       <!-- KV store prop -->
       <g transform="translate(250,308)"><rect x="0" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="22" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="44" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="66" y="0" width="17" height="17" rx="3" fill="#eaf3ee" stroke="#2f6b4f" stroke-width="2" stroke-dasharray="3 2"/></g>
       <text x="342" y="321" font-size="13" font-weight="600" fill="#2f6b4f">with cache · the KV store grows one cell per step — O(t), not O(t²)</text>
-    </svg></div><p class="mcap">How the KV cache works: prefill once, then reuse the stored keys/values each step instead of recomputing the whole prefix.</p></div>
+    </svg></div><p class="mcap">The model keeps notes on what it has already worked out, so it doesn't redo all that thinking for every new word.</p></div>
         <div class="mtp" data-t="mkv" data-p="graph" hidden>
           <div class="mdiag" id="mkvchart"></div>
           <p class="mcap">Measured cache speedup vs batch size: a wash at batch 1 (the GPU is memory-bound and idle), climbing to ~9x by batch 16 as the batch fills the compute units.</p>
@@ -345,7 +345,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
       <g><rect x="680" y="86" width="180" height="64" rx="13" fill="#ece3cf" stroke="#d6c8a6"/><text x="770" y="112" text-anchor="middle" fill="#4a4636" font-size="15" font-weight="600">Accept longest</text><text x="770" y="132" text-anchor="middle" fill="#6b6450" font-size="13.5">matching prefix</text></g>
       <g><rect x="920" y="86" width="180" height="64" rx="13" fill="#2f6b4f"/><text x="1010" y="112" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Emit accepted</text><text x="1010" y="132" text-anchor="middle" fill="#cfe3d6" font-size="13.5">+ 1 free bonus token</text></g>
       <g><rect x="435" y="244" width="250" height="60" rx="13" fill="#94823f"/><text x="560" y="270" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Reject the tail</text><text x="560" y="290" text-anchor="middle" fill="#efe8d2" font-size="13.5">crop the KV cache (rollback)</text></g>
-    </svg></div><p class="mcap">How speculative decoding works: the 0.5B draft proposes k tokens, the 7B verifies them in one pass, and re-drafts from the rollback on the first mismatch.</p></div>
+    </svg></div><p class="mcap">A quick little model guesses the next few words, and the big accurate model just checks them all in one go.</p></div>
         <div class="mtp" data-t="msp" data-p="graph" hidden>
           <div class="mdiag" id="mspchart"></div>
           <div class="mlegend" id="msplegend"></div>
@@ -415,7 +415,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
       <!-- GPU prop + full slots -->
       <g transform="translate(584,326)" stroke="#2f6b4f" stroke-width="2" fill="#e2efe7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="30" height="30" rx="4"/><rect x="13" y="13" width="14" height="14" rx="2" fill="#bcdcca"/><line x1="13" y1="0" x2="13" y2="5"/><line x1="20" y1="0" x2="20" y2="5"/><line x1="27" y1="0" x2="27" y2="5"/><line x1="13" y1="35" x2="13" y2="40"/><line x1="20" y1="35" x2="20" y2="40"/><line x1="27" y1="35" x2="27" y2="40"/><line x1="0" y1="13" x2="5" y2="13"/><line x1="0" y1="20" x2="5" y2="20"/><line x1="0" y1="27" x2="5" y2="27"/><line x1="35" y1="13" x2="40" y2="13"/><line x1="35" y1="20" x2="40" y2="20"/><line x1="35" y1="27" x2="40" y2="27"/></g>
       <g><rect x="642" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="666" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="690" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="714" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/></g>
-    </svg></div><p class="mcap">How continuous batching works: static drains to idle before admitting the next batch; continuous refills freed slots to stay saturated.</p></div>
+    </svg></div><p class="mcap">The moment one request finishes, a waiting one takes its place, so nobody sits idle while the slowest one runs on.</p></div>
         <div class="mtp" data-t="cb" data-p="graph" hidden>
           <div class="mdiag" id="cbchart"></div>
           <div class="mlegend"><span><i class="tan"></i>static</span><span><i class="green"></i>continuous</span></div>
@@ -482,7 +482,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
       </g>
       <text x="1032" y="348" text-anchor="end" fill="#2f6b4f" font-size="14.5" font-weight="700">≈ 9,360 sequences  (~12×)</text>
       <text x="600" y="348" fill="#7e8a72" font-size="12">4.3% waste</text>
-    </svg></div><p class="mcap">How PagedAttention works: naive reserves a contiguous max-length block per sequence; paged hands out fixed blocks on demand.</p></div>
+    </svg></div><p class="mcap">It hands out small chunks of memory only as they're needed, instead of reserving a huge chunk for each request up front.</p></div>
         <div class="mtp" data-t="pa" data-p="graph" hidden>
           <div class="mdiag" id="pachart"></div>
           <p class="mcap">Measured wasted KV memory vs block size: the paged line stays far below the naive reserve-max (dashed) across every block size.</p>
@@ -511,7 +511,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
 .zoomable{cursor:zoom-in}
 .zoom-modal{position:fixed;inset:0;z-index:1000;background:rgba(20,25,35,.5);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
 .zoom-modal[hidden]{display:none}
-.zoom-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 32px 24px;max-width:920px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.32);cursor:default;position:relative}
+.zoom-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 32px 24px;max-width:min(1440px,95vw);width:100%;box-shadow:0 24px 70px rgba(0,0,0,.32);cursor:default;position:relative}
 .zoom-close{position:absolute;top:12px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);font-size:21px;line-height:1;cursor:pointer}
 .zoom-close:hover{color:var(--ink)}
 .zoom-body svg{width:100%;height:auto;display:block}
@@ -772,10 +772,10 @@ function timeChart(el,seriesList,xmax,refY){
   zoomable("cbchart","Measured slot utilisation over time (batch 32, 80 req/s): static (tan) drains to idle while one straggler finishes; continuous (green) holds the slots full.");
   zoomable("cbtablewrap","Measured throughput and p95 latency across batch size and arrival rate: continuous beats static at every setting, and the gap widens as the batch grows.");
   zoomable("pachart","Measured wasted KV memory vs block size: the paged line (green) stays far below the naive reserve-max (dashed, "+D.exp4.naive_waste+"%) at every block size.");
-  zoomable("mkvflow","Flowchart of the KV cache.");
-  zoomable("mspflow","Flowchart of speculative decoding.");
-  zoomable("cbflow","Flowchart of continuous batching.");
-  zoomable("paflow","Flowchart of PagedAttention.");
+  zoomable("mkvflow","The model keeps notes on what it has already worked out, so it doesn't redo all that thinking for every new word.");
+  zoomable("mspflow","A quick little model guesses the next few words, and the big accurate model just checks them all in one go.");
+  zoomable("cbflow","The moment one request finishes, a waiting one takes its place, so nobody sits idle while the slowest one runs on.");
+  zoomable("paflow","It hands out small chunks of memory only as they're needed, instead of reserving a huge chunk for each request up front.");
   if(zmodal){zmodal.addEventListener("click",e=>{if(e.target===zmodal||e.target.classList.contains("zoom-close"))zmodal.hidden=true;});
     document.addEventListener("keydown",e=>{if(e.key==="Escape")zmodal.hidden=true;});}
 
