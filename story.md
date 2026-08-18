@@ -408,6 +408,18 @@ baked in as rules: `.mfill` must be `display:block`, pin the y-max before drawin
 measure the same configuration as the chart, and check the `<style>` block survives range deletes. → *Better:
 the design is now portable — one skill invocation reproduces it anywhere.*
 
+**E29 · The conversion prompt — the key that applies the skill anywhere.** Harman's closing request: one
+paste-ready prompt that converts any existing frontend to the minimal design via the skill. Written and stored
+at `~/.claude/skills/harman-minimal-frontend/CONVERT-PROMPT.md` so it never has to be dug out of a chat log.
+The prompt enforces: read the skill + all three references **before** writing code; inventory the page and map
+every concept → one mini-box, paired into sections; the tab contract (Benchmark/Diagram/Graph as applicable,
+**Flowchart always, always last**, hand-authored per the grammar); the green/tan/olive color law; real numbers
+only (omit a Graph tab rather than fake one); paired-bar grammar; sentence headings + .mlesson per section;
+one shared zoom modal; the voice rules (never "LLM"). Engineering guards: restyle without breaking API
+plumbing, graceful degradation when backends are down, keep the old frontend recoverable, and verify in a real
+browser against the skill's 10-point checklist — ending by listing anything unmapped instead of silently
+dropping it. → *Better: skill + prompt = the whole design system is now two artifacts, both reusable.*
+
 ---
 
 ## Current status (as of last entry)
