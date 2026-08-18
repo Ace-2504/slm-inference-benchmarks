@@ -36,3 +36,6 @@ dist/
 Thumbs.db
 .idea/
 .vscode/
+
+# --- local-only flowchart images (NEVER commit; must not reach GitHub) ---
+flowcharts/

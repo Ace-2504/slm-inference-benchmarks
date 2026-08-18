@@ -292,6 +292,75 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
     </div>
   </div>
 
+  <!-- ===== TEST: minimal side-by-side variant (appended; existing design untouched) ===== -->
+  <style>
+  .mini-wrap{margin:44px 0 8px}
+  .mini-head{text-align:center;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:16px}
+  .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+  @media(max-width:680px){.mini-grid{grid-template-columns:1fr}}
+  .mini-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(30,41,59,.03),0 8px 22px rgba(30,41,59,.04)}
+  .mini-box h4{margin:0 0 4px;font-size:18px;font-weight:800}
+  .mini-box .desc{font-size:13.5px;color:var(--muted);margin:0 0 15px;line-height:1.5}
+  .mini-ctl{margin-bottom:13px}
+  .mini-ctl .srow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px}
+  .mini-ctl .srow b{font-family:"JetBrains Mono",monospace;color:var(--ink)}
+  .mini-ctl input[type=range]{width:100%;accent-color:var(--violet);height:4px}
+  .mini-presets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+  .mini-preset{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+  .mini-preset.sel{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet)}
+  .mini-ta{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:54px;margin-bottom:13px}
+  .mini-run{background:var(--grad-btn);color:#fff;border:0;border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;align-self:flex-start;box-shadow:0 5px 14px rgba(124,58,237,.2)}
+  .mini-run:hover{filter:brightness(1.07)}.mini-run:disabled{opacity:.6;cursor:default}
+  .mini-out{display:none;margin-top:auto;padding-top:15px}
+  .mini-out.show{display:block}
+  .mini-out .div{border-top:1px solid var(--line-soft);margin-bottom:13px}
+  .mini-stats{display:flex;gap:16px;align-items:center;margin-bottom:11px}
+  .mini-stat{font-size:12px;color:var(--muted)}
+  .mini-stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:17px;color:var(--ink);font-weight:700;margin-top:2px}
+  .mini-mult{margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:800;font-size:26px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .mini-text{font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.7;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px;max-height:96px;overflow:auto;white-space:pre-wrap}
+  </style>
+  <div class="mini-wrap">
+    <div class="mini-head">— test · a minimal take —</div>
+    <div class="mini-grid">
+      <div class="mini-box">
+        <h4>KV cache</h4>
+        <p class="desc">With the cache the model reuses every past Key and Value; without it it recomputes the whole prefix at every step. Same output text, very different speed.</p>
+        <div class="mini-ctl">
+          <div class="srow"><span>Batch size</span><b id="mkvb">8</b></div>
+          <input id="mkvslider" type="range" min="1" max="64" value="8" step="1">
+        </div>
+        <button class="mini-run" id="mkvrun">Run benchmark</button>
+        <div class="mini-out" id="mkvout">
+          <div class="div"></div>
+          <div class="mini-stats">
+            <div class="mini-stat">with cache<b id="mkvc">–</b></div>
+            <div class="mini-stat">no cache<b id="mkvu">–</b></div>
+            <div class="mini-mult" id="mkvm">–</div>
+          </div>
+          <div class="mini-text" id="mkvtext"></div>
+        </div>
+      </div>
+      <div class="mini-box">
+        <h4>Speculative decoding</h4>
+        <p class="desc">A small 0.5B draft guesses tokens ahead and the 7B verifies them in a single pass — the same answer, in fewer expensive target passes.</p>
+        <div class="mini-presets" id="mspresets"></div>
+        <textarea class="mini-ta" id="mspt">Write a Python function that merges two sorted lists.</textarea>
+        <button class="mini-run" id="msrun">Run comparison</button>
+        <div class="mini-out" id="msout">
+          <div class="div"></div>
+          <div class="mini-stats">
+            <div class="mini-stat">speculative<b id="mss">–</b></div>
+            <div class="mini-stat">target alone<b id="mst">–</b></div>
+            <div class="mini-mult" id="msm">–</div>
+          </div>
+          <div class="mini-text" id="mstext"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== end TEST ===== -->
+
   <footer>
     <span>Built by Harman Sandhu · every number measured on <span id="gpu2">NVIDIA L4</span> via Modal</span>
     <a href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">source &amp; report ↗</a>
@@ -447,6 +516,56 @@ $("e4nw").innerHTML=E4.naive_waste+"<small>%</small>";
 })();
 
 paintE1();paintE2();
+</script>
+<script>
+// ===== TEST: minimal variant wiring (self-contained; does not touch the code above) =====
+(function(){
+  const TOKEN="ilab-7q2x9k4m";
+  const EP={exp1:"https://ace-2504--a4-live-demo-demo-exp1.modal.run",exp2:"https://ace-2504--a4-live-demo-demo-exp2.modal.run"};
+  const $=id=>document.getElementById(id);
+  const fail=(box,txt,el)=>{ $(box+"text").textContent=txt; $(box+"out").classList.add("show"); };
+
+  $("mkvslider").oninput=function(){$("mkvb").textContent=this.value};
+  $("mkvrun").onclick=async function(){
+    const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";
+    try{
+      const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch:$("mkvslider").value,max_new_tokens:48,t:TOKEN}));
+      const d=await r.json();
+      if(d.error){fail("mkv","demo unavailable: "+d.error);}
+      else{
+        $("mkvc").textContent=d.cached_tok_s.toFixed(1)+" tok/s";
+        $("mkvu").textContent=d.uncached_tok_s.toFixed(1)+" tok/s";
+        $("mkvm").textContent=d.speedup.toFixed(2)+"×";
+        $("mkvtext").textContent=(d.match?"identical output ✓\n":"")+d.cached_text.trim();
+        $("mkvout").classList.add("show");
+      }
+    }catch(e){fail("mkv","live call failed: "+e);}
+    b.textContent=old;b.disabled=false;
+  };
+
+  const SP=[["Code","Write a Python function that merges two sorted lists."],
+            ["Copy","Repeat this exactly: the mitochondrion is the powerhouse of the cell."],
+            ["Creative","Write a short, vivid story about a lighthouse keeper."]];
+  $("mspresets").innerHTML=SP.map((p,i)=>`<button class="mini-preset${i===0?' sel':''}">${p[0]}</button>`).join("");
+  [...$("mspresets").children].forEach((btn,i)=>btn.onclick=()=>{
+    [...$("mspresets").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");$("mspt").value=SP[i][1];});
+  $("msrun").onclick=async function(){
+    const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";
+    try{
+      const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("mspt").value,k:4,max_new_tokens:64,t:TOKEN}));
+      const d=await r.json();
+      if(d.error){fail("ms","demo unavailable: "+d.error);}
+      else{
+        $("mss").textContent=d.spec_tok_s.toFixed(1)+" tok/s";
+        $("mst").textContent=d.target_tok_s.toFixed(1)+" tok/s";
+        $("msm").textContent=d.speedup.toFixed(2)+"×";
+        $("mstext").textContent=d.tagged.map(t=>t.tok).join("").trim();
+        $("msout").classList.add("show");
+      }
+    }catch(e){fail("ms","live call failed: "+e);}
+    b.textContent=old;b.disabled=false;
+  };
+})();
 </script>
 </body>
 </html>

@@ -82,7 +82,7 @@ class Demo:
         gate = _gate(t)
         if gate:
             return JSONResponse(status_code=gate[0], headers=_cors, content={"error": gate[1]})
-        batch = max(1, min(int(batch), 16))
+        batch = max(1, min(int(batch), 64))
         max_new_tokens = max(1, min(int(max_new_tokens), 96))
         ids = self.tok1(prompt, return_tensors="pt")["input_ids"].to(self.dev)
         ids = ids.repeat(batch, 1)
