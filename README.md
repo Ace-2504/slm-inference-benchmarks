@@ -79,5 +79,5 @@ Local plotting/sim scripts need the repo root on `PYTHONPATH` (`PYTHONPATH=. pyt
 
 ## Hardware & cost
 
-Every number is on an **NVIDIA L4 (24 GB)** via Modal scale-to-zero, models in **bf16**. Spend is logged
-in `costs.md` (local).
+Every number is on an **NVIDIA L4 (24 GB)** via Modal scale-to-zero, models in **bf16**. Per-experiment
+spend is logged in [`costs.md`](costs.md) (≈ $2.6 total for the whole assignment).

@@ -25,9 +25,34 @@ EXP1_MODEL = "gpt2"
 TARGET_ID = "Qwen/Qwen2.5-7B-Instruct"
 DRAFT_ID = "Qwen/Qwen2.5-0.5B-Instruct"
 
+# --- gating + capping so a public endpoint can't run up the bill ---
+# Soft gate: the frontend sends this shared token; a bare URL hit without it is rejected.
+# (It lives in the page source, so it only stops casual/bot hammering — the hard ceiling
+#  is the cap below.) Hard cap: max_containers=1 bounds burn to a single L4 (~$1.10/hr no
+# matter the traffic), and a per-day request counter refuses work past DAILY_CAP.
+DEMO_TOKEN = "ilab-7q2x9k4m"
+DAILY_CAP = 400
+_usage = modal.Dict.from_name("a4-demo-usage", create_if_missing=True)
+
+
+def _gate(token: str):
+    """Return a (status, message) tuple to reject, or None to allow."""
+    import time
+    if token != DEMO_TOKEN:
+        return (403, "missing or invalid demo token")
+    day = time.strftime("%Y-%m-%d")
+    try:
+        n = _usage.get(day, 0)
+        if n >= DAILY_CAP:
+            return (429, f"daily demo limit reached ({DAILY_CAP} runs) — try again tomorrow")
+        _usage[day] = n + 1
+    except Exception:
+        pass  # never let the counter break the endpoint
+    return None
+
 
 @app.cls(image=IMAGE, gpu=GPU, volumes={HF_CACHE_DIR: HF_CACHE},
-         scaledown_window=300, timeout=600, memory=32768)
+         scaledown_window=120, timeout=600, memory=24576, max_containers=1)
 class Demo:
     @modal.enter()
     def load(self):
@@ -46,7 +71,7 @@ class Demo:
 
     @modal.fastapi_endpoint()
     def exp1(self, prompt: str = "The future of computing is", batch: int = 1,
-             max_new_tokens: int = 48):
+             max_new_tokens: int = 48, t: str = ""):
         import torch
         from fastapi.responses import JSONResponse
         from bench.decode_loops import greedy_cached, greedy_uncached
@@ -54,7 +79,11 @@ class Demo:
         from bench.token_utils import token_equal
         _cors = {"Access-Control-Allow-Origin": "*"}
 
+        gate = _gate(t)
+        if gate:
+            return JSONResponse(status_code=gate[0], headers=_cors, content={"error": gate[1]})
         batch = max(1, min(int(batch), 16))
+        max_new_tokens = max(1, min(int(max_new_tokens), 96))
         ids = self.tok1(prompt, return_tensors="pt")["input_ids"].to(self.dev)
         ids = ids.repeat(batch, 1)
         gen_c, _ = greedy_cached(self.m1, ids, max_new_tokens)
@@ -75,13 +104,17 @@ class Demo:
 
     @modal.fastapi_endpoint()
     def exp2(self, prompt: str = "Explain attention in simple terms.", k: int = 4,
-             max_new_tokens: int = 64):
+             max_new_tokens: int = 64, t: str = ""):
         from fastapi.responses import JSONResponse
         from bench.speculative import speculative_generate, target_alone_greedy
         from bench.timer import benchmark
         _cors = {"Access-Control-Allow-Origin": "*"}
 
+        gate = _gate(t)
+        if gate:
+            return JSONResponse(status_code=gate[0], headers=_cors, content={"error": gate[1]})
         k = max(1, min(int(k), 8))
+        max_new_tokens = max(1, min(int(max_new_tokens), 96))
         msgs = [{"role": "user", "content": prompt}]
         text = self.tokq.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
         ids = self.tokq(text, return_tensors="pt")["input_ids"].to(self.dev)

@@ -240,6 +240,20 @@ Dropped the book-reading swatch picker to match the reference's single design. S
 `harman-inference-lab.vercel.app`. → *Better: the demo now reads as the real lab, faithfully, without
 misrepresenting authorship or numbers.*
 
+**E18 · Gated+capped live endpoint, costs.md made public, and a screenshot-exact redesign.** Three asks:
+**(1) Redeployed the demo gated + capped** — a shared token the frontend sends (`_gate` returns 403 without
+it), `max_containers=1` (burn bounded to one L4 ≈ $1.10/hr no matter the traffic), a per-day request counter
+(Modal Dict, `DAILY_CAP=400` → 429 past it), 120 s warm tail, and a 96-token output clamp. Verified: no token
+→ **403**, valid token → live inference. The token lives in the page source so it's a *soft* gate; the hard
+ceiling is the container cap + daily counter. **(2) `costs.md` made public** — removed from `.gitignore`,
+fixed the README note ("(local)" → linked, ≈$2.6 total), now tracked. **(3) Redesigned the components to
+match the reference's three screenshots exactly** (Harman branding, not Vizuara): centered hero with an
+eyebrow, a gradient `Lab` wordmark and gradient underline rule, gradient circular number badges, uppercase
+field labels, **purple range sliders** (context length + tokens to generate; k + tokens), **round
+gradient-selected batch buttons**, gradient pill CTA buttons, the right-aligned `MEASURED: … c=…` line, and a
+dark tech panel — verified via computed styles. Redeployed public. → *Better: the demo is live and safe to
+share, the cost is on the record, and the UI is a faithful match with honest numbers and authorship.*
+
 ---
 
 ## Current status (as of last entry)
