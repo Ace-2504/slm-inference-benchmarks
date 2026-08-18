@@ -1,0 +1,11 @@
+✓ Created objects.
+├── 🔨 Created mount D:\vizuara-assignments\assignment-4\site\demo_backend.py
+├── 🔨 Created mount PythonPackage:bench
+├── 🔨 Created function Demo.*.
+├── 🔨 Created Web Function URL for Demo.exp1 => 
+│   https://ace-2504--a4-live-demo-demo-exp1.modal.run
+└── 🔨 Created Web Function URL for Demo.exp2 => 
+    https://ace-2504--a4-live-demo-demo-exp2.modal.run
+✓ App deployed in 4.600s! 🎉
+
+View Deployment: https://modal.com/apps/ace-2504/main/deployed/a4-live-demo

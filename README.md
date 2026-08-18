@@ -5,6 +5,10 @@ Modal), with timings that survive scrutiny. One inference pipeline, four control
 toggling exactly one thing. **The rule across all four: both sides must emit identical tokens before any
 speedup is claimed.**
 
+**🔴 Live demo:** https://harman-inference-lab.vercel.app — runs experiments 1 & 2 on a Modal L4 when you
+press a button (scale-to-zero, so the first request wakes the GPU). Exp 1 has a batch-size control and shows
+both modes' text + tok/s; Exp 2 streams the answer with each token coloured by who produced it.
+
 | # | Optimization | Headline finding |
 |---|--------------|------------------|
 | 1 | **KV cache** | At batch 1 the uncached loop does **60× more arithmetic yet finishes in the same time** (memory-bound); the cache only wins as the batch fills the ALUs (→ 9× at batch 16). |

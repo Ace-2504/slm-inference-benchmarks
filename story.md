@@ -181,6 +181,22 @@ numbers; embedded a Unicode TTF after fpdf's latin-1 core font rejected em-dashe
 (reproduce-in-order) and `costs.md` (≈$2.2 of $15). → *Better: all six "what to submit" parts have real
 deliverables.*
 
+## Polish pass (post-submission)
+
+**E14 · Public Vercel link (via an accident I caught and fixed) + CORS + vLLM retry.** Making the demo
+public surfaced three things: **(1) I had accidentally deployed the demo into Harman's existing "site"
+Vercel project, whose production domain is the Assignment-3 `harman-ygo-slm.vercel.app` yugioh arena — my
+`vercel --prod` hijacked it** (the domain briefly served my inference demo). Caught it by checking the page
+title; **restored the arena with `vercel promote` of the prior deployment** (verified title back to "Yu-Gi-Oh
+SLM Arena"). **(2)** Redeployed the demo to a **new, uniquely-named project `harman-inference-lab`** — the
+E47 lesson: a globally-unique name gets the clean `<name>.vercel.app` production domain, which is public
+under Standard Protection while team-suffixed URLs are SSO-gated. **Live + public: https://harman-inference-lab.vercel.app**.
+**(3)** The browser calls the Modal endpoints cross-origin, so added CORS (`Access-Control-Allow-Origin`) to
+the demo backend and redeployed; verified the header is present and both endpoints answer. **vLLM confirmation
+for Exp 4:** first run failed (`vllm 0.11.0` vs transformers 5.x tokenizer API); pinned `transformers==4.57.1`
+and re-ran. → *Worse then better: nearly left a broken yugioh arena behind; caught and reverted, and the
+demo now has its own public home.*
+
 ---
 
 ## Current status (as of last entry)

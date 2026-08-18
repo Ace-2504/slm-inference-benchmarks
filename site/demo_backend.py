@@ -48,9 +48,11 @@ class Demo:
     def exp1(self, prompt: str = "The future of computing is", batch: int = 1,
              max_new_tokens: int = 48):
         import torch
+        from fastapi.responses import JSONResponse
         from bench.decode_loops import greedy_cached, greedy_uncached
         from bench.timer import benchmark
         from bench.token_utils import token_equal
+        _cors = {"Access-Control-Allow-Origin": "*"}
 
         batch = max(1, min(int(batch), 16))
         ids = self.tok1(prompt, return_tensors="pt")["input_ids"].to(self.dev)
@@ -62,20 +64,22 @@ class Demo:
         um = benchmark(lambda: greedy_uncached(self.m1, ids, max_new_tokens),
                        warmup=1, repeats=2)["median"]
         n = batch * max_new_tokens
-        return {
+        return JSONResponse(headers=_cors, content={
             "batch": batch,
             "cached_text": self.tok1.decode(gen_c[0]),
             "uncached_text": self.tok1.decode(gen_u[0]),
             "cached_tok_s": n / (cm / 1e3), "uncached_tok_s": n / (um / 1e3),
             "speedup": (n / (cm / 1e3)) / (n / (um / 1e3)),
             "match": token_equal(gen_c[0].tolist(), gen_u[0].tolist())["match"],
-        }
+        })
 
     @modal.fastapi_endpoint()
     def exp2(self, prompt: str = "Explain attention in simple terms.", k: int = 4,
              max_new_tokens: int = 64):
+        from fastapi.responses import JSONResponse
         from bench.speculative import speculative_generate, target_alone_greedy
         from bench.timer import benchmark
+        _cors = {"Access-Control-Allow-Origin": "*"}
 
         k = max(1, min(int(k), 8))
         msgs = [{"role": "user", "content": prompt}]
@@ -88,7 +92,7 @@ class Demo:
                        warmup=0, repeats=1)["median"]
         tm = benchmark(lambda: target_alone_greedy(self.target, ids, max_new_tokens),
                        warmup=0, repeats=1)["median"]
-        return {
+        return JSONResponse(headers=_cors, content={
             "k": k,
             "tagged": [{"tok": self.tokq.decode([t]), "tag": g}
                        for t, g in zip(spec["tokens"], spec["tags"])],
@@ -96,4 +100,4 @@ class Demo:
             "spec_tok_s": max_new_tokens / (sm / 1e3),
             "target_tok_s": max_new_tokens / (tm / 1e3),
             "speedup": (max_new_tokens / (sm / 1e3)) / (max_new_tokens / (tm / 1e3)),
-        }
+        })
