@@ -332,6 +332,14 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   .mlegend i.green{background:var(--mgreen)}.mlegend i.tan{background:var(--mtan)}
   .mini-text{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;max-height:150px;overflow:auto;white-space:pre-wrap}
   .mini-text .acc{background:color-mix(in srgb,var(--mgreen) 20%,transparent);box-shadow:inset 0 -2px 0 var(--mgreen);border-radius:3px}
+  /* static-concept boxes (continuous batching / paging) */
+  .mseg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px}
+  .mseg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:6px 16px;border-radius:999px;cursor:pointer}
+  .mseg button.sel{background:var(--mgreen-dk);color:#fff}
+  .mdiag{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:12px 13px;margin-bottom:12px}
+  .mdiag svg{display:block;width:100%;height:auto}
+  .mfoot{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-top:auto}
+  .mmini-stats{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);margin-top:8px}
   </style>
   <div class="mini-wrap">
     <div class="mini-head">— test · a minimal take —</div>
@@ -372,6 +380,30 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
           <div class="mlegend"><span><i class="green"></i>proposed by draft, accepted</span><span><i class="tan"></i>produced by target</span></div>
           <div class="mini-text" id="mstext"></div>
         </div>
+      </div>
+    </div>
+    <div class="mini-grid" style="margin-top:16px">
+      <div class="mini-box">
+        <div class="mini-eyebrow">Continuous batching · offline study</div>
+        <p class="desc">Static batching runs a whole batch to completion before admitting anyone new, so short
+          requests sit idle in their slot. Continuous batching refills a slot the instant it frees up. (Run
+          offline — sustained many-request load isn't reasonable to serve live.)</p>
+        <div class="mseg" id="cbseg"><button class="sel" data-m="static">Static</button><button data-m="cont">Continuous</button></div>
+        <div class="mdiag" id="cbdiag"></div>
+        <p class="mexplain" id="cbexp"></p>
+        <div class="mfoot"><span class="mbig green" id="cbbig">–</span><span class="mdesc">more throughput than static</span></div>
+        <div class="mmini-stats" id="cbstats"></div>
+      </div>
+      <div class="mini-box">
+        <div class="mini-eyebrow">PagedAttention · offline study</div>
+        <p class="desc">Naive serving reserves a full max-length block of KV memory per sequence up front —
+          mostly empty. Paging hands out small fixed blocks only as tokens are actually generated, so far more
+          sequences fit in the same memory.</p>
+        <div class="mseg" id="paseg"><button class="sel" data-m="naive">Naive</button><button data-m="paged">Paged</button></div>
+        <div class="mdiag" id="padiag"></div>
+        <p class="mexplain" id="paexp"></p>
+        <div class="mfoot"><span class="mbig green" id="pabig">–</span><span class="mdesc">more sequences fit in the same memory</span></div>
+        <div class="mmini-stats" id="pastats"></div>
       </div>
     </div>
   </div>
@@ -600,6 +632,62 @@ paintE1();paintE2();
     }catch(e){$("msexp").textContent="live call failed: "+e;$("msout").classList.add("show");}
     b.textContent=old;b.disabled=false;
   };
+})();
+
+// ===== TEST: static-concept diagrams for continuous batching + paging =====
+(function(){
+  const $=id=>document.getElementById(id), D=window.DATA;
+  const GREEN="#2f6b4f", TAN="#d8d1bf", greens=["#2f6b4f","#3c7d5e","#54987a","#6fae92"];
+
+  function cbDiagram(mode){
+    const W=340,H=96,rows=5,gap=5,rh=(H-gap*(rows-1))/rows;let s=`<svg viewBox="0 0 ${W} ${H}">`;
+    if(mode==="static"){
+      const lens=[[.9,.4,.65,.3,1],[.5,1,.35,.7,.45]],win=W/2;
+      for(let cyc=0;cyc<2;cyc++)for(let i=0;i<rows;i++){
+        const y=i*(rh+gap),L=lens[cyc][i]*win,x0=cyc*win;
+        s+=`<rect x="${x0}" y="${y}" width="${Math.max(0,L-1)}" height="${rh}" rx="2" fill="${GREEN}"/>`;
+        s+=`<rect x="${x0+L}" y="${y}" width="${Math.max(0,win-L-1)}" height="${rh}" rx="2" fill="${TAN}"/>`;}
+      s+=`<line x1="${W/2}" y1="0" x2="${W/2}" y2="${H}" stroke="#bcae90" stroke-dasharray="3 3"/>`;
+    }else{
+      const pat=[[.3,.45,.25],[.5,.2,.3],[.22,.33,.25,.2],[.4,.6],[.28,.24,.28,.2]];
+      for(let i=0;i<rows;i++){const y=i*(rh+gap);let x=0;
+        pat[i].forEach((f,j)=>{const w=f*W;s+=`<rect x="${x}" y="${y}" width="${w-1.5}" height="${rh}" rx="2" fill="${greens[j%greens.length]}"/>`;x+=w;});}
+    }
+    return s+`</svg>`;
+  }
+  function paDiagram(mode){
+    const W=340,H=96;let s=`<svg viewBox="0 0 ${W} ${H}">`;
+    if(mode==="naive"){
+      const rows=3,gap=8,rh=(H-gap*(rows-1))/rows,fill=W*0.16;
+      for(let i=0;i<rows;i++){const y=i*(rh+gap);
+        s+=`<rect x="0" y="${y}" width="${fill}" height="${rh}" rx="2" fill="${GREEN}"/>`;
+        s+=`<rect x="${fill}" y="${y}" width="${W-fill}" height="${rh}" rx="2" fill="${TAN}"/>`;}
+      s+=`<text x="${W*0.58}" y="${H/2+4}" text-anchor="middle" font-size="11" fill="#9a9078" font-family="JetBrains Mono">reserved · never written</text>`;
+    }else{
+      const cols=18,rows=6,gap=2,bw=(W-gap*(cols-1))/cols,bh=(H-gap*(rows-1))/rows;
+      for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const x=c*(bw+gap),y=r*(bh+gap);
+        const empty=(r===rows-1&&c>=cols-2);
+        s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="1.5" fill="${empty?TAN:greens[(r*3+c)%greens.length]}"/>`;}
+    }
+    return s+`</svg>`;
+  }
+  function cbRender(m){$("cbdiag").innerHTML=cbDiagram(m);
+    $("cbexp").textContent=m==="static"
+      ? "The batch drains — short requests finish and sit idle in their slot while one straggler runs on."
+      : "Every freed slot is refilled at once, so the GPU stays busy the whole time.";}
+  function paRender(m){$("padiag").innerHTML=paDiagram(m);
+    $("paexp").textContent=m==="naive"
+      ? "Each sequence reserves a full max-length block up front; against a real length mix "+D.exp4.naive_waste+"% of it is never written."
+      : "Blocks are handed out only as tokens arrive, so far more sequences pack into the same memory.";}
+  [...$("cbseg").children].forEach(b=>b.onclick=()=>{[...$("cbseg").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");cbRender(b.dataset.m);});
+  [...$("paseg").children].forEach(b=>b.onclick=()=>{[...$("paseg").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");paRender(b.dataset.m);});
+
+  $("cbbig").textContent=Math.round(D.exp3.cont_req_s/D.exp3.static_req_s)+"×";
+  $("cbstats").textContent=`${D.exp3.cont_req_s} vs ${D.exp3.static_req_s} req/s · p95 ${D.exp3.cont_p95}s vs ${D.exp3.static_p95}s`;
+  const paConc=D.exp4.vllm?D.exp4.vllm.conc:D.exp4.paged_conc;
+  $("pabig").textContent=Math.round(paConc/D.exp4.naive_conc)+"×";
+  $("pastats").textContent=`${D.exp4.kv_kb} KB/token · ${D.exp4.naive_conc.toLocaleString()} → ${paConc.toLocaleString()} sequences`;
+  cbRender("static");paRender("naive");
 })();
 </script>
 </body>
