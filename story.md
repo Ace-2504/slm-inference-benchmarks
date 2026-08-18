@@ -273,6 +273,41 @@ four results on-page, and reads in Harman's own voice.*
 
 ---
 
+## Side task — connector-drawn flowcharts (local only)
+
+**E20 · Four inference-technique flowcharts via Canva/Figma/Miro connectors, kept out of git.** Harman
+asked for one flowchart per technique (KV cache, speculative decoding, continuous batching, PagedAttention)
+as **gitignored images only** (not on the frontend, must never reach GitHub — another session is live on the
+repo), and to spread them across the Canva, Figma, and Miro connectors so he can judge which connector is
+best. Guarded first: added `flowcharts/` to root `.gitignore` **plus** a nested `flowcharts/.gitignore`
+(`*` + `!.gitignore`) belt-and-suspenders, verified with `git check-ignore` (all four IGNORED, working tree
+clean even though the concurrent session committed in the middle). Built: **(1) KV cache — Figma/FigJam**
+(`generate_diagram` from Mermaid → `get_screenshot` PNG, 899×3000); **(4) PagedAttention — Figma/FigJam**
+(548×2432) — both clean, accurate, colour-coded, fully legible. **(2) Speculative decoding — Miro**
+(`diagram_create_mermaid`): Miro renders a real flowchart but has **no MCP image export**; `canvas_read_as_svg`
+only returns an empty `foreignObject` placeholder for the diagram widget, and the board is private so the
+in-app (anonymous) browser hit a login wall. Solved it via Claude-in-Chrome (Harman's logged-in session):
+the board-level "Export as image" force-crops a landscape frame (cut the tall diagram top+bottom), but
+right-click widget → **Share and export → Export as image** gives the full portrait bounds (499×2001, free
+tier caps at "Small") — clean and legible. **(3) Continuous batching — Canva** (`generate-design` →
+`create-design-from-candidate` → `export-design` PNG, 800×2000): honest finding — Canva makes a **pretty
+infographic shell but the embedded "diagram" panels are AI-generated garbage** ("Clampl static - batching",
+"46,7.17 cfm", "356% 358"), and my exact numbers are dropped. → *Verdict for Harman: for technical flowcharts,
+**Figma/FigJam is best** (Mermaid-accurate, cleanest export), **Miro a close second** (accurate render, but
+export is fiddly and free-tier-capped), **Canva last** (design-pretty, content-inaccurate). Images live in
+`flowcharts/`, confirmed never committed.*
+
+**E20 · report.pdf — fixed clipped graphs + centered title/hero.** Harman flagged the KV-cache and
+speculative graphs were cut off mid-chart. Cause: `img_row` reserved a fixed 52 mm per row, but at half-page
+width (~93 mm) those plots are ~64 mm and ~61 mm tall, so each row overlapped the next and clipped the top
+graphs. Fixed `img_row` to read each image's real pixel dimensions (Pillow), reserve the row's true max
+height, and page-break when a row won't fit — the report now runs to **2 pages** (allowed) with **all four
+graphs shown in full**. Also reworked the header to the harman-article-format: a **centered bold title**
+("What Each Inference Trick Is Worth") and a **centered italic hero line**, then a hairline divider and the
+trust paragraph as left-aligned body. → *Better: the report reads cleanly and every plot is fully visible.*
+
+---
+
 ## Current status (as of last entry)
 
 - **Oriented** to the brief; four experiments + golden rules understood (E1).

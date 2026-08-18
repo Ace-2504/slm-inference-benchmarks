@@ -62,19 +62,29 @@ pdf.add_font("Arial", "B", f"{_F}/arialbd.ttf")
 pdf.add_font("Arial", "I", f"{_F}/ariali.ttf")
 pdf.set_auto_page_break(True, margin=12)
 pdf.add_page()
-pdf.set_font("Arial", "B", 15)
-pdf.cell(0, 8, "What each inference trick is worth", new_x="LMARGIN", new_y="NEXT")
+# centered title + centered hero line (harman-article-format)
+pdf.set_font("Arial", "B", 18)
+pdf.cell(0, 10, "What Each Inference Trick Is Worth", align="C", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Arial", "I", 10.5)
+pdf.set_text_color(110)
+pdf.cell(0, 6, f"One pipeline, four controlled experiments — what each serving optimization is really worth on an {GPU}.",
+         align="C", new_x="LMARGIN", new_y="NEXT")
+# hairline divider
+pdf.ln(2.5)
+pdf.set_draw_color(205)
+_yd = pdf.get_y()
+pdf.line(pdf.l_margin, _yd, pdf.w - pdf.r_margin, _yd)
+pdf.ln(3.5)
+# trust paragraph (body, left-aligned)
 pdf.set_font("Arial", "", 9)
 pdf.set_text_color(60)
 pdf.multi_cell(0, 4.4,
-    f"One pipeline, four controlled experiments, each toggling one thing. All numbers on {GPU} "
-    f"(bf16), synchronised, warmed up, repeated with spread. Trust: a validation gauntlet "
-    f"({gaunt['summary']['pass']}/{gaunt['summary']['pass']+gaunt['summary']['fail']} pass) shows a "
-    f"single un-synchronised matmul under-reports its time by "
-    f"{gaunt['raw']['G2']['ratio']:.0f}x, so every timer here calls cuda.synchronize(); the CUDA-event "
-    f"and perf_counter clocks agree to {gaunt['raw']['G4']['rel_diff']*100:.1f}%, and measured FP32 "
-    f"throughput stays under the card's roofline. Both sides of every comparison were checked to emit "
-    f"the same tokens before any speedup was claimed.")
+    f"All numbers are on {GPU} (bf16), synchronised, warmed up, and repeated with their spread. Trust: a "
+    f"validation gauntlet ({gaunt['summary']['pass']}/{gaunt['summary']['pass']+gaunt['summary']['fail']} "
+    f"pass) shows a single un-synchronised matmul under-reports its time by {gaunt['raw']['G2']['ratio']:.0f}x, "
+    f"so every timer here calls cuda.synchronize(); the CUDA-event and perf_counter clocks agree to "
+    f"{gaunt['raw']['G4']['rel_diff']*100:.1f}%, and measured FP32 throughput stays under the card's roofline. "
+    f"Both sides of every comparison were checked to emit the same tokens before any speedup was claimed.")
 pdf.ln(1)
 
 # headline table
@@ -108,14 +118,27 @@ for i, row in enumerate(rows):
 pdf.ln(1)
 
 
-def img_row(paths, h=52):
-    x0 = pdf.get_x()
+def img_row(paths, gap_after=6):
+    # reserve each image's REAL height (max in the row) so nothing overlaps, and break to a
+    # new page if the row won't fit (the report may run to 2 pages — that's allowed)
+    from PIL import Image
+    ww = (pdf.w - pdf.l_margin - pdf.r_margin - 4) / 2
+    dims, maxh = [], 0
+    for p in paths:
+        fp = ROOT / p
+        if fp.exists():
+            iw, ih = Image.open(fp).size
+            hh = ww * ih / iw
+            dims.append((fp, hh)); maxh = max(maxh, hh)
+        else:
+            dims.append((None, 0))
+    if pdf.get_y() + maxh > pdf.h - pdf.b_margin:
+        pdf.add_page()
     y0 = pdf.get_y()
-    ww = (pdf.w - 2 * pdf.l_margin - 4) / 2
-    for i, p in enumerate(paths):
-        if (ROOT / p).exists():
-            pdf.image(str(ROOT / p), x=pdf.l_margin + i * (ww + 4), y=y0, w=ww)
-    pdf.set_y(y0 + h)
+    for i, (fp, _hh) in enumerate(dims):
+        if fp:
+            pdf.image(str(fp), x=pdf.l_margin + i * (ww + 4), y=y0, w=ww)
+    pdf.set_y(y0 + maxh + gap_after)
 
 
 img_row(["exp1_kvcache/speedup_vs_batch.png", "exp2_specdec/speedup_vs_k.png"])
