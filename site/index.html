@@ -233,7 +233,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Without a KV cache the model recomputes attention over the whole growing sequence
           every step. With it, each step reuses the stored keys/values. Raise the batch size (more concurrent
           "users") and watch the gap grow.</p>
-        <div class="mtabs" data-t="mkv"><button class="mtab sel" data-p="run">Benchmark</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtabs" data-t="mkv"><button class="mtab sel" data-p="run">Benchmark</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="flowchart">Flowchart</button></div>
         <div class="mtp" data-t="mkv" data-p="run">
           <div class="mini-ctl">
             <div class="mlabel">Batch size (concurrent sequences): <b id="mkvb">16</b></div>
@@ -250,6 +250,43 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
             <div class="mini-text" id="mkvtext"></div>
           </div>
         </div>
+        <div class="mtp" data-t="mkv" data-p="flowchart" hidden><div class="mdiag zoomable" id="mkvflow"><svg viewBox="-190 0 1370 350" style="width: 100%; height: auto; display: block; margin-top: 6px;" font-family="Figtree, sans-serif">
+      <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3a382f"/></marker></defs>
+      <!-- input prop: prompt tokens converge into a funnel -->
+      <text x="-176" y="96" font-size="12.5" font-weight="600" fill="#8a8472">prompt tokens</text>
+      <g stroke="#2a5c44" stroke-width="2.2" fill="#eaf3ee" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate(-178,104)"><rect x="0" y="0" width="42" height="28" rx="7"/><line x1="8" y1="10" x2="34" y2="10"/><line x1="8" y1="18" x2="26" y2="18"/></g>
+        <g transform="translate(-178,140)"><rect x="0" y="0" width="42" height="28" rx="7"/><line x1="8" y1="10" x2="34" y2="10"/><line x1="8" y1="18" x2="26" y2="18"/></g>
+        <g transform="translate(-178,176)"><rect x="0" y="0" width="42" height="28" rx="7"/><line x1="8" y1="10" x2="34" y2="10"/><line x1="8" y1="18" x2="26" y2="18"/></g>
+      </g>
+      <g transform="translate(-92,142)" stroke="#2a5c44" stroke-width="2.4" fill="#dfeee4" stroke-linejoin="round"><path d="M0 2 H44 L27 22 V38 L17 38 V22 Z"/></g>
+      <text x="-70" y="214" text-anchor="middle" font-size="12" fill="#6b6450">clean + tokenize</text>
+      <path d="M-136 118 C-112 118 -96 138 -74 150" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M-136 154 C-110 154 -94 156 -74 158" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M-136 190 C-110 190 -94 176 -74 168" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M-70 180 C-40 180 -6 178 16 178" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <!-- lane annotation -->
+      <text x="470" y="46" font-size="13" font-weight="600" fill="#94823f">without cache · recompute everything each step</text>
+      <!-- curved connectors -->
+      <path d="M150 178 C200 178 200 92 250 92" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M150 178 C200 178 200 266 250 266" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <polyline points="450,92 520,92" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <polyline points="450,266 520,266" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M710 92 C748 92 744 178 780 178" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M710 266 C748 266 744 178 780 178" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a1)"/>
+      <path d="M960 178 C1058 172 1052 22 900 22 L100 22 C64 22 85 78 85 148" fill="none" stroke="#b7ab8c" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round" marker-end="url(#a1)"/>
+      <text x="500" y="15" font-size="12.5" fill="#9a9078" font-style="italic">repeat every decode step</text>
+      <!-- nodes -->
+      <g><rect x="20" y="146" width="130" height="64" rx="13" fill="#2a5c44"/><text x="85" y="172" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="600">New token</text><text x="85" y="192" text-anchor="middle" fill="#cfe3d6" font-size="13">at step t</text></g>
+      <g><rect x="250" y="60" width="200" height="64" rx="13" fill="#ece3cf" stroke="#d6c8a6"/><text x="350" y="86" text-anchor="middle" fill="#4a4636" font-size="15" font-weight="600">Recompute K, V</text><text x="350" y="106" text-anchor="middle" fill="#6b6450" font-size="13.5">for all t tokens</text></g>
+      <g><rect x="520" y="60" width="190" height="64" rx="13" fill="#ece3cf" stroke="#d6c8a6"/><text x="615" y="86" text-anchor="middle" fill="#4a4636" font-size="15" font-weight="600">Attention over</text><text x="615" y="106" text-anchor="middle" fill="#6b6450" font-size="13.5">the full sequence</text></g>
+      <g><rect x="250" y="234" width="200" height="64" rx="13" fill="#2f6b4f"/><text x="350" y="260" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Compute K, V</text><text x="350" y="280" text-anchor="middle" fill="#cfe3d6" font-size="13.5">for the new token only</text></g>
+      <g><rect x="520" y="234" width="190" height="64" rx="13" fill="#2f6b4f"/><text x="615" y="260" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Append to cache,</text><text x="615" y="280" text-anchor="middle" fill="#cfe3d6" font-size="13.5">attend over stored K/V</text></g>
+      <g><rect x="780" y="146" width="180" height="64" rx="13" fill="#2a5c44"/><text x="870" y="172" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="600">Logits → argmax</text><text x="870" y="192" text-anchor="middle" fill="#cfe3d6" font-size="13">next token</text></g>
+      <!-- KV store prop -->
+      <g transform="translate(250,308)"><rect x="0" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="22" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="44" y="0" width="17" height="17" rx="3" fill="#2f6b4f"/><rect x="66" y="0" width="17" height="17" rx="3" fill="#eaf3ee" stroke="#2f6b4f" stroke-width="2" stroke-dasharray="3 2"/></g>
+      <text x="342" y="321" font-size="13" font-weight="600" fill="#2f6b4f">with cache · the KV store grows one cell per step — O(t), not O(t²)</text>
+    </svg></div><p class="mcap">How the KV cache works: prefill once, then reuse the stored keys/values each step instead of recomputing the whole prefix.</p></div>
         <div class="mtp" data-t="mkv" data-p="graph" hidden>
           <div class="mdiag" id="mkvchart"></div>
           <p class="mcap">Measured cache speedup vs batch size: a wash at batch 1 (the GPU is memory-bound and idle), climbing to ~9x by batch 16 as the batch fills the compute units.</p>
@@ -263,7 +300,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">The small 0.5B <b>draft</b> proposes several tokens at once; the big 7B <b>target</b>
           verifies them in a single pass and keeps the longest prefix it agrees with. Same output as the 7B
           alone, but the speedup rides entirely on how often the draft is right.</p>
-        <div class="mtabs" data-t="msp"><button class="mtab sel" data-p="run">Benchmark</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtabs" data-t="msp"><button class="mtab sel" data-p="run">Benchmark</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="flowchart">Flowchart</button></div>
         <div class="mtp" data-t="msp" data-p="run">
           <div class="mini-presets" id="mspresets"></div>
           <textarea class="mini-ta" id="mspt">List the integers from 1 to 40, separated by commas.</textarea>
@@ -277,6 +314,38 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
             <div class="mini-text" id="mstext"></div>
           </div>
         </div>
+        <div class="mtp" data-t="msp" data-p="flowchart" hidden><div class="mdiag zoomable" id="mspflow"><svg viewBox="-180 0 1360 350" style="width: 100%; height: auto; display: block; margin-top: 6px;" font-family="Figtree, sans-serif">
+      <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3a382f"/></marker></defs>
+      <!-- input prop: prompt -->
+      <text x="-165" y="96" font-size="12.5" font-weight="600" fill="#8a8472">prompt</text>
+      <g transform="translate(-168,104)" stroke="#2a5c44" stroke-width="2.2" fill="#eaf3ee" stroke-linecap="round" stroke-linejoin="round"><rect x="0" y="0" width="42" height="28" rx="7"/><line x1="8" y1="10" x2="34" y2="10"/><line x1="8" y1="18" x2="26" y2="18"/></g>
+      <path d="M-122 118 C-40 118 110 118 196 118" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a2)"/>
+      <!-- main chain -->
+      <polyline points="380,118 430,118" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a2)"/>
+      <polyline points="620,118 680,118" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a2)"/>
+      <polyline points="860,118 920,118" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a2)"/>
+      <!-- draft speed prop: lightning -->
+      <path transform="translate(206,58)" d="M14 0 L2 18 H12 L7 32 L24 12 H13 Z" fill="#94823f"/>
+      <!-- proposed tokens prop -->
+      <g fill="#2a5c44"><rect x="388" y="58" width="9" height="9" rx="1.5"/><rect x="400" y="58" width="9" height="9" rx="1.5"/><rect x="412" y="58" width="9" height="9" rx="1.5"/></g>
+      <text x="480" y="104" font-size="12.5" fill="#9a9078" font-style="italic">k tokens · one target pass</text>
+      <!-- verify prop: magnifier + check -->
+      <g transform="translate(432,56)" stroke="#2a5c44" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="#eaf3ee"/><path d="M7 12 l3.5 3.5 l6 -7.5"/><line x1="19.5" y1="19.5" x2="28" y2="28"/></g>
+      <!-- reject branch (curved) -->
+      <path d="M765 150 C765 205 640 210 560 242" fill="none" stroke="#94823f" stroke-width="2" marker-end="url(#a2)"/>
+      <text x="688" y="196" font-size="12.5" fill="#94823f" font-weight="600">on mismatch</text>
+      <path d="M435 274 C300 288 172 250 172 200 C172 168 236 152 288 152" fill="none" stroke="#94823f" stroke-width="2" marker-end="url(#a2)"/>
+      <text x="150" y="262" font-size="12.5" fill="#94823f">re-draft from the rollback</text>
+      <!-- next round loop (curved) -->
+      <path d="M1010 86 C1012 40 1000 30 900 30 L300 30 C288 30 290 62 290 86" fill="none" stroke="#b7ab8c" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a2)"/>
+      <text x="600" y="25" font-size="12.5" fill="#9a9078" font-style="italic">next round</text>
+      <!-- nodes -->
+      <g><rect x="200" y="86" width="180" height="64" rx="13" fill="#ece3cf" stroke="#d6c8a6"/><text x="290" y="112" text-anchor="middle" fill="#4a4636" font-size="15" font-weight="600">Draft 0.5B</text><text x="290" y="132" text-anchor="middle" fill="#6b6450" font-size="13.5">proposes k tokens</text></g>
+      <g><rect x="430" y="86" width="190" height="64" rx="13" fill="#2f6b4f"/><text x="525" y="112" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Target 7B verifies</text><text x="525" y="132" text-anchor="middle" fill="#cfe3d6" font-size="13.5">all k in one pass</text></g>
+      <g><rect x="680" y="86" width="180" height="64" rx="13" fill="#ece3cf" stroke="#d6c8a6"/><text x="770" y="112" text-anchor="middle" fill="#4a4636" font-size="15" font-weight="600">Accept longest</text><text x="770" y="132" text-anchor="middle" fill="#6b6450" font-size="13.5">matching prefix</text></g>
+      <g><rect x="920" y="86" width="180" height="64" rx="13" fill="#2f6b4f"/><text x="1010" y="112" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Emit accepted</text><text x="1010" y="132" text-anchor="middle" fill="#cfe3d6" font-size="13.5">+ 1 free bonus token</text></g>
+      <g><rect x="435" y="244" width="250" height="60" rx="13" fill="#94823f"/><text x="560" y="270" text-anchor="middle" fill="#fff" font-size="15" font-weight="600">Reject the tail</text><text x="560" y="290" text-anchor="middle" fill="#efe8d2" font-size="13.5">crop the KV cache (rollback)</text></g>
+    </svg></div><p class="mcap">How speculative decoding works: the 0.5B draft proposes k tokens, the 7B verifies them in one pass, and re-drafts from the rollback on the first mismatch.</p></div>
         <div class="mtp" data-t="msp" data-p="graph" hidden>
           <div class="mdiag" id="mspchart"></div>
           <div class="mlegend" id="msplegend"></div>
@@ -297,12 +366,56 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Static batching runs a whole batch to completion before admitting anyone new, so short
           requests sit idle in their slot. Continuous batching refills a slot the instant it frees up. (Run
           offline — sustained many-request load isn't reasonable to serve live.)</p>
-        <div class="mtabs" data-t="cb"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="table">Table</button></div>
+        <div class="mtabs" data-t="cb"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="table">Table</button><button class="mtab" data-p="flowchart">Flowchart</button></div>
         <div class="mtp" data-t="cb" data-p="diagram">
           <div class="mseg" id="cbseg"><button class="sel" data-m="static">Static</button><button data-m="cont">Continuous</button></div>
           <div class="mdiag" id="cbdiag"></div>
           <p class="mexplain" id="cbexp"></p>
         </div>
+        <div class="mtp" data-t="cb" data-p="flowchart" hidden><div class="mdiag zoomable" id="cbflow"><svg viewBox="-210 0 1390 380" style="width: 100%; height: auto; display: block; margin-top: 6px;" font-family="Figtree, sans-serif">
+      <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3a382f"/></marker></defs>
+      <!-- input prop: request tickets fan out to both policies -->
+      <text x="-192" y="112" font-size="12.5" font-weight="600" fill="#8a8472">incoming requests</text>
+      <g stroke="#94823f" stroke-width="2.2" fill="#f1ead6" stroke-linejoin="round">
+        <g transform="translate(-185,124)"><path d="M3 4 H30 a3 3 0 0 1 3 3 V21 a3 3 0 0 1 -3 3 H3 L11 14 Z"/><circle cx="9" cy="14" r="2.4" fill="#94823f" stroke="none"/></g>
+        <g transform="translate(-185,162)"><path d="M3 4 H30 a3 3 0 0 1 3 3 V21 a3 3 0 0 1 -3 3 H3 L11 14 Z"/><circle cx="9" cy="14" r="2.4" fill="#94823f" stroke="none"/></g>
+        <g transform="translate(-185,200)"><path d="M3 4 H30 a3 3 0 0 1 3 3 V21 a3 3 0 0 1 -3 3 H3 L11 14 Z"/><circle cx="9" cy="14" r="2.4" fill="#94823f" stroke="none"/></g>
+      </g>
+      <path d="M-148 152 C-40 120 40 110 118 110" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a3)"/>
+      <path d="M-148 178 C-40 224 40 290 118 290" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a3)"/>
+      <!-- lane labels -->
+      <text x="16" y="70" font-size="13" font-weight="700" letter-spacing=".08em" fill="#94823f">STATIC</text>
+      <text x="16" y="86" font-size="12" fill="#a89a72">drains to idle</text>
+      <text x="16" y="290" font-size="13" font-weight="700" letter-spacing=".08em" fill="#2f6b4f">CONTINUOUS</text>
+      <text x="16" y="306" font-size="12" fill="#7e8a72">stays saturated</text>
+      <!-- static chain -->
+      <g fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a3)">
+        <polyline points="270,110 316,110"/><polyline points="466,110 512,110"/><polyline points="682,110 728,110"/><polyline points="878,110 924,110"/>
+      </g>
+      <path d="M1084 82 C1084 42 1084 42 980 42 L210 42 C196 42 195 62 195 80" fill="none" stroke="#b7ab8c" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a3)"/>
+      <text x="600" y="38" font-size="12.5" fill="#9a9078" font-style="italic">next batch only after the last one drains</text>
+      <g><rect x="120" y="82" width="150" height="56" rx="12" fill="#ece3cf" stroke="#d6c8a6"/><text x="195" y="106" text-anchor="middle" fill="#4a4636" font-size="14" font-weight="600">Admit N as</text><text x="195" y="124" text-anchor="middle" fill="#6b6450" font-size="13">one batch</text></g>
+      <g><rect x="316" y="82" width="150" height="56" rx="12" fill="#ece3cf" stroke="#d6c8a6"/><text x="391" y="106" text-anchor="middle" fill="#4a4636" font-size="14" font-weight="600">Decode all</text><text x="391" y="124" text-anchor="middle" fill="#6b6450" font-size="13">together</text></g>
+      <g><rect x="512" y="82" width="170" height="56" rx="12" fill="#94823f"/><text x="597" y="106" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Short ones finish,</text><text x="597" y="124" text-anchor="middle" fill="#efe8d2" font-size="13">slots go idle</text></g>
+      <g><rect x="728" y="82" width="150" height="56" rx="12" fill="#94823f"/><text x="803" y="106" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Wait for the</text><text x="803" y="124" text-anchor="middle" fill="#efe8d2" font-size="13">straggler</text></g>
+      <g><rect x="924" y="82" width="160" height="56" rx="12" fill="#ece3cf" stroke="#d6c8a6"/><text x="1004" y="106" text-anchor="middle" fill="#4a4636" font-size="14" font-weight="600">Batch done →</text><text x="1004" y="124" text-anchor="middle" fill="#6b6450" font-size="13">admit next N</text></g>
+      <!-- GPU prop + idle slots -->
+      <g transform="translate(500,144)" stroke="#94823f" stroke-width="2" fill="#f1ead6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="30" height="30" rx="4"/><rect x="13" y="13" width="14" height="14" rx="2" fill="#e3d7b6"/><line x1="13" y1="0" x2="13" y2="5"/><line x1="20" y1="0" x2="20" y2="5"/><line x1="27" y1="0" x2="27" y2="5"/><line x1="13" y1="35" x2="13" y2="40"/><line x1="20" y1="35" x2="20" y2="40"/><line x1="27" y1="35" x2="27" y2="40"/><line x1="0" y1="13" x2="5" y2="13"/><line x1="0" y1="20" x2="5" y2="20"/><line x1="0" y1="27" x2="5" y2="27"/><line x1="35" y1="13" x2="40" y2="13"/><line x1="35" y1="20" x2="40" y2="20"/><line x1="35" y1="27" x2="40" y2="27"/></g>
+      <g><rect x="558" y="152" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="582" y="152" width="18" height="18" rx="3" fill="#e4dcc6" stroke="#cabd97"/><rect x="606" y="152" width="18" height="18" rx="3" fill="#e4dcc6" stroke="#cabd97"/><rect x="630" y="152" width="18" height="18" rx="3" fill="#e4dcc6" stroke="#cabd97"/></g>
+      <!-- continuous chain -->
+      <g fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a3)">
+        <polyline points="270,290 316,290"/><polyline points="516,290 562,290"/><polyline points="802,290 848,290"/>
+      </g>
+      <path d="M1008 318 C1008 358 1008 358 900 358 L405 358 C392 358 391 338 391 320" fill="none" stroke="#8fa07f" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a3)"/>
+      <text x="620" y="374" font-size="12.5" fill="#7e8a72" font-style="italic">continuous refill, every step</text>
+      <g><rect x="120" y="262" width="150" height="56" rx="12" fill="#2f6b4f"/><text x="195" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Requests</text><text x="195" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">queue up</text></g>
+      <g><rect x="316" y="262" width="200" height="56" rx="12" fill="#2f6b4f"/><text x="416" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Scheduler fills free</text><text x="416" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">slots every step</text></g>
+      <g><rect x="562" y="262" width="240" height="56" rx="12" fill="#2f6b4f"/><text x="682" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">A slot finishes → refill</text><text x="682" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">from the queue at once</text></g>
+      <g><rect x="848" y="262" width="160" height="56" rx="12" fill="#2a5c44"/><text x="928" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Slots stay full</text><text x="928" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">end to end</text></g>
+      <!-- GPU prop + full slots -->
+      <g transform="translate(584,326)" stroke="#2f6b4f" stroke-width="2" fill="#e2efe7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="30" height="30" rx="4"/><rect x="13" y="13" width="14" height="14" rx="2" fill="#bcdcca"/><line x1="13" y1="0" x2="13" y2="5"/><line x1="20" y1="0" x2="20" y2="5"/><line x1="27" y1="0" x2="27" y2="5"/><line x1="13" y1="35" x2="13" y2="40"/><line x1="20" y1="35" x2="20" y2="40"/><line x1="27" y1="35" x2="27" y2="40"/><line x1="0" y1="13" x2="5" y2="13"/><line x1="0" y1="20" x2="5" y2="20"/><line x1="0" y1="27" x2="5" y2="27"/><line x1="35" y1="13" x2="40" y2="13"/><line x1="35" y1="20" x2="40" y2="20"/><line x1="35" y1="27" x2="40" y2="27"/></g>
+      <g><rect x="642" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="666" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="690" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/><rect x="714" y="332" width="18" height="18" rx="3" fill="#2f6b4f"/></g>
+    </svg></div><p class="mcap">How continuous batching works: static drains to idle before admitting the next batch; continuous refills freed slots to stay saturated.</p></div>
         <div class="mtp" data-t="cb" data-p="graph" hidden>
           <div class="mdiag" id="cbchart"></div>
           <div class="mlegend"><span><i class="tan"></i>static</span><span><i class="green"></i>continuous</span></div>
@@ -320,12 +433,56 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Naive serving reserves a full max-length block of KV memory per sequence up front —
           mostly empty. Paging hands out small fixed blocks only as tokens are actually generated, so far more
           sequences fit in the same memory.</p>
-        <div class="mtabs" data-t="pa"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtabs" data-t="pa"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="flowchart">Flowchart</button></div>
         <div class="mtp" data-t="pa" data-p="diagram">
           <div class="mseg" id="paseg"><button class="sel" data-m="naive">Naive</button><button data-m="paged">Paged</button></div>
           <div class="mdiag" id="padiag"></div>
           <p class="mexplain" id="paexp"></p>
         </div>
+        <div class="mtp" data-t="pa" data-p="flowchart" hidden><div class="mdiag zoomable" id="paflow"><svg viewBox="-210 0 1390 390" style="width: 100%; height: auto; display: block; margin-top: 4px;" font-family="Figtree, sans-serif">
+      <defs><marker id="a4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3a382f"/></marker></defs>
+      <!-- input prop: sequences fan out to both allocators -->
+      <text x="-192" y="118" font-size="12.5" font-weight="600" fill="#8a8472">sequences arrive</text>
+      <g fill="#2a5c44">
+        <g transform="translate(-186,132)"><rect x="0" y="0" width="11" height="11" rx="2"/><rect x="15" y="0" width="11" height="11" rx="2"/><rect x="30" y="0" width="11" height="11" rx="2"/></g>
+        <g transform="translate(-186,168)"><rect x="0" y="0" width="11" height="11" rx="2"/><rect x="15" y="0" width="11" height="11" rx="2"/><rect x="30" y="0" width="11" height="11" rx="2"/></g>
+        <g transform="translate(-186,204)"><rect x="0" y="0" width="11" height="11" rx="2"/><rect x="15" y="0" width="11" height="11" rx="2"/><rect x="30" y="0" width="11" height="11" rx="2"/></g>
+      </g>
+      <path d="M-140 172 C-40 122 40 110 118 110" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a4)"/>
+      <path d="M-140 178 C-40 226 40 290 118 290" fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a4)"/>
+      <!-- lane labels -->
+      <text x="16" y="96" font-size="13" font-weight="700" letter-spacing=".08em" fill="#94823f">NAIVE</text>
+      <text x="16" y="112" font-size="12" fill="#a89a72">contiguous</text>
+      <text x="16" y="286" font-size="13" font-weight="700" letter-spacing=".08em" fill="#2f6b4f">PAGED</text>
+      <text x="16" y="302" font-size="12" fill="#7e8a72">on demand</text>
+      <!-- paging prop: a book of pages -->
+      <g transform="translate(1044,258)" stroke="#2a5c44" stroke-width="2.2" fill="#dfeee4" stroke-linejoin="round" stroke-linecap="round"><path d="M4 6 h16 a4 4 0 0 1 4 4 v28 h-16 a4 4 0 0 1 -4 -4 Z"/><path d="M24 10 a4 4 0 0 1 4 -4 h16 v28 a4 4 0 0 0 -4 4 h-16 Z" fill="#eef6f0"/><line x1="29" y1="15" x2="40" y2="15" stroke-width="1.6"/><line x1="29" y1="21" x2="40" y2="21" stroke-width="1.6"/><line x1="29" y1="27" x2="40" y2="27" stroke-width="1.6"/></g>
+      <!-- naive chain -->
+      <g fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a4)">
+        <polyline points="280,110 326,110"/><polyline points="546,110 592,110"/>
+      </g>
+      <g><rect x="120" y="82" width="160" height="56" rx="12" fill="#ece3cf" stroke="#d6c8a6"/><text x="200" y="106" text-anchor="middle" fill="#4a4636" font-size="14" font-weight="600">New sequence</text><text x="200" y="124" text-anchor="middle" fill="#6b6450" font-size="13">arrives</text></g>
+      <g><rect x="326" y="82" width="220" height="56" rx="12" fill="#94823f"/><text x="436" y="106" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Reserve max length</text><text x="436" y="124" text-anchor="middle" fill="#efe8d2" font-size="13">2048 tokens, up front</text></g>
+      <!-- naive memory strip -->
+      <rect x="592" y="82" width="440" height="56" rx="8" fill="#efe7d3" stroke="#d6c8a6"/>
+      <rect x="596" y="86" width="34" height="48" rx="4" fill="#2f6b4f"/>
+      <text x="820" y="106" text-anchor="middle" fill="#9a8a55" font-size="13" font-family="JetBrains Mono, monospace">reserved · never written</text>
+      <text x="820" y="124" text-anchor="middle" fill="#b0a172" font-size="12">91.8% wasted</text>
+      <text x="1032" y="168" text-anchor="end" fill="#94823f" font-size="14.5" font-weight="700">≈ 801 sequences fit</text>
+      <!-- paged chain -->
+      <g fill="none" stroke="#3a382f" stroke-width="2" marker-end="url(#a4)">
+        <polyline points="280,290 326,290"/><polyline points="566,290 592,290"/>
+      </g>
+      <g><rect x="120" y="262" width="160" height="56" rx="12" fill="#2f6b4f"/><text x="200" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">New sequence</text><text x="200" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">arrives</text></g>
+      <g><rect x="326" y="262" width="240" height="56" rx="12" fill="#2f6b4f"/><text x="446" y="286" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Grow in 16-token blocks,</text><text x="446" y="304" text-anchor="middle" fill="#cfe3d6" font-size="13">mapped by a block table</text></g>
+      <!-- paged memory strip: many small blocks mostly filled -->
+      <rect x="592" y="262" width="440" height="56" rx="8" fill="#efe7d3" stroke="#d6c8a6"/>
+      <g>
+        <rect x="600" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="630" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="660" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="690" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="720" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="750" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="780" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="810" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="840" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="870" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="900" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="930" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="960" y="270" width="26" height="40" rx="3" fill="#2f6b4f"/><rect x="990" y="270" width="26" height="40" rx="3" fill="#e4dcc6" stroke="#cabd97"/>
+      </g>
+      <text x="1032" y="348" text-anchor="end" fill="#2f6b4f" font-size="14.5" font-weight="700">≈ 9,360 sequences  (~12×)</text>
+      <text x="600" y="348" fill="#7e8a72" font-size="12">4.3% waste</text>
+    </svg></div><p class="mcap">How PagedAttention works: naive reserves a contiguous max-length block per sequence; paged hands out fixed blocks on demand.</p></div>
         <div class="mtp" data-t="pa" data-p="graph" hidden>
           <div class="mdiag" id="pachart"></div>
           <p class="mcap">Measured wasted KV memory vs block size: the paged line stays far below the naive reserve-max (dashed) across every block size.</p>
@@ -615,6 +772,10 @@ function timeChart(el,seriesList,xmax,refY){
   zoomable("cbchart","Measured slot utilisation over time (batch 32, 80 req/s): static (tan) drains to idle while one straggler finishes; continuous (green) holds the slots full.");
   zoomable("cbtablewrap","Measured throughput and p95 latency across batch size and arrival rate: continuous beats static at every setting, and the gap widens as the batch grows.");
   zoomable("pachart","Measured wasted KV memory vs block size: the paged line (green) stays far below the naive reserve-max (dashed, "+D.exp4.naive_waste+"%) at every block size.");
+  zoomable("mkvflow","Flowchart of the KV cache.");
+  zoomable("mspflow","Flowchart of speculative decoding.");
+  zoomable("cbflow","Flowchart of continuous batching.");
+  zoomable("paflow","Flowchart of PagedAttention.");
   if(zmodal){zmodal.addEventListener("click",e=>{if(e.target===zmodal||e.target.classList.contains("zoom-close"))zmodal.hidden=true;});
     document.addEventListener("keydown",e=>{if(e.key==="Escape")zmodal.hidden=true;});}
 
