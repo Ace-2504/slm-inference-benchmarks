@@ -254,6 +254,23 @@ gradient-selected batch buttons**, gradient pill CTA buttons, the right-aligned 
 dark tech panel — verified via computed styles. Redeployed public. → *Better: the demo is live and safe to
 share, the cost is on the record, and the UI is a faithful match with honest numbers and authorship.*
 
+**E19 · Frontend: fixed the live wiring, added Run/What-this-is tabs, published exp3+4 on-page, prose in
+Harman's voice.** Six fixes: **(1)** the buttons weren't actually calling Modal — a 4.5 s page-load health
+check always timed out before the ~60 s cold start, set `LIVE=false`, and the Run handlers early-returned;
+now **Run always calls the endpoint** with a "waking GPU…" state and only falls back to recorded on real
+failure. **(2)** Added **Run / What-this-is tabs** to the KV-cache and speculative sections. **(3)** Run tab
+= just the inference runner box (controls + Run + its bars/verdict/stream); **all prose, charts, cards and the
+k-table moved to What-this-is.** **(4)** Continuous batching and PagedAttention are now **their own sections
+(3 and 4) with results published on the page** — a real inline-SVG utilisation-over-time chart (static drains
+to idle vs continuous stays full) + throughput/latency numbers + a 6-row table for #3; the KV-byte arithmetic,
+a block-size-sweep waste chart with the naive reference line, and the concurrency numbers (naive 801 / vLLM
+15,220) for #4 — no more "see the repo". **(5)** Deleted the dark "How it runs" panel. **(6)** Rewrote all
+copy in **/harman-voice** (first-person ownership, honest surprises, plain numbers, jargon explained, never
+"LLM") with **/harman-article-format** number discipline (every figure scoped; the honest c=0.428 with the
+CUDA-graph-fix caveat stated). `build_site.py` extended to bake the exp3 series + exp4 sweep + vLLM into
+data.js. Redeployed public. → *Better: the demo is genuinely live, cleanly split run-vs-explanation, shows all
+four results on-page, and reads in Harman's own voice.*
+
 ---
 
 ## Current status (as of last entry)

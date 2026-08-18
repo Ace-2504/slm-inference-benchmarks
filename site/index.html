@@ -21,56 +21,50 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;
   font-size:17.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
-.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 a{color:var(--teal);text-decoration:none}
-/* top bar */
-.top{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:18px 0}
-.chip{font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);
-  border-radius:999px;padding:7px 15px}
-/* hero */
+.top{display:flex;justify-content:flex-end;padding:18px 0}
+.chip{font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 15px}
 .hero{text-align:center;padding:20px 0 8px;max-width:44rem;margin:0 auto}
 .eyebrow{font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
 .hero h1{font-size:56px;line-height:1.02;letter-spacing:-.025em;margin:.14em 0 .4em;font-weight:800}
 .hero h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:18.5px;color:var(--muted);margin:0 auto;max-width:40rem}
+.hero p{font-size:18.5px;color:var(--muted);margin:0 auto;max-width:41rem}
 .hero b{color:var(--ink-soft)}
 .chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0 14px}
 .rule{width:190px;height:4px;border-radius:4px;background:var(--grad);margin:0 auto 6px}
-/* summary strip */
 .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0 6px}
 @media(max-width:720px){.strip{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
 .stat .k{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .stat .v{font-weight:800;font-size:27px;letter-spacing:-.01em;margin-top:3px;font-variant-numeric:tabular-nums}
 .stat .s{font-size:13px;color:var(--dim)}
-.stat.t{border-top:3px solid var(--teal)} .stat.r{border-top:3px solid var(--rose)}
-.stat.b{border-top:3px solid var(--blue)} .stat.v{border-top:3px solid var(--violet)}
-/* section header with number badge */
-.sechead{display:flex;align-items:center;gap:14px;margin:36px 0 8px}
-.badge{width:34px;height:34px;flex:none;border-radius:50%;background:var(--grad);color:#fff;display:grid;
-  place-items:center;font-weight:800;font-size:16px}
+.stat.t{border-top:3px solid var(--teal)}.stat.r{border-top:3px solid var(--rose)}
+.stat.b{border-top:3px solid var(--blue)}.stat.v{border-top:3px solid var(--violet)}
+.sechead{display:flex;align-items:center;gap:14px;margin:38px 0 14px}
+.badge{width:34px;height:34px;flex:none;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px}
 .sechead h2{font-size:28px;font-weight:800;letter-spacing:-.01em;margin:0}
-.secsub{color:var(--muted);margin:0 0 16px;max-width:60rem}
-/* card */
+/* tabs */
+.tabs{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:14px}
+.tab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:14.5px;padding:8px 20px;border-radius:999px;cursor:pointer}
+.tab.sel{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(30,41,59,.12)}
+.tabpanel[hidden]{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;
   box-shadow:0 1px 2px rgba(30,41,59,.03),0 12px 34px rgba(30,41,59,.05)}
+.prose{color:var(--ink-soft);font-size:17px}
+.prose p{margin:0 0 14px}.prose b{color:var(--ink)}.prose .lead{font-size:18px}
 .cardtop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.status{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:13px;
-  font-weight:500;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+.status{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:500;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:6px 13px}
 .status .d{width:8px;height:8px;border-radius:50%;background:var(--dim)}
 .status.on .d{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.2)}
-.status.off .d{background:var(--amber)}
+.status.off .d{background:var(--amber)}.status.wake .d{background:var(--blue);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.35}}
 .measured{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.03em;text-align:right}
 .flabel{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
-.pinput{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
-  font:inherit;font-size:16px;color:var(--ink)}
-textarea.pinput{min-height:74px;resize:vertical}
+.pinput{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;color:var(--ink)}
+textarea.pinput{min-height:70px;resize:vertical}
 .presets{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 0}
-.preset{font-size:14px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);
-  border-radius:999px;padding:8px 16px;cursor:pointer}
-.preset:hover{border-color:var(--dim)}
-.preset.sel{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet)}
-/* sliders */
+.preset{font-size:14px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer}
+.preset:hover{border-color:var(--dim)}.preset.sel{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet)}
 .sliders{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:20px 0}
 @media(max-width:600px){.sliders{grid-template-columns:1fr}}
 .slider .srow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
@@ -78,18 +72,14 @@ textarea.pinput{min-height:74px;resize:vertical}
 .slider .sv{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;color:var(--ink)}
 .slider .sv small{color:var(--muted);font-weight:500}
 input[type=range]{width:100%;accent-color:var(--violet);height:4px}
-/* batch + run row */
 .runrow{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-top:6px}
 .batch .cl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
 .batset{display:flex;gap:9px}
-.batb{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font:inherit;
-  font-weight:700;font-size:15px;cursor:pointer;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.batb{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font:inherit;font-weight:700;font-size:15px;cursor:pointer;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
 .batb.sel{background:linear-gradient(140deg,#0f766e,#14b8a6);color:#fff;border-color:transparent}
-.run{background:var(--grad-btn);color:#fff;border:0;border-radius:999px;padding:13px 26px;font:inherit;
-  font-weight:700;font-size:15.5px;cursor:pointer;box-shadow:0 6px 18px rgba(124,58,237,.22)}
-.run:hover{filter:brightness(1.07)}.run:disabled{opacity:.55;cursor:default}
-.hint{font-size:13.5px;color:var(--dim);margin:18px 0 0;padding-top:16px;border-top:1px solid var(--line-soft)}
-/* results */
+.run{background:var(--grad-btn);color:#fff;border:0;border-radius:999px;padding:13px 26px;font:inherit;font-weight:700;font-size:15.5px;cursor:pointer;box-shadow:0 6px 18px rgba(124,58,237,.22)}
+.run:hover{filter:brightness(1.07)}.run:disabled{opacity:.6;cursor:default}
+.hint{font-size:13.5px;color:var(--dim);margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line-soft)}
 .results{margin-top:18px}
 .bars{display:flex;flex-direction:column;gap:12px}
 .barrow{display:grid;grid-template-columns:120px 1fr auto;gap:14px;align-items:center}
@@ -97,7 +87,7 @@ input[type=range]{width:100%;accent-color:var(--violet);height:4px}
 .track{height:26px;background:var(--panel-2);border-radius:8px;overflow:hidden}
 .track>i{display:block;height:100%;border-radius:8px;transition:width .5s cubic-bezier(.4,0,.2,1)}
 .barrow .val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
-.fillT{background:linear-gradient(90deg,#0f766e,#14b8a6)} .fillR{background:linear-gradient(90deg,#e11d48,#f43f5e)}
+.fillT{background:linear-gradient(90deg,#0f766e,#14b8a6)}.fillR{background:linear-gradient(90deg,#e11d48,#f43f5e)}
 .subhint{font-size:13px;color:var(--dim);margin-top:8px}
 .verdict{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 4px}
 .vpill{display:inline-flex;align-items:baseline;gap:7px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
@@ -115,48 +105,34 @@ input[type=range]{width:100%;accent-color:var(--violet);height:4px}
 .chart svg{width:100%;height:auto;display:block;overflow:visible}
 .legend{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
 .legend b{display:inline-block;width:20px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
-.stream{font-family:"JetBrains Mono",monospace;font-size:14px;line-height:2.05;background:var(--panel-2);
-  border:1px solid var(--line-soft);border-radius:14px;padding:15px 17px;max-height:250px;overflow:auto;white-space:pre-wrap}
+.stream{font-family:"JetBrains Mono",monospace;font-size:14px;line-height:2.05;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:14px;padding:15px 17px;max-height:250px;overflow:auto;white-space:pre-wrap}
 .tok{padding:1px 2px;border-radius:4px}
 .tok.draft{background:color-mix(in srgb,var(--teal) 16%,transparent);box-shadow:inset 0 -2px 0 var(--teal)}
 .tok.target{background:color-mix(in srgb,var(--rose) 16%,transparent);box-shadow:inset 0 -2px 0 var(--rose)}
 .tok.bonus{background:color-mix(in srgb,var(--blue) 15%,transparent);box-shadow:inset 0 -2px 0 var(--blue)}
 .streamlab{font-size:12px;color:var(--dim);margin-top:8px}
-.formula{font-family:"JetBrains Mono",monospace;background:var(--amber-bg);border:1px solid #f6e3b3;border-radius:12px;
-  padding:12px 16px;margin:16px 0 6px;text-align:center;font-size:14.5px;color:#78350f}
+.formula{font-family:"JetBrains Mono",monospace;background:var(--amber-bg);border:1px solid #f6e3b3;border-radius:12px;padding:12px 16px;margin:16px 0 6px;text-align:center;font-size:14.5px;color:#78350f}
 table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
 th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;font-family:"JetBrains Mono",monospace}
 th:first-child,td:first-child{text-align:left;font-family:Figtree,sans-serif}
 thead th{color:var(--muted);font-size:12px;font-weight:700;font-family:Figtree,sans-serif}
 tr.here td{background:color-mix(in srgb,var(--teal) 8%,transparent);font-weight:700}
-.out{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:var(--panel-2);border:1px solid var(--line-soft);
-  border-radius:12px;padding:13px 15px;color:var(--muted);white-space:pre-wrap;max-height:120px;overflow:auto;margin-top:14px}
-.tech{background:var(--dark);color:#e2e8f0;border-radius:22px;padding:26px;margin:26px 0}
-.tech h3{margin:0 0 6px;font-size:19px;font-weight:800;color:#fff}
-.tech p{color:#94a3b8;margin:0 0 14px;font-size:15.5px}
-.techchips{display:flex;gap:8px;flex-wrap:wrap}
-.tchip{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 11px;color:#cbd5e1}
-footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-top:16px;padding:22px 0 46px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.out{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:13px 15px;color:var(--muted);white-space:pre-wrap;max-height:120px;overflow:auto;margin-top:14px}
+.kv{font-family:"JetBrains Mono",monospace;font-size:14px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:12px 15px;color:var(--ink-soft);margin:6px 0 2px}
+footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-top:34px;padding:22px 0 46px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top">
-    <a class="chip" href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">GitHub ↗</a>
-  </div>
+  <div class="top"><a class="chip" href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">GitHub ↗</a></div>
 
   <div class="hero">
     <div class="eyebrow">Harman Sandhu · Live GPUs</div>
     <h1>SLM Inference <span class="g">Lab</span></h1>
-    <p>Everything here runs on a real GPU when you press the button. Two experiments on Modal: a 125M model
-      decoding with the KV cache switched on and off, and <b>Qwen2.5-7B</b> decoding with and without a draft
-      model checking ahead for it. The numbers shown are the last recorded run until you press Run.</p>
-    <div class="chips">
-      <span class="chip">Real inference, live</span>
-      <span class="chip">KV cache on / off</span>
-      <span class="chip">Speculative decoding</span>
-      <span class="chip">Tokens per second</span>
-    </div>
+    <p>I built one inference pipeline and ran four experiments through it. Each one flips a single switch and
+      checks that both sides produce the <b>exact same tokens</b> before I trust any speedup. Two of them run
+      live on a GPU when you press the button; press Run and the first call wakes it (about a minute).</p>
+    <div class="chips"><span class="chip">Real inference, live</span><span class="chip">KV cache on / off</span><span class="chip">Speculative decoding</span><span class="chip">Tokens per second</span></div>
     <div class="rule"></div>
   </div>
 
@@ -164,29 +140,20 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
 
   <!-- Experiment 1 -->
   <div class="sechead"><span class="badge">1</span><h2>The KV cache, switched off</h2></div>
-  <p class="secsub">A 125M model on one <b id="gpu">NVIDIA L4</b>. The same greedy decode runs twice: once
-    keeping the Keys and Values of every past token, once recomputing the entire prefix from scratch at every
-    single step. Same prompt, same weights, same output text. The only difference is how much arithmetic gets
-    thrown away.</p>
-  <div class="card">
-    <div class="cardtop">
-      <span class="status" id="e1status"><span class="d"></span><span id="e1st">checking…</span></span>
-    </div>
+  <div class="tabs" data-exp="1"><button class="tab sel" data-tab="run">Run</button><button class="tab" data-tab="about">What this is</button></div>
+  <div class="card tabpanel" data-exp="1" data-panel="run">
+    <div class="cardtop"><span class="status" id="e1status"><span class="d"></span><span id="e1st">GPU sleeps when idle — press Run to wake it</span></span></div>
     <p class="flabel">Prompt</p>
     <input id="e1p" class="pinput" type="text" value="The future of computing is">
     <div class="presets" id="e1presets"></div>
     <div class="sliders">
-      <div class="slider"><div class="srow"><span class="cl">Context length (prompt tokens)</span><span class="sv" id="e1ctxv">512</span></div>
-        <input id="e1ctx" type="range" min="128" max="512" value="512" step="64"></div>
-      <div class="slider"><div class="srow"><span class="cl">Tokens to generate</span><span class="sv" id="e1genv">64</span></div>
-        <input id="e1gen" type="range" min="16" max="96" value="64" step="8"></div>
+      <div class="slider"><div class="srow"><span class="cl">Context length (prompt tokens)</span><span class="sv" id="e1ctxv">512</span></div><input id="e1ctx" type="range" min="128" max="512" value="512" step="64"></div>
+      <div class="slider"><div class="srow"><span class="cl">Tokens to generate</span><span class="sv" id="e1genv">64</span></div><input id="e1gen" type="range" min="16" max="96" value="64" step="8"></div>
     </div>
     <div class="runrow">
       <div class="batch"><div class="cl">Sequences in the batch</div><div class="batset" id="e1seg"></div></div>
       <button class="run" id="e1go">Run both</button>
     </div>
-    <p class="hint">Start at a batch of 1 and look at the speedup, then run it again at 16. The cache saves
-      arithmetic — and arithmetic only costs you time once the GPU is actually busy doing arithmetic.</p>
     <div class="results">
       <div class="bars">
         <div class="barrow"><span class="nm">with cache</span><div class="track"><i class="fillT" id="e1cbar"></i></div><span class="val" id="e1c">–</span></div>
@@ -197,51 +164,48 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <span class="vpill good"><span class="n">cache speedup</span><span class="b" id="e1sp">–</span></span>
         <span class="vpill" id="e1matchpill"><span class="n">outputs</span><span class="b" id="e1match">match ✓</span></span>
       </div>
-      <div class="mrow">
-        <div class="mc"><div class="k">token-positions · cached</div><div class="v" id="e1tpc">–</div></div>
-        <div class="mc"><div class="k">token-positions · uncached</div><div class="v" id="e1tpu">–</div></div>
-        <div class="mc"><div class="k">wasted work</div><div class="v" id="e1waste">–</div></div>
-        <div class="mc"><div class="k">prompt / generated</div><div class="v" id="e1len">–</div></div>
-      </div>
-      <div class="chart"><h4>Time per decoding step (ms) — this batch</h4><div id="e1step"></div>
-        <div class="legend"><span><b style="background:var(--teal)"></b>cached</span><span><b style="background:var(--rose)"></b>uncached</span></div></div>
-      <div class="chart"><h4>Cache speedup vs batch size</h4><div id="e1sweep"></div></div>
       <div class="out" id="e1text"></div>
+    </div>
+  </div>
+  <div class="card tabpanel prose" data-exp="1" data-panel="about" hidden>
+    <p class="lead">When a model writes text, every new token has to look back at every token before it. The
+      <b>KV cache</b> saves the Keys and Values it already worked out so it never redoes that math. I wanted to
+      know what the cache is really worth, so I ran the same greedy decode twice on a 125M model on one
+      <b>NVIDIA L4</b> — once keeping the cache, once recomputing the whole prefix from scratch at every step.
+      Same prompt, same weights, and the output text comes out identical; the only difference is how much
+      arithmetic gets thrown away.</p>
+    <p>Here is the part that surprised me. At a batch of 1 the uncached loop computes <b>60.4× more token
+      positions</b>, and it finishes in basically the same wall-clock time — <b>0.99×</b>. That looked wrong
+      until I understood why: a single stream barely keeps the GPU busy, so it spends most of its time waiting
+      on memory and the extra math is nearly free. The cache only starts winning once I add enough sequences
+      that the GPU is actually busy doing arithmetic — by batch 16 it is <b>9.2×</b> faster, and the uncached
+      loop's speed barely moves because it was never limited by arithmetic in the first place.</p>
+    <div class="chart"><h4>Time per decoding step (ms) — at batch 1</h4><div id="e1step"></div>
+      <div class="legend"><span><b style="background:var(--teal)"></b>cached</span><span><b style="background:var(--rose)"></b>uncached</span></div></div>
+    <div class="chart"><h4>Cache speedup vs batch size</h4><div id="e1sweep"></div></div>
+    <div class="mrow">
+      <div class="mc"><div class="k">token-positions · cached</div><div class="v" id="e1tpc">–</div></div>
+      <div class="mc"><div class="k">token-positions · uncached</div><div class="v" id="e1tpu">–</div></div>
+      <div class="mc"><div class="k">wasted work</div><div class="v" id="e1waste">–</div></div>
+      <div class="mc"><div class="k">prompt / generated</div><div class="v" id="e1len">–</div></div>
     </div>
   </div>
 
   <!-- Experiment 2 -->
   <div class="sechead"><span class="badge">2</span><h2>Speculative decoding, live</h2></div>
-  <p class="secsub">Qwen2.5-7B-Instruct on one <b>NVIDIA L4</b>, generating the same answer two ways. First
-    <b>plain</b>: the 7B alone, one token per forward pass. Then <b>speculative</b>: the small Qwen2.5-0.5B
-    drafts <i>k</i> tokens ahead and the 7B verifies them in a single pass. Both are greedy, so the answer is
-    the same; only the speed differs. As the speculative run streams, each token is coloured by who produced
-    it. Try the code preset and then the creative one — the mechanism is identical, the payoff is not.</p>
-  <div class="card">
-    <div class="cardtop">
-      <span class="status" id="e2status"><span class="d"></span><span id="e2st">checking…</span></span>
-      <span class="measured" id="e2measured"></span>
-    </div>
+  <div class="tabs" data-exp="2"><button class="tab sel" data-tab="run">Run</button><button class="tab" data-tab="about">What this is</button></div>
+  <div class="card tabpanel" data-exp="2" data-panel="run">
+    <div class="cardtop"><span class="status" id="e2status"><span class="d"></span><span id="e2st">GPU sleeps when idle — press Run to wake it</span></span><span class="measured" id="e2measured"></span></div>
     <p class="flabel">Prompt</p>
     <textarea id="e2p" class="pinput">Write a Python function that merges two sorted lists, with a docstring.</textarea>
     <div class="presets" id="e2presets"></div>
     <div class="sliders">
-      <div class="slider"><div class="srow"><span class="cl">Draft length k, tokens guessed per round</span><span class="sv" id="e2kv">4</span></div>
-        <input id="e2k" type="range" min="1" max="8" value="4" step="1"></div>
-      <div class="slider"><div class="srow"><span class="cl">Tokens to generate</span><span class="sv" id="e2genv">64</span></div>
-        <input id="e2gen" type="range" min="16" max="96" value="64" step="8"></div>
+      <div class="slider"><div class="srow"><span class="cl">Draft length k, tokens guessed per round</span><span class="sv" id="e2kv">4</span></div><input id="e2k" type="range" min="1" max="8" value="4" step="1"></div>
+      <div class="slider"><div class="srow"><span class="cl">Tokens to generate</span><span class="sv" id="e2genv">64</span></div><input id="e2gen" type="range" min="16" max="96" value="64" step="8"></div>
     </div>
-    <div class="runrow" style="justify-content:flex-end">
-      <button class="run" id="e2go">Run plain vs speculative</button>
-    </div>
-    <p class="hint">Watch the coloured stream: long green runs mean the little draft is guessing right and the
-      7B is waved through several tokens at once. A red token is a correction and a blue one is the free bonus
-      token. The code and copy prompts have long green runs; the creative prompt has far fewer.</p>
+    <div class="runrow" style="justify-content:flex-end"><button class="run" id="e2go">Run plain vs speculative</button></div>
     <div class="results">
-      <div class="legend" style="margin-bottom:8px">
-        <span><b style="background:var(--teal)"></b>draft-accepted</span>
-        <span><b style="background:var(--rose)"></b>target-correction</span>
-        <span><b style="background:var(--blue)"></b>bonus (free)</span></div>
+      <div class="legend" style="margin-bottom:8px"><span><b style="background:var(--teal)"></b>draft-accepted</span><span><b style="background:var(--rose)"></b>target-correction</span><span><b style="background:var(--blue)"></b>bonus (free)</span></div>
       <div class="stream" id="e2stream"></div>
       <div class="streamlab" id="e2streamlab"></div>
       <div class="bars" style="margin-top:16px">
@@ -255,30 +219,81 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <span class="vpill"><span class="n">tokens / target pass</span><span class="b" id="e2tpp">–</span></span>
         <span class="vpill"><span class="n">vs plain</span><span class="b" id="e2ex">–</span></span>
       </div>
-      <div class="formula">speedup = tokens per pass / (1 + k · c) &nbsp;→&nbsp; predicted <b id="e2pred">–</b></div>
-      <table id="e2tab"><thead><tr><th>k</th><th>accept</th><th>tok/pass</th><th>spec tok/s</th><th>speedup</th><th>predicted</th></tr></thead><tbody></tbody></table>
     </div>
   </div>
+  <div class="card tabpanel prose" data-exp="2" data-panel="about" hidden>
+    <p class="lead">Speculative decoding is a clever trick. A small <b>draft</b> model guesses <i>k</i> tokens
+      ahead, and the big 7B <b>target</b> checks all of them in a single forward pass, keeping the longest run
+      it agrees with. Because both decode greedily, the final answer is exactly what the 7B would have said on
+      its own — I check that on every run.</p>
+    <p>And here is the finding that surprised me. My first measurement had it running <b>slower</b> than plain
+      decoding. The honest reason is not the acceptance rate — it is that my 0.5B draft takes <b>25 ms</b> per
+      step when it should take about 3. It is too small to keep the GPU busy, so it wastes its time launching
+      tiny kernels. I measured <b>c = draft step / target step = 0.428</b>, and once c is that high, no
+      acceptance rate can win. The fix is to run the draft under CUDA graphs — I tried, but it crashed with a
+      device-side error on my torch and transformers versions, so I am reporting the honest c = 0.428 instead
+      of a number I could not reproduce.</p>
+    <p>The payoff still swings hard by prompt type, and that is the real lesson. On <b>code</b> the draft
+      guesses right 88% of the time and I get <b>1.53×</b>; on <b>creative</b> prose the draft struggles, the
+      acceptance rate collapses, and it turns into a slowdown. Same mechanism, completely different payoff.</p>
+    <div class="formula">speedup = tokens per pass / (1 + k · c) &nbsp;→&nbsp; predicted <b id="e2pred">–</b> at the current k</div>
+    <p style="margin-top:14px;color:var(--muted);font-size:15px">Sweeping k for the selected prompt — measured against predicted:</p>
+    <table id="e2tab"><thead><tr><th>k</th><th>accept</th><th>tok/pass</th><th>spec tok/s</th><th>speedup</th><th>predicted</th></tr></thead><tbody></tbody></table>
+  </div>
 
-  <div class="sechead"><span class="badge">3</span><h2>Continuous batching &amp; PagedAttention</h2></div>
-  <p class="secsub">Held offline — sustained multi-request GPU load isn't reasonable to serve to a visitor —
-    but measured the same way. Plots and numbers are in the report and repo.</p>
-  <div class="strip" id="strip2" style="grid-template-columns:repeat(2,1fr);margin-top:0"></div>
+  <!-- Experiment 3 -->
+  <div class="sechead"><span class="badge">3</span><h2>Continuous batching</h2></div>
+  <div class="card prose">
+    <p class="lead">When you serve many requests at once, the naive thing is <b>static batching</b>: gather a
+      batch, run it, and admit nobody new until every sequence in it has finished. The problem is not speed —
+      it is waiting. Short requests finish early and just sit there holding their slot while one long request
+      runs on. <b>Continuous batching</b> fixes this: the moment a sequence finishes, I evict it and pull a
+      waiting request straight into its slot.</p>
+    <p>I measured the real decode-step time on the L4 and ran both policies over the same stream of 200
+      requests with realistic, very uneven output lengths (a few long ones hiding among many short ones — I
+      implemented both sides myself). The chart below is the whole story: static keeps spiking to full and then
+      <b>draining to almost nothing</b> while one straggler finishes, and continuous holds the slots full. At a
+      batch of 32 and 80 requests a second, continuous does <b>7.5 requests/second</b> against static's
+      <b>2.5</b> — about <b>3×</b> — and its 95th-percentile latency is <b>14 s</b> against <b>68 s</b>.
+      Static does not lose because it is slow. It loses because it is idle.</p>
+    <div class="chart"><h4>Slot utilisation over time — batch 32, 80 requests/s</h4><div id="e3util"></div>
+      <div class="legend"><span><b style="background:var(--rose)"></b>static (drains to idle)</span><span><b style="background:var(--teal)"></b>continuous (stays full)</span></div></div>
+    <div class="mrow" style="margin-top:18px">
+      <div class="mc"><div class="k">throughput · continuous</div><div class="v" id="e3cr">–</div></div>
+      <div class="mc"><div class="k">throughput · static</div><div class="v" id="e3sr">–</div></div>
+      <div class="mc"><div class="k">p95 latency · continuous</div><div class="v" id="e3cp">–</div></div>
+      <div class="mc"><div class="k">p95 latency · static</div><div class="v" id="e3sp">–</div></div>
+    </div>
+    <table id="e3tab" style="margin-top:16px"><thead><tr><th>batch · rate</th><th>static req/s</th><th>continuous req/s</th><th>static p95</th><th>continuous p95</th></tr></thead><tbody></tbody></table>
+  </div>
 
-  <div class="tech">
-    <h3>How it runs</h3>
-    <p>Experiment 1 uses a 125M-class model; experiment 2 pairs a 7B target with a 0.5B draft, all bf16 on an
-      L4 via Modal. Every timer synchronises, warms up and repeats — validated by an 8-test gauntlet showing an
-      un-synchronised matmul under-reports its time by ~330×. Both sides are checked for identical tokens first.</p>
-    <div class="techchips">
-      <span class="tchip">gpt2 (125M)</span><span class="tchip">Qwen/Qwen2.5-7B-Instruct</span>
-      <span class="tchip">Qwen/Qwen2.5-0.5B-Instruct</span><span class="tchip">torch.cuda.synchronize()</span>
-      <span class="tchip">bf16</span><span class="tchip">Modal · NVIDIA L4</span>
+  <!-- Experiment 4 -->
+  <div class="sechead"><span class="badge">4</span><h2>PagedAttention</h2></div>
+  <div class="card prose">
+    <p class="lead">This one is about memory, and the speed follows from it. The KV cache for a single token is
+      <b>2 × layers × kv_heads × head_dim × 2 bytes</b>. The trap is <b>kv_heads</b>: Qwen2.5-0.5B uses
+      grouped-query attention, so it has only 2 KV heads, not the 14 attention heads — get that wrong and the
+      whole estimate is off by 7×. For my model that works out to <b>12 KB per token</b>.</p>
+    <div class="kv" id="e4kv"></div>
+    <p style="margin-top:14px">The naive way reserves a full max-length block per sequence up front —
+      <b>24 MB</b> each for a 2048-token limit. But real answers are short: against my length mix (mean 168
+      tokens) that <b>wastes 91.8%</b> of the reserved memory. <b>PagedAttention</b> hands out small fixed
+      blocks only as tokens are actually generated. I worked the numbers out, confirmed the naive limit by
+      admitting sequences until the GPU ran out of memory (I predicted 801, it hit the wall at 889), and then
+      confirmed the paged side on the real <b>vLLM</b> engine: it fits <b>15,220 sequences</b> where naive fits
+      <b>801</b> — about <b>19× more</b> — from the same memory. More sequences resident at once means a bigger
+      effective batch, and that is exactly where the memory saving turns into a speed saving.</p>
+    <div class="chart"><h4>Wasted KV memory vs block size — paged (line) against naive (dashed)</h4><div id="e4chart"></div></div>
+    <div class="mrow" style="margin-top:18px">
+      <div class="mc"><div class="k">KV per token</div><div class="v" id="e4kvt">–</div></div>
+      <div class="mc"><div class="k">naive concurrency</div><div class="v" id="e4nc">–</div></div>
+      <div class="mc"><div class="k">paged (vLLM)</div><div class="v" id="e4pc">–</div></div>
+      <div class="mc"><div class="k">naive KV wasted</div><div class="v" id="e4nw">–</div></div>
     </div>
   </div>
 
   <footer>
-    <span>Built by Harman Sandhu · all numbers on <span id="gpu2">NVIDIA L4</span></span>
+    <span>Built by Harman Sandhu · every number measured on <span id="gpu2">NVIDIA L4</span> via Modal</span>
     <a href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">source &amp; report ↗</a>
   </footer>
 </div>
@@ -288,17 +303,18 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
 const D=window.DATA,$=id=>document.getElementById(id);
 const TOKEN="ilab-7q2x9k4m";
 const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])).replace(/\n/g,"⏎\n");
-$("gpu").textContent=$("gpu2").textContent=D.gpu;
+$("gpu2").textContent=D.gpu;
+
+// tabs
+document.querySelectorAll(".tabs").forEach(bar=>{const exp=bar.dataset.exp;
+  bar.querySelectorAll(".tab").forEach(tb=>tb.onclick=()=>{
+    bar.querySelectorAll(".tab").forEach(x=>x.classList.remove("sel"));tb.classList.add("sel");
+    document.querySelectorAll(`.tabpanel[data-exp="${exp}"]`).forEach(p=>p.hidden=(p.dataset.panel!==tb.dataset.tab));});});
 
 const EP={exp1:"https://ace-2504--a4-live-demo-demo-exp1.modal.run",exp2:"https://ace-2504--a4-live-demo-demo-exp2.modal.run"};
-let LIVE=false;
-(async()=>{try{const c=new AbortController();setTimeout(()=>c.abort(),4500);
-  const r=await fetch(EP.exp1+"?prompt=hi&batch=1&max_new_tokens=1&t="+TOKEN,{signal:c.signal});LIVE=r.ok}catch(e){LIVE=false}
-  for(const [s,t,lab] of [["e1status","e1st","L4 ready · 125M model loaded"],["e2status","e2st","L4 ready · 7B and 0.5B loaded"]]){
-    if(LIVE){$(s).className="status on";$(t).textContent=lab}
-    else{$(s).className="status off";$(t).textContent="recorded run · live GPU demo offline"}}
-})();
+function setStatus(id,cls,txt){const s=$(id);s.className="status "+cls;s.lastElementChild.textContent=txt;}
 
+// summary strip
 const bestSp=Math.max(...Object.values(D.exp2.prompts).flatMap(p=>p.by_k.map(k=>k.speedup)));
 $("strip").innerHTML=[
  ["t","KV cache","0.99→"+D.exp1.batches.at(-1).speedup+"×","batch 1 → 16"],
@@ -306,12 +322,9 @@ $("strip").innerHTML=[
  ["b","Cont. batching",D.exp3.cont_req_s+"/"+D.exp3.static_req_s,"cont vs static req/s"],
  ["v","PagedAttn","~"+D.exp4.ratio+"×","more sequences fit"]
 ].map(([c,k,v,s])=>`<div class="stat ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
-$("strip2").innerHTML=[
- ["b","Continuous batching",D.exp3.cont_req_s+" vs "+D.exp3.static_req_s+" req/s","p95 "+D.exp3.cont_p95+"s vs "+D.exp3.static_p95+"s — static drains to idle"],
- ["v","PagedAttention","~"+D.exp4.ratio+"× concurrency",D.exp4.kv_kb+" KB/token · naive wastes "+D.exp4.naive_waste+"%"]
-].map(([c,k,v,s])=>`<div class="stat ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
 
-function lineChart(el,series,ymax,xlab){
+// ---- charts ----
+function lineChart(el,series,ymax,xlab,unit){
   const W=700,H=200,pl=44,pr=12,pt=10,pb=28,iw=W-pl-pr,ih=H-pt-pb,n=Math.max(...series.map(s=>s.y.length));
   const X=i=>pl+(n<=1?0:i/(n-1)*iw),Y=v=>pt+ih-(v/ymax)*ih;
   let ticks="";for(let g=0;g<=4;g++){const v=ymax*g/4,y=Y(v);
@@ -319,63 +332,74 @@ function lineChart(el,series,ymax,xlab){
   const paths=series.map(s=>`<path d="${s.y.map((v,i)=>(i?"L":"M")+X(i)+" "+Y(v)).join(" ")}" fill="none" stroke="${s.c}" stroke-width="2.2"/>`).join("");
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}<line x1="${pl}" y1="${pt}" x2="${pl}" y2="${pt+ih}" stroke="var(--line)"/><line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="var(--line)"/>${paths}<text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">${xlab}</text></svg>`;
 }
-function sweepChart(el,pts){
+function sweepChart(el,pts,unit,col){
   const W=700,H=200,pl=40,pr=14,pt=14,pb=30,iw=W-pl-pr,ih=H-pt-pb,ymax=Math.max(2,...pts.map(p=>p.y))*1.12;
   const X=i=>pl+i/(pts.length-1)*iw,Y=v=>pt+ih-(v/ymax)*ih;
   let ticks="";for(let g=0;g<=4;g++){const v=ymax*g/4,y=Y(v);
-    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/><text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${v.toFixed(0)}×</text>`}
-  const par=`<line x1="${pl}" y1="${Y(1)}" x2="${pl+iw}" y2="${Y(1)}" stroke="var(--dim)" stroke-dasharray="4 3"/>`;
-  const path=`<path d="${pts.map((p,i)=>(i?"L":"M")+X(i)+" "+Y(p.y)).join(" ")}" fill="none" stroke="var(--violet)" stroke-width="2.6"/>`;
-  const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.y)}" r="3.6" fill="var(--violet)"/><text x="${X(i)}" y="${Y(p.y)-9}" text-anchor="middle" font-size="10.5" fill="var(--ink)" font-family="JetBrains Mono" font-weight="700">${p.y}×</text><text x="${X(i)}" y="${pt+ih+16}" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="JetBrains Mono">${p.x}</text>`).join("");
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}${par}${path}${dots}<text x="${pl+iw/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">batch size</text></svg>`;
+    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/><text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${v.toFixed(0)}${unit}</text>`}
+  const path=`<path d="${pts.map((p,i)=>(i?"L":"M")+X(i)+" "+Y(p.y)).join(" ")}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.y)}" r="3.6" fill="${col}"/><text x="${X(i)}" y="${Y(p.y)-9}" text-anchor="middle" font-size="10.5" fill="var(--ink)" font-family="JetBrains Mono" font-weight="700">${p.y}${unit}</text><text x="${X(i)}" y="${pt+ih+16}" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="JetBrains Mono">${p.x}</text>`).join("");
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}${path}${dots}<text x="${pl+iw/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">${el.dataset.xlab||""}</text></svg>`;
+}
+function timeChart(el,seriesList,xmax,refY){
+  const W=700,H=220,pl=40,pr=12,pt=10,pb=30,iw=W-pl-pr,ih=H-pt-pb;
+  const X=t=>pl+(t/xmax)*iw,Y=u=>pt+ih-u*ih;
+  let ticks="";for(let g=0;g<=4;g++){const u=g/4,y=Y(u);
+    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/><text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${Math.round(u*100)}%</text>`}
+  const paths=seriesList.map(s=>`<path d="${s.d.map((p,i)=>(i?"L":"M")+X(p[0])+" "+Y(p[1])).join(" ")}" fill="none" stroke="${s.c}" stroke-width="1.7" opacity=".9"/>`).join("");
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}<line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="var(--line)"/>${paths}<text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">time (s)</text></svg>`;
 }
 
-// Experiment 1
+// ---- Experiment 1 ----
 const E1=D.exp1;let e1bi=0;
 $("e1seg").innerHTML=E1.batches.map((b,i)=>`<button class="batb${i===0?' sel':''}" data-i="${i}">${b.bs}</button>`).join("");
-[...$("e1seg").children].forEach(btn=>btn.onclick=()=>{e1bi=+btn.dataset.i;[...$("e1seg").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");renderE1()});
+[...$("e1seg").children].forEach(btn=>btn.onclick=()=>{e1bi=+btn.dataset.i;[...$("e1seg").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");paintE1();});
 $("e1ctx").oninput=function(){$("e1ctxv").innerHTML=this.value+' <small>tokens</small>'};$("e1ctxv").innerHTML='512 <small>tokens</small>';
 $("e1gen").oninput=function(){$("e1genv").textContent=this.value};
 const E1P=["The future of computing is","In a distributed system, the hardest part is","The best way to learn something new is"];
 $("e1presets").innerHTML=E1P.map((p,i)=>`<button class="preset${i===0?' sel':''}" data-p="${esc(p)}">${esc(p.slice(0,32))}…</button>`).join("");
 [...$("e1presets").children].forEach(b=>b.onclick=()=>{[...$("e1presets").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");$("e1p").value=b.dataset.p});
-function renderE1(){
+function paintE1(){
   const b=E1.batches[e1bi],mx=Math.max(b.cached_tps,b.uncached_tps);
   $("e1c").textContent=b.cached_tps+" tok/s";$("e1u").textContent=b.uncached_tps+" tok/s";
   $("e1cbar").style.width=(b.cached_tps/mx*100)+"%";$("e1ubar").style.width=(b.uncached_tps/mx*100)+"%";
   $("e1sp").textContent=b.speedup+"×";$("e1matchpill").style.display=b.match?"inline-flex":"none";
+  $("e1text").textContent="cached output:  "+(E1.sample.cached||"").trim();
   $("e1tpc").textContent=E1.tp.cached.toLocaleString();$("e1tpu").textContent=E1.tp.uncached.toLocaleString();
   $("e1waste").innerHTML=E1.tp.ratio+"<small>×</small>";$("e1len").textContent=E1.prompt_len+" / "+E1.gen;
-  const ps=E1.per_step[b.bs],ymax=Math.max(...ps.cached,...ps.uncached)*1.1;
-  lineChart($("e1step"),[{y:ps.cached,c:"var(--teal)"},{y:ps.uncached,c:"var(--rose)"}],ymax,"decode step index");
-  sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})));
-  $("e1text").textContent="cached output:  "+(E1.sample.cached||"").trim();
 }
+const ps1=E1.per_step[E1.batches[0].bs];
+lineChart($("e1step"),[{y:ps1.cached,c:"var(--teal)"},{y:ps1.uncached,c:"var(--rose)"}],Math.max(...ps1.cached,...ps1.uncached)*1.1,"decode step index");
+sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})),"×","var(--violet)");
+$("e1sweep").dataset.xlab="batch size";sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})),"×","var(--violet)");
 $("e1go").onclick=async function(){
-  const b=E1.batches[e1bi];if(!LIVE){renderE1();return}
-  this.disabled=true;$("e1sp").textContent="…";
-  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:$("e1gen").value,t:TOKEN}));const d=await r.json();
-    if(d.error){$("e1text").textContent="demo: "+d.error;this.disabled=false;return}
+  const b=E1.batches[e1bi];this.disabled=true;setStatus("e1status","wake","waking GPU… first run ~60s");
+  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:$("e1gen").value,t:TOKEN}));
+    const d=await r.json();
+    if(d.error){setStatus("e1status","off","demo: "+d.error);this.disabled=false;return}
     const mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
     $("e1c").textContent=d.cached_tok_s.toFixed(1)+" tok/s";$("e1u").textContent=d.uncached_tok_s.toFixed(1)+" tok/s";
     $("e1cbar").style.width=(d.cached_tok_s/mx*100)+"%";$("e1ubar").style.width=(d.uncached_tok_s/mx*100)+"%";
-    $("e1sp").textContent=d.speedup.toFixed(2)+"×";$("e1text").textContent="cached output:  "+d.cached_text.trim();
-  }catch(e){$("e1text").textContent="live call failed: "+e}this.disabled=false;
+    $("e1sp").textContent=d.speedup.toFixed(2)+"×";$("e1matchpill").style.display=d.match?"inline-flex":"none";
+    $("e1text").textContent="cached output:  "+d.cached_text.trim();
+    setStatus("e1status","on","live · L4 · 125M model loaded");
+  }catch(e){setStatus("e1status","off","live call failed — showing recorded run");paintE1();}
+  this.disabled=false;
 };
 
-// Experiment 2
+// ---- Experiment 2 ----
 const E2=D.exp2,PN=Object.keys(E2.prompts);let e2name=PN.includes("code")?"code":PN[0],e2k=4;
 $("e2measured").textContent=`measured: 7B step ${E2.target_step_ms} ms · 0.5B step ${E2.draft_step_ms} ms · c = ${E2.c}`;
 const E2LAB={code:"Code (draft guesses well)",copy:"Copy a passage (near-perfect)",explain:"Explain a concept",creative:"Creative prose (draft struggles)"};
 const E2PROMPT={code:"Write a Python function that merges two sorted lists, with a docstring.",copy:"Repeat this passage exactly: the mitochondrion is the powerhouse of the cell.",explain:"Explain how attention works in simple terms.",creative:"Write a short vivid story about a lighthouse keeper."};
 $("e2presets").innerHTML=PN.map(n=>`<button class="preset${n===e2name?' sel':''}" data-n="${n}">${E2LAB[n]||n}</button>`).join("");
-[...$("e2presets").children].forEach(b=>b.onclick=()=>{e2name=b.dataset.n;[...$("e2presets").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");if(E2PROMPT[e2name])$("e2p").value=E2PROMPT[e2name];renderE2()});
-$("e2k").oninput=function(){e2k=+this.value;$("e2kv").textContent=this.value;renderE2()};
+[...$("e2presets").children].forEach(b=>b.onclick=()=>{e2name=b.dataset.n;[...$("e2presets").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");if(E2PROMPT[e2name])$("e2p").value=E2PROMPT[e2name];paintE2();});
+$("e2k").oninput=function(){e2k=+this.value;$("e2kv").textContent=this.value;paintE2();};
 $("e2gen").oninput=function(){$("e2genv").textContent=this.value};
-function renderE2(){
+function paintE2(){
   const p=E2.prompts[e2name],row=p.by_k.find(x=>x.k===e2k)||p.by_k[3];
   if(p.tagged){$("e2stream").innerHTML=p.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");
-    $("e2streamlab").textContent=`coloured stream shown for the k=${E2.tag_k} run`;}
+    $("e2streamlab").textContent=`recorded stream for the k=${E2.tag_k} run · press Run for a live one`;}
   const st=row.spec_tps,tt=p.target_tps,mx=Math.max(st,tt);
   $("e2stps").textContent=st+" tok/s";$("e2ttps").textContent=tt+" tok/s";
   $("e2sbar").style.width=(st/mx*100)+"%";$("e2tbar").style.width=(tt/mx*100)+"%";
@@ -385,18 +409,44 @@ function renderE2(){
   $("e2tab").querySelector("tbody").innerHTML=p.by_k.map(x=>`<tr class="${x.k===e2k?'here':''}"><td>${x.k}</td><td>${Math.round(x.accept*100)}%</td><td>${x.tok_per_pass}</td><td>${x.spec_tps}</td><td>${x.speedup}×</td><td>${x.pred}×</td></tr>`).join("");
 }
 $("e2go").onclick=async function(){
-  if(!LIVE){renderE2();return}this.disabled=true;
-  try{const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("e2p").value,k:e2k,max_new_tokens:$("e2gen").value,t:TOKEN}));const d=await r.json();
-    if(d.error){this.disabled=false;return}
-    $("e2stream").innerHTML=d.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");
+  this.disabled=true;setStatus("e2status","wake","waking GPU… first run ~60s");
+  try{const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("e2p").value,k:e2k,max_new_tokens:$("e2gen").value,t:TOKEN}));
+    const d=await r.json();
+    if(d.error){setStatus("e2status","off","demo: "+d.error);this.disabled=false;return}
+    $("e2stream").innerHTML=d.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");$("e2streamlab").textContent="live run";
     const mx=Math.max(d.spec_tok_s,d.target_tok_s);
     $("e2stps").textContent=d.spec_tok_s.toFixed(1)+" tok/s";$("e2ttps").textContent=d.target_tok_s.toFixed(1)+" tok/s";
     $("e2sbar").style.width=(d.spec_tok_s/mx*100)+"%";$("e2tbar").style.width=(d.target_tok_s/mx*100)+"%";
     $("e2sp").textContent=d.speedup.toFixed(2)+"×";$("e2acc").textContent=Math.round(d.acceptance_rate*100)+"%";
-  }catch(e){}this.disabled=false;
+    setStatus("e2status","on","live · L4 · 7B and 0.5B loaded");
+  }catch(e){setStatus("e2status","off","live call failed — showing recorded run");paintE2();}
+  this.disabled=false;
 };
 
-renderE1();renderE2();
+// ---- Experiment 3 ----
+const E3=D.exp3;
+$("e3cr").innerHTML=E3.cont_req_s+" <small>req/s</small>";$("e3sr").innerHTML=E3.static_req_s+" <small>req/s</small>";
+$("e3cp").innerHTML=E3.cont_p95+" <small>s</small>";$("e3sp").innerHTML=E3.static_p95+" <small>s</small>";
+const xmax=Math.max(...E3.static_util.map(p=>p[0]),...E3.cont_util.map(p=>p[0]));
+timeChart($("e3util"),[{d:E3.static_util,c:"var(--rose)"},{d:E3.cont_util,c:"var(--teal)"}],xmax);
+$("e3tab").querySelector("tbody").innerHTML=E3.table.map(r=>`<tr><td>B${r.B} · ${r.rate}/s</td><td>${r.s_req}</td><td>${r.c_req}</td><td>${r.s_p95}s</td><td>${r.c_p95}s</td></tr>`).join("");
+
+// ---- Experiment 4 ----
+const E4=D.exp4;
+$("e4kv").textContent=`KV/token = 2 × ${E4.layers} layers × ${E4.kv_heads} kv_heads × ${E4.head_dim} head_dim × 2 bytes = ${E4.kv_bytes.toLocaleString()} bytes = ${E4.kv_kb} KB`;
+$("e4kvt").innerHTML=E4.kv_kb+" <small>KB</small>";
+$("e4nc").innerHTML=E4.naive_conc+" <small>seqs</small>";
+$("e4pc").innerHTML=(E4.vllm?E4.vllm.conc.toLocaleString():E4.paged_conc.toLocaleString())+" <small>seqs</small>";
+$("e4nw").innerHTML=E4.naive_waste+"<small>%</small>";
+(function(){const el=$("e4chart");el.dataset.xlab="block size (tokens)";
+  sweepChart(el,E4.sweep.map(s=>({x:s.block,y:s.waste})),"%","var(--violet)");
+  // overlay the naive-waste reference as a dashed line
+  const svg=el.querySelector("svg");if(svg){const W=700,pl=40,pr=14,iw=W-pl-pr,pt=14,ih=200-pt-30;
+    const ymax=Math.max(2,...E4.sweep.map(s=>s.waste))*1.12;const y=pt+ih-(E4.naive_waste/ymax)*ih;
+    svg.insertAdjacentHTML("beforeend",`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--rose)" stroke-dasharray="5 4" stroke-width="2"/><text x="${pl+iw}" y="${y-5}" text-anchor="end" font-size="10" fill="var(--rose)" font-family="JetBrains Mono">naive ${E4.naive_waste}%</text>`);}
+})();
+
+paintE1();paintE2();
 </script>
 </body>
 </html>
