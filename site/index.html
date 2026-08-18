@@ -340,6 +340,11 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   .mdiag svg{display:block;width:100%;height:auto}
   .mfoot{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-top:auto}
   .mmini-stats{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);margin-top:8px}
+  .mtabs{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:13px}
+  .mtab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:12.5px;padding:5px 15px;border-radius:999px;cursor:pointer}
+  .mtab.sel{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(30,41,59,.12)}
+  .mtp[hidden]{display:none}
+  .mcap{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.5}
   </style>
   <div class="mini-wrap">
     <div class="mini-head">— test · a minimal take —</div>
@@ -388,9 +393,17 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Static batching runs a whole batch to completion before admitting anyone new, so short
           requests sit idle in their slot. Continuous batching refills a slot the instant it frees up. (Run
           offline — sustained many-request load isn't reasonable to serve live.)</p>
-        <div class="mseg" id="cbseg"><button class="sel" data-m="static">Static</button><button data-m="cont">Continuous</button></div>
-        <div class="mdiag" id="cbdiag"></div>
-        <p class="mexplain" id="cbexp"></p>
+        <div class="mtabs" data-t="cb"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtp" data-t="cb" data-p="diagram">
+          <div class="mseg" id="cbseg"><button class="sel" data-m="static">Static</button><button data-m="cont">Continuous</button></div>
+          <div class="mdiag" id="cbdiag"></div>
+          <p class="mexplain" id="cbexp"></p>
+        </div>
+        <div class="mtp" data-t="cb" data-p="graph" hidden>
+          <div class="mdiag" id="cbchart"></div>
+          <div class="mlegend"><span><i class="tan"></i>static</span><span><i class="green"></i>continuous</span></div>
+          <p class="mcap">Measured slot utilisation over time (batch 32, 80 req/s): static drains to idle while one straggler finishes; continuous holds the slots full.</p>
+        </div>
         <div class="mfoot"><span class="mbig green" id="cbbig">–</span><span class="mdesc">more throughput than static</span></div>
         <div class="mmini-stats" id="cbstats"></div>
       </div>
@@ -399,9 +412,16 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Naive serving reserves a full max-length block of KV memory per sequence up front —
           mostly empty. Paging hands out small fixed blocks only as tokens are actually generated, so far more
           sequences fit in the same memory.</p>
-        <div class="mseg" id="paseg"><button class="sel" data-m="naive">Naive</button><button data-m="paged">Paged</button></div>
-        <div class="mdiag" id="padiag"></div>
-        <p class="mexplain" id="paexp"></p>
+        <div class="mtabs" data-t="pa"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtp" data-t="pa" data-p="diagram">
+          <div class="mseg" id="paseg"><button class="sel" data-m="naive">Naive</button><button data-m="paged">Paged</button></div>
+          <div class="mdiag" id="padiag"></div>
+          <p class="mexplain" id="paexp"></p>
+        </div>
+        <div class="mtp" data-t="pa" data-p="graph" hidden>
+          <div class="mdiag" id="pachart"></div>
+          <p class="mcap">Measured wasted KV memory vs block size: the paged line stays far below the naive reserve-max (dashed) across every block size.</p>
+        </div>
         <div class="mfoot"><span class="mbig green" id="pabig">–</span><span class="mdesc">more sequences fit in the same memory</span></div>
         <div class="mmini-stats" id="pastats"></div>
       </div>
@@ -687,6 +707,22 @@ paintE1();paintE2();
   const paConc=D.exp4.vllm?D.exp4.vllm.conc:D.exp4.paged_conc;
   $("pabig").textContent=Math.round(paConc/D.exp4.naive_conc)+"×";
   $("pastats").textContent=`${D.exp4.kv_kb} KB/token · ${D.exp4.naive_conc.toLocaleString()} → ${paConc.toLocaleString()} sequences`;
+
+  // Diagram | Graph tab switching
+  document.querySelectorAll(".mtabs").forEach(bar=>{const t=bar.dataset.t;
+    bar.querySelectorAll(".mtab").forEach(tb=>tb.onclick=()=>{
+      bar.querySelectorAll(".mtab").forEach(x=>x.classList.remove("sel"));tb.classList.add("sel");
+      document.querySelectorAll(`.mtp[data-t="${t}"]`).forEach(p=>p.hidden=(p.dataset.p!==tb.dataset.p));});});
+
+  // Graph tab: reuse the same measured charts as the main sections (global helpers)
+  const xmax=Math.max(...D.exp3.static_util.map(p=>p[0]),...D.exp3.cont_util.map(p=>p[0]));
+  timeChart($("cbchart"),[{d:D.exp3.static_util,c:"#c7ba98"},{d:D.exp3.cont_util,c:"#2f6b4f"}],xmax);
+  $("pachart").dataset.xlab="block size (tokens)";
+  sweepChart($("pachart"),D.exp4.sweep.map(s=>({x:s.block,y:s.waste})),"%","#2f6b4f",100);
+  const psvg=$("pachart").querySelector("svg");
+  if(psvg){const W=700,pl=40,pr=14,iw=W-pl-pr,pt=14,ih=200-pt-30,y=pt+ih-(D.exp4.naive_waste/100)*ih;
+    psvg.insertAdjacentHTML("beforeend",`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="#94823f" stroke-dasharray="5 4" stroke-width="2"/><text x="${pl+iw}" y="${y-5}" text-anchor="end" font-size="10" fill="#94823f" font-family="JetBrains Mono">naive ${D.exp4.naive_waste}%</text>`);}
+
   cbRender("static");paRender("naive");
 })();
 </script>
