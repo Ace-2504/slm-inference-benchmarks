@@ -68,6 +68,11 @@ python exp4_paged/analyze_and_plot.py
 
 # report (<=2 pages)
 python report/make_report.py
+
+# live-demo site: bake the real results into the page, then deploy the static frontend
+python site/build_site.py           # -> site/data.js (embeds exp1/exp2 recorded data)
+# (deploy site/ to Vercel; the page runs exp 1 & 2 live if the Modal endpoint is up,
+#  otherwise it shows the recorded results and the sliders explore the measured sweep)
 ```
 
 Local plotting/sim scripts need the repo root on `PYTHONPATH` (`PYTHONPATH=. python exp3_batching/...`).

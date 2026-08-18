@@ -211,6 +211,21 @@ buttons now show "demo unavailable" until/unless a protected endpoint is redeplo
 separate decision and must be asked explicitly, even when the brief lists a live demo as a deliverable.** →
 *Corrected: no unexpected standing cost/exposure on Harman's account.*
 
+**E16 · Frontend redesign — book-reading theme + reference-lab components, driven by real data.** Harman
+found the demo dull and pointed to the Session-7 lab (`slm-inference-lab.vercel.app`) for component style +
+asked for the `book-reading-theme`. Studied the reference lab's layout (config panels, side-by-side metric
+tiles with tok/s bars, per-step line chart, token-position cards, coloured token stream, the
+`speedup = tok/pass / (1+k·c)` formula, per-k table, technical panel). Rebuilt `site/index.html` on the
+**book-reading theme** (4 reading-first themes — Paper/Sepia/Slate/Ink — verbatim tokens, swatch picker,
+no-flash loader; verified all four repaint to the exact spec values + light-panel shadows). Made it
+**rich and honest even with the live endpoint down**: `site/build_site.py` bakes the real `exp1.json`/
+`exp2.json` into `site/data.js`, so the page shows the measured numbers, inline-SVG charts (per-step dual
+line, speedup-vs-batch), and a real coloured token stream; the batch/k sliders explore the *recorded* sweep
+offline, and a health-check lights up "Live GPUs" only if an endpoint is reachable (else a truthful
+"Recorded run" badge). Redeployed the **static** site ($0, no GPU) to `harman-inference-lab.vercel.app`
+(public). → *Better: the demo now teaches and looks the part, works fully offline on real data, and stays
+honest about whether it's live.*
+
 ---
 
 ## Current status (as of last entry)
