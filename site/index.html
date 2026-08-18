@@ -435,6 +435,25 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   </footer>
 </div>
 
+<!-- click-to-zoom lightbox for the concept-box graphs -->
+<style>
+.zoomable{cursor:zoom-in}
+.zoom-modal{position:fixed;inset:0;z-index:1000;background:rgba(20,25,35,.5);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
+.zoom-modal[hidden]{display:none}
+.zoom-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 32px 24px;max-width:920px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.32);cursor:default;position:relative}
+.zoom-close{position:absolute;top:12px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);font-size:21px;line-height:1;cursor:pointer}
+.zoom-close:hover{color:var(--ink)}
+.zoom-body svg{width:100%;height:auto;display:block}
+.zoom-cap{margin-top:16px;color:var(--muted);font-size:14.5px;line-height:1.55}
+</style>
+<div id="zoom-modal" class="zoom-modal" hidden>
+  <div class="zoom-card">
+    <button class="zoom-close" aria-label="Close">×</button>
+    <div class="zoom-body" id="zoom-body"></div>
+    <div class="zoom-cap" id="zoom-cap"></div>
+  </div>
+</div>
+
 <script src="./data.js"></script>
 <script>
 const D=window.DATA,$=id=>document.getElementById(id);
@@ -722,6 +741,17 @@ paintE1();paintE2();
   const psvg=$("pachart").querySelector("svg");
   if(psvg){const W=700,pl=40,pr=14,iw=W-pl-pr,pt=14,ih=200-pt-30,y=pt+ih-(D.exp4.naive_waste/100)*ih;
     psvg.insertAdjacentHTML("beforeend",`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="#94823f" stroke-dasharray="5 4" stroke-width="2"/><text x="${pl+iw}" y="${y-5}" text-anchor="end" font-size="10" fill="#94823f" font-family="JetBrains Mono">naive ${D.exp4.naive_waste}%</text>`);}
+
+  // click-to-zoom: magnifier cursor on hover, pop the graph into a large lightbox (same tab,
+  // same clarity — the SVG is vector, so it scales up crisp)
+  const zmodal=$("zoom-modal"),zbody=$("zoom-body"),zcap=$("zoom-cap");
+  function zoomable(id,cap){const el=$(id);if(!el)return;el.classList.add("zoomable");el.title="Click to zoom";
+    el.addEventListener("click",()=>{const svg=el.querySelector("svg");if(!svg)return;
+      zbody.innerHTML=svg.outerHTML;zcap.textContent=cap;zmodal.hidden=false;});}
+  zoomable("cbchart","Measured slot utilisation over time (batch 32, 80 req/s): static (tan) drains to idle while one straggler finishes; continuous (green) holds the slots full.");
+  zoomable("pachart","Measured wasted KV memory vs block size: the paged line (green) stays far below the naive reserve-max (dashed, "+D.exp4.naive_waste+"%) at every block size.");
+  if(zmodal){zmodal.addEventListener("click",e=>{if(e.target===zmodal||e.target.classList.contains("zoom-close"))zmodal.hidden=true;});
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")zmodal.hidden=true;});}
 
   cbRender("static");paRender("naive");
 })();
