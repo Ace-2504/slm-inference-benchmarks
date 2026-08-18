@@ -294,66 +294,82 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
 
   <!-- ===== TEST: minimal side-by-side variant (appended; existing design untouched) ===== -->
   <style>
-  .mini-wrap{margin:44px 0 8px}
+  .mini-wrap{margin:44px 0 8px;--mgreen:#2f6b4f;--mtan:#c7ba98;--molive:#94823f;--mgreen-dk:#2a5c44}
   .mini-head{text-align:center;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:16px}
   .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
   @media(max-width:680px){.mini-grid{grid-template-columns:1fr}}
-  .mini-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(30,41,59,.03),0 8px 22px rgba(30,41,59,.04)}
-  .mini-box h4{margin:0 0 4px;font-size:18px;font-weight:800}
-  .mini-box .desc{font-size:13.5px;color:var(--muted);margin:0 0 15px;line-height:1.5}
-  .mini-ctl{margin-bottom:13px}
-  .mini-ctl .srow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px}
-  .mini-ctl .srow b{font-family:"JetBrains Mono",monospace;color:var(--ink)}
-  .mini-ctl input[type=range]{width:100%;accent-color:var(--violet);height:4px}
-  .mini-presets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
-  .mini-preset{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
-  .mini-preset.sel{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet)}
-  .mini-ta{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:54px;margin-bottom:13px}
-  .mini-run{background:var(--grad-btn);color:#fff;border:0;border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;align-self:flex-start;box-shadow:0 5px 14px rgba(124,58,237,.2)}
-  .mini-run:hover{filter:brightness(1.07)}.mini-run:disabled{opacity:.6;cursor:default}
-  .mini-out{display:none;margin-top:auto;padding-top:15px}
+  .mini-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(30,41,59,.03),0 8px 22px rgba(30,41,59,.04)}
+  .mini-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--molive);margin-bottom:9px}
+  .mini-box .desc{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.55}
+  .mini-box .desc b{color:var(--ink)}
+  .mini-ctl{margin-bottom:14px}
+  .mlabel{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .mlabel b{font-family:"JetBrains Mono",monospace;color:var(--ink)}
+  .mini-ctl input[type=range]{width:100%;accent-color:var(--mgreen);height:4px}
+  .mslabels{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-top:5px;font-family:"JetBrains Mono",monospace}
+  .mini-presets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .mini-preset{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer}
+  .mini-preset:hover{border-color:var(--dim)}.mini-preset.sel{border-color:var(--mgreen);box-shadow:0 0 0 1px var(--mgreen);color:var(--mgreen-dk)}
+  .mini-ta{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:58px;margin-bottom:14px}
+  .mini-run{background:var(--mgreen-dk);color:#fff;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;align-self:flex-start;box-shadow:0 5px 14px rgba(42,92,68,.22)}
+  .mini-run:hover{filter:brightness(1.12)}.mini-run:disabled{opacity:.6;cursor:default}
+  .mini-out{display:none;margin-top:22px}
   .mini-out.show{display:block}
-  .mini-out .div{border-top:1px solid var(--line-soft);margin-bottom:13px}
-  .mini-stats{display:flex;gap:16px;align-items:center;margin-bottom:11px}
-  .mini-stat{font-size:12px;color:var(--muted)}
-  .mini-stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:17px;color:var(--ink);font-weight:700;margin-top:2px}
-  .mini-mult{margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:800;font-size:26px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .mini-text{font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.7;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px;max-height:96px;overflow:auto;white-space:pre-wrap}
+  .mbar{margin-bottom:13px}
+  .mbar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--ink-soft);margin-bottom:7px;gap:10px}
+  .mval{color:var(--molive);font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;white-space:nowrap}
+  .mtrack{height:13px;background:var(--panel-2);border-radius:7px;overflow:hidden}
+  .mfill{height:100%;border-radius:7px;transition:width .55s cubic-bezier(.4,0,.2,1)}
+  .mfill.green{background:var(--mgreen)}.mfill.tan{background:var(--mtan)}
+  .mmult{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:16px 0 10px}
+  .mbig{font-family:"JetBrains Mono",monospace;font-weight:800;font-size:34px;line-height:1}
+  .mbig.green{color:var(--mgreen)}.mbig.dark{color:var(--ink);margin-left:14px}
+  .mdesc{font-size:13.5px;color:var(--muted)}
+  .mexplain{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.55}
+  .mout-lab{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+  .mlegend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+  .mlegend i.green{background:var(--mgreen)}.mlegend i.tan{background:var(--mtan)}
+  .mini-text{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;max-height:150px;overflow:auto;white-space:pre-wrap}
+  .mini-text .acc{background:color-mix(in srgb,var(--mgreen) 20%,transparent);box-shadow:inset 0 -2px 0 var(--mgreen);border-radius:3px}
   </style>
   <div class="mini-wrap">
     <div class="mini-head">— test · a minimal take —</div>
     <div class="mini-grid">
       <div class="mini-box">
-        <h4>KV cache</h4>
-        <p class="desc">With the cache the model reuses every past Key and Value; without it it recomputes the whole prefix at every step. Same output text, very different speed.</p>
+        <div class="mini-eyebrow">KV cache · 125M SLM</div>
+        <p class="desc">Without a KV cache the model recomputes attention over the whole growing sequence
+          every step. With it, each step reuses the stored keys/values. Raise the batch size (more concurrent
+          "users") and watch the gap grow.</p>
         <div class="mini-ctl">
-          <div class="srow"><span>Batch size</span><b id="mkvb">8</b></div>
-          <input id="mkvslider" type="range" min="1" max="64" value="8" step="1">
+          <div class="mlabel">Batch size (concurrent sequences): <b id="mkvb">16</b></div>
+          <input id="mkvslider" type="range" min="1" max="64" value="16" step="1">
+          <div class="mslabels"><span>1</span><span>48 tokens each · greedy</span><span>64</span></div>
         </div>
-        <button class="mini-run" id="mkvrun">Run benchmark</button>
+        <button class="mini-run" id="mkvrun">Run benchmark →</button>
         <div class="mini-out" id="mkvout">
-          <div class="div"></div>
-          <div class="mini-stats">
-            <div class="mini-stat">with cache<b id="mkvc">–</b></div>
-            <div class="mini-stat">no cache<b id="mkvu">–</b></div>
-            <div class="mini-mult" id="mkvm">–</div>
-          </div>
+          <div class="mbar"><div class="mbar-top"><span>With KV cache</span><span class="mval" id="mkvc">–</span></div><div class="mtrack"><i class="mfill green" id="mkvcbar"></i></div></div>
+          <div class="mbar"><div class="mbar-top"><span>Without KV cache</span><span class="mval" id="mkvu">–</span></div><div class="mtrack"><i class="mfill tan" id="mkvubar"></i></div></div>
+          <div class="mmult"><span class="mbig green" id="mkvm">–</span><span class="mdesc" id="mkvmd">faster with the cache</span></div>
+          <p class="mexplain" id="mkvexp"></p>
+          <div class="mout-lab">Identical output, both paths</div>
           <div class="mini-text" id="mkvtext"></div>
         </div>
       </div>
       <div class="mini-box">
-        <h4>Speculative decoding</h4>
-        <p class="desc">A small 0.5B draft guesses tokens ahead and the 7B verifies them in a single pass — the same answer, in fewer expensive target passes.</p>
+        <div class="mini-eyebrow">Speculative decoding · Qwen2.5 7B + 0.5B</div>
+        <p class="desc">The small 0.5B <b>draft</b> proposes several tokens at once; the big 7B <b>target</b>
+          verifies them in a single pass and keeps the longest prefix it agrees with. Same output as the 7B
+          alone, but the speedup rides entirely on how often the draft is right.</p>
         <div class="mini-presets" id="mspresets"></div>
-        <textarea class="mini-ta" id="mspt">Write a Python function that merges two sorted lists.</textarea>
-        <button class="mini-run" id="msrun">Run comparison</button>
+        <textarea class="mini-ta" id="mspt">List the integers from 1 to 40, separated by commas.</textarea>
+        <button class="mini-run" id="msrun">Run both →</button>
         <div class="mini-out" id="msout">
-          <div class="div"></div>
-          <div class="mini-stats">
-            <div class="mini-stat">speculative<b id="mss">–</b></div>
-            <div class="mini-stat">target alone<b id="mst">–</b></div>
-            <div class="mini-mult" id="msm">–</div>
-          </div>
+          <div class="mbar"><div class="mbar-top"><span>Target only (7B, one token at a time)</span><span class="mval" id="mst">–</span></div><div class="mtrack"><i class="mfill tan" id="mstbar"></i></div></div>
+          <div class="mbar"><div class="mbar-top"><span>Speculative (7B verifies 0.5B)</span><span class="mval" id="mss">–</span></div><div class="mtrack"><i class="mfill green" id="mssbar"></i></div></div>
+          <div class="mmult"><span class="mbig green" id="msm">–</span><span class="mdesc">throughput</span><span class="mbig dark" id="msacc">–</span><span class="mdesc">draft tokens accepted</span></div>
+          <p class="mexplain" id="msexp"></p>
+          <div class="mlegend"><span><i class="green"></i>proposed by draft, accepted</span><span><i class="tan"></i>produced by target</span></div>
           <div class="mini-text" id="mstext"></div>
         </div>
       </div>
@@ -522,47 +538,66 @@ paintE1();paintE2();
 (function(){
   const TOKEN="ilab-7q2x9k4m";
   const EP={exp1:"https://ace-2504--a4-live-demo-demo-exp1.modal.run",exp2:"https://ace-2504--a4-live-demo-demo-exp2.modal.run"};
+  const KV_TOKENS=48, SP_TOKENS=64;
   const $=id=>document.getElementById(id);
-  const fail=(box,txt,el)=>{ $(box+"text").textContent=txt; $(box+"out").classList.add("show"); };
+  const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const fmt=n=>n.toLocaleString(undefined,{minimumFractionDigits:1,maximumFractionDigits:1});
+
+  function kvExplain(sp,batch){
+    if(sp<1.3) return `Barely ahead: at batch ${batch} the GPU is memory-bound and mostly idle, so recomputing costs almost nothing. Push the batch higher and the cache pulls away.`;
+    if(sp<4)   return `The cache is pulling ahead now — the batch is starting to fill the GPU's compute units, so the wasted arithmetic starts to cost real time.`;
+    return `Now the GPU is busy doing arithmetic, and the cache's saved work turns straight into saved time.`;
+  }
+  function spExplain(acc){
+    if(acc>=0.7) return "High acceptance → the draft nails predictable text, so speculation pays off.";
+    if(acc>=0.4) return "Middling acceptance → the 7B rejects a fair share of guesses, so the win is modest.";
+    return "Low acceptance → the draft keeps guessing wrong and the 7B redoes the work, so speculation can even lose.";
+  }
 
   $("mkvslider").oninput=function(){$("mkvb").textContent=this.value};
   $("mkvrun").onclick=async function(){
-    const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";
+    const b=this,old=b.textContent,batch=+$("mkvslider").value;b.disabled=true;b.textContent="waking GPU… ~60s";
     try{
-      const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch:$("mkvslider").value,max_new_tokens:48,t:TOKEN}));
+      const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch,max_new_tokens:KV_TOKENS,t:TOKEN}));
       const d=await r.json();
-      if(d.error){fail("mkv","demo unavailable: "+d.error);}
+      if(d.error){$("mkvexp").textContent="demo unavailable: "+d.error;$("mkvout").classList.add("show");}
       else{
-        $("mkvc").textContent=d.cached_tok_s.toFixed(1)+" tok/s";
-        $("mkvu").textContent=d.uncached_tok_s.toFixed(1)+" tok/s";
-        $("mkvm").textContent=d.speedup.toFixed(2)+"×";
-        $("mkvtext").textContent=(d.match?"identical output ✓\n":"")+d.cached_text.trim();
+        const tot=batch*KV_TOKENS,tc=tot/d.cached_tok_s,tu=tot/d.uncached_tok_s,mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
+        $("mkvc").textContent=fmt(d.cached_tok_s)+" tok/s · "+tc.toFixed(3)+"s";
+        $("mkvu").textContent=fmt(d.uncached_tok_s)+" tok/s · "+tu.toFixed(3)+"s";
+        $("mkvcbar").style.width=(d.cached_tok_s/mx*100)+"%";$("mkvubar").style.width=(d.uncached_tok_s/mx*100)+"%";
+        $("mkvm").textContent=d.speedup.toFixed(2)+"×";$("mkvmd").textContent="faster with the cache at batch "+batch;
+        $("mkvexp").textContent=kvExplain(d.speedup,batch);
+        $("mkvtext").textContent=d.cached_text.trim();
         $("mkvout").classList.add("show");
       }
-    }catch(e){fail("mkv","live call failed: "+e);}
+    }catch(e){$("mkvexp").textContent="live call failed: "+e;$("mkvout").classList.add("show");}
     b.textContent=old;b.disabled=false;
   };
 
-  const SP=[["Code","Write a Python function that merges two sorted lists."],
-            ["Copy","Repeat this exactly: the mitochondrion is the powerhouse of the cell."],
-            ["Creative","Write a short, vivid story about a lighthouse keeper."]];
+  const SP=[["Structured (high accept)","List the integers from 1 to 40, separated by commas."],
+            ["Legal boilerplate","Repeat this notice exactly: This agreement shall be governed by and construed in accordance with the applicable laws, and the parties consent to the exclusive jurisdiction of its courts."],
+            ["Creative (low accept)","Write a short, surprising story about a lighthouse keeper who starts hearing the sea talk back."]];
   $("mspresets").innerHTML=SP.map((p,i)=>`<button class="mini-preset${i===0?' sel':''}">${p[0]}</button>`).join("");
   [...$("mspresets").children].forEach((btn,i)=>btn.onclick=()=>{
     [...$("mspresets").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");$("mspt").value=SP[i][1];});
   $("msrun").onclick=async function(){
     const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";
     try{
-      const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("mspt").value,k:4,max_new_tokens:64,t:TOKEN}));
+      const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("mspt").value,k:4,max_new_tokens:SP_TOKENS,t:TOKEN}));
       const d=await r.json();
-      if(d.error){fail("ms","demo unavailable: "+d.error);}
+      if(d.error){$("msexp").textContent="demo unavailable: "+d.error;$("msout").classList.add("show");}
       else{
-        $("mss").textContent=d.spec_tok_s.toFixed(1)+" tok/s";
-        $("mst").textContent=d.target_tok_s.toFixed(1)+" tok/s";
-        $("msm").textContent=d.speedup.toFixed(2)+"×";
-        $("mstext").textContent=d.tagged.map(t=>t.tok).join("").trim();
+        const tt=SP_TOKENS/d.target_tok_s,ts=SP_TOKENS/d.spec_tok_s,mx=Math.max(d.spec_tok_s,d.target_tok_s);
+        $("mst").textContent=fmt(d.target_tok_s)+" tok/s · "+tt.toFixed(3)+"s";
+        $("mss").textContent=fmt(d.spec_tok_s)+" tok/s · "+ts.toFixed(3)+"s";
+        $("mstbar").style.width=(d.target_tok_s/mx*100)+"%";$("mssbar").style.width=(d.spec_tok_s/mx*100)+"%";
+        $("msm").textContent=d.speedup.toFixed(2)+"×";$("msacc").textContent=Math.round(d.acceptance_rate*100)+"%";
+        $("msexp").textContent=spExplain(d.acceptance_rate);
+        $("mstext").innerHTML=d.tagged.map(t=>t.tag==="draft"?`<span class="acc">${esc(t.tok)}</span>`:`<span>${esc(t.tok)}</span>`).join("");
         $("msout").classList.add("show");
       }
-    }catch(e){fail("ms","live call failed: "+e);}
+    }catch(e){$("msexp").textContent="live call failed: "+e;$("msout").classList.add("show");}
     b.textContent=old;b.disabled=false;
   };
 })();
