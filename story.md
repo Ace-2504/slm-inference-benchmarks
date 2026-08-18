@@ -271,6 +271,25 @@ CUDA-graph-fix caveat stated). `build_site.py` extended to bake the exp3 series 
 data.js. Redeployed public. → *Better: the demo is genuinely live, cleanly split run-vs-explanation, shows all
 four results on-page, and reads in Harman's own voice.*
 
+## Minimal-design variant (test) — Harman's second layout, appended below the main design
+
+**E21 · Minimal side-by-side variant, iterated over several turns (main design never overwritten).** Harman
+prototyped a compact alternative at the page bottom to compare which reads better. Arc: **(a)** two live
+benchmark boxes side by side — **KV cache** (one batch slider to 64; output hidden until Run, then reveals
+tok/s with/without + multiplier + identical-output scrollable box) and **speculative decoding** (3 editable
+sample prompts; output reveals both tok/s + throughput multiplier + acceptance + coloured token stream);
+**(b)** redesigned those outputs to the reference style — labelled `tok/s · wall-time`, proportional
+green/tan bars, big multiplier, an adaptive one-liner; taller equal-height boxes; **(c)** two static-concept
+boxes (continuous batching + PagedAttention) presented as **toggle-driven inline-SVG diagrams**
+(Static↔Continuous slot occupancy; Naive↔Paged memory blocks) since they have no live output; **(d)** a
+**Graph** tab on all four boxes with the real measured charts, made **click-to-zoom** (magnifier cursor →
+full-size lightbox, same clarity since SVG is vector); **(e)** fixed an empty-progress-bar bug (the `<i>`
+fill was inline → needed `display:block`); **(f)** grouped into **Section 1** (single stream: KV +
+speculative) and **Section 2** (many streams: batching + paging), each closed with a prose lesson (Harman's
+text for §1, a specialised parallel for §2) and a closing stanza tying the project to the roofline. All in a
+self-contained appended TEST block. → *Better: a full minimal alternative exists to compare, main design
+untouched.*
+
 ---
 
 ## Side task — connector-drawn flowcharts (local only)
@@ -297,7 +316,7 @@ infographic shell but the embedded "diagram" panels are AI-generated garbage** (
 export is fiddly and free-tier-capped), **Canva last** (design-pretty, content-inaccurate). Images live in
 `flowcharts/`, confirmed never committed.*
 
-**E20 · report.pdf — fixed clipped graphs + centered title/hero.** Harman flagged the KV-cache and
+**E22 · report.pdf — fixed clipped graphs + centered title/hero.** Harman flagged the KV-cache and
 speculative graphs were cut off mid-chart. Cause: `img_row` reserved a fixed 52 mm per row, but at half-page
 width (~93 mm) those plots are ~64 mm and ~61 mm tall, so each row overlapped the next and clipped the top
 graphs. Fixed `img_row` to read each image's real pixel dimensions (Pillow), reserve the row's true max
@@ -308,7 +327,7 @@ trust paragraph as left-aligned body. → *Better: the report reads cleanly and 
 
 ---
 
-**E21 · Deep scan: report-vs-demo KV-cache mismatch (Harman ran batch-64 live → 2.5x, report shows 9.2x
+**E23 · Deep scan: report-vs-demo KV-cache mismatch (Harman ran batch-64 live → 2.5x, report shows 9.2x
 at batch 16).** Traced it end-to-end. **Root cause = context length, not a compute flaw:** `run_exp1.py`
 pads the prompt to **512 tokens**; the demo tokenized Harman's **~6-token** prompt with no padding. The
 uncached loop recomputes the whole sequence every step, so the cache's payoff scales with sequence length —
@@ -325,6 +344,21 @@ the main KV box's context slider now actually pads (was decorative); the minimal
 match the report; regenerated exp1 plots + data.js + report.pdf from the corrected run; redeployed. **Demo
 now matches the report** (batch 16 → ~9x both). → *Better: a confusing inconsistency is fully explained,
 one real fairness/OOM bug fixed, and web + report are consistent.*
+
+**E24 · Minimal-take section: nine UX/parity fixes.** Harman gave a 9-item punch
+list for the "test · a minimal take" section. Shipped all in `site/index.html`: (1) spec button "Run both" →
+"Run plain vs speculative"; (2) KV box slider → small batch-size buttons `1,2,4,8,16,32,64`; (3) added
+reactive **demo available / unavailable** status pills (top-right, styled like the maximal cards) on the KV
+and spec boxes — a failed/errored run flips to "demo unavailable" and grays the run button; clicking the pill
+retries; (4)+(5) replaced the 2-colour minimal token legend (the near-invisible tan "produced by target"
+swatch was the bug) with the maximal **3-way** highlight — draft-accepted (teal) / target-correction (rose) /
+bonus (blue), matching style not size; (6) rewrote both "the lesson in both" paragraphs in plain layman
+English; (7) added a 3rd **Table** tab to the continuous-batching box (the exp3 batch×rate sweep) with the
+same click-to-zoom lightbox (extended `zoomable()` to clone a `<table>`, not just SVG); (8) moved the CB
+(req/s, p95) and PagedAttention (KV/token, naive→paged seqs) stats into metric **sub-boxes** like the maximal
+impl; (9) removed the "Four switches…" closing paragraph. Verified live over a local http server via DOM
+introspection (data.js needs a server, not file://): all buttons/tabs/zoom/status flows pass, no console
+errors. → *Better: the minimal section now mirrors the maximal one's affordances and reads simpler.*
 
 ---
 

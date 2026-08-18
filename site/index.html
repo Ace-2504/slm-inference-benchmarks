@@ -300,6 +300,24 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   @media(max-width:680px){.mini-grid{grid-template-columns:1fr}}
   .mini-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(30,41,59,.03),0 8px 22px rgba(30,41,59,.04)}
   .mini-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--molive);margin-bottom:9px}
+  .mini-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .mini-top .mini-eyebrow{margin-bottom:0}
+  .mstatus{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.01em;color:var(--muted);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap;margin-bottom:9px}
+  .mstatus .md{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+  .mstatus.ok .md{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)}
+  .mstatus.wake .md{background:var(--blue);animation:pulse 1s infinite}
+  .mstatus.off{cursor:pointer;color:#9a6a1a}.mstatus.off .md{background:var(--amber)}
+  .mbatset{display:flex;gap:6px;flex-wrap:wrap}
+  .mbatb{min-width:30px;height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font:inherit;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .mbatb:hover{border-color:var(--dim)}
+  .mbatb.sel{background:var(--mgreen-dk);color:#fff;border-color:transparent}
+  .msub{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .msub.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:420px){.msub.three{grid-template-columns:1fr 1fr}}
+  .msubc{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:9px 11px}
+  .msubc .k{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .msubc .v{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15.5px;color:var(--ink);margin-top:2px;font-variant-numeric:tabular-nums}
+  .msubc .v small{font-size:11px;color:var(--dim);font-weight:500}
   .mini-box .desc{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.55}
   .mini-box .desc b{color:var(--ink)}
   .mini-ctl{margin-bottom:14px}
@@ -330,8 +348,12 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   .mlegend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
   .mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
   .mlegend i.green{background:var(--mgreen)}.mlegend i.tan{background:var(--mtan)}
+  .mlegend i.draft{background:var(--teal)}.mlegend i.target{background:var(--rose)}.mlegend i.bonus{background:var(--blue)}
   .mini-text{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;max-height:150px;overflow:auto;white-space:pre-wrap}
-  .mini-text .acc{background:color-mix(in srgb,var(--mgreen) 20%,transparent);box-shadow:inset 0 -2px 0 var(--mgreen);border-radius:3px}
+  .mini-text .tok{padding:1px 2px;border-radius:3px}
+  .mini-text .tok.draft{background:color-mix(in srgb,var(--teal) 16%,transparent);box-shadow:inset 0 -2px 0 var(--teal)}
+  .mini-text .tok.target{background:color-mix(in srgb,var(--rose) 16%,transparent);box-shadow:inset 0 -2px 0 var(--rose)}
+  .mini-text .tok.bonus{background:color-mix(in srgb,var(--blue) 15%,transparent);box-shadow:inset 0 -2px 0 var(--blue)}
   /* static-concept boxes (continuous batching / paging) */
   .mseg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px}
   .mseg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:6px 16px;border-radius:999px;cursor:pointer}
@@ -358,7 +380,10 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
     <div class="msec-head"><em>Section 1</em> · making one stream faster</div>
     <div class="mini-grid">
       <div class="mini-box">
-        <div class="mini-eyebrow">KV cache · 125M SLM</div>
+        <div class="mini-top">
+          <div class="mini-eyebrow">KV cache · 125M SLM</div>
+          <span class="mstatus ok" id="mkvstatus" title="live demo status"><span class="md"></span><span>demo available</span></span>
+        </div>
         <p class="desc">Without a KV cache the model recomputes attention over the whole growing sequence
           every step. With it, each step reuses the stored keys/values. Raise the batch size (more concurrent
           "users") and watch the gap grow.</p>
@@ -366,8 +391,8 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <div class="mtp" data-t="mkv" data-p="run">
           <div class="mini-ctl">
             <div class="mlabel">Batch size (concurrent sequences): <b id="mkvb">16</b></div>
-            <input id="mkvslider" type="range" min="1" max="64" value="16" step="1">
-            <div class="mslabels"><span>1</span><span>512-token context · 48 new tokens · greedy</span><span>64</span></div>
+            <div class="mbatset" id="mkvbatset"></div>
+            <div class="mslabels" style="justify-content:center"><span>512-token context · 48 new tokens · greedy</span></div>
           </div>
           <button class="mini-run" id="mkvrun">Run benchmark →</button>
           <div class="mini-out" id="mkvout">
@@ -385,7 +410,10 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         </div>
       </div>
       <div class="mini-box">
-        <div class="mini-eyebrow">Speculative decoding · Qwen2.5 7B + 0.5B</div>
+        <div class="mini-top">
+          <div class="mini-eyebrow">Speculative decoding · Qwen2.5 7B + 0.5B</div>
+          <span class="mstatus ok" id="msstatus" title="live demo status"><span class="md"></span><span>demo available</span></span>
+        </div>
         <p class="desc">The small 0.5B <b>draft</b> proposes several tokens at once; the big 7B <b>target</b>
           verifies them in a single pass and keeps the longest prefix it agrees with. Same output as the 7B
           alone, but the speedup rides entirely on how often the draft is right.</p>
@@ -393,13 +421,13 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <div class="mtp" data-t="msp" data-p="run">
           <div class="mini-presets" id="mspresets"></div>
           <textarea class="mini-ta" id="mspt">List the integers from 1 to 40, separated by commas.</textarea>
-          <button class="mini-run" id="msrun">Run both →</button>
+          <button class="mini-run" id="msrun">Run plain vs speculative →</button>
           <div class="mini-out" id="msout">
             <div class="mbar"><div class="mbar-top"><span>Target only (7B, one token at a time)</span><span class="mval" id="mst">–</span></div><div class="mtrack"><i class="mfill tan" id="mstbar"></i></div></div>
             <div class="mbar"><div class="mbar-top"><span>Speculative (7B verifies 0.5B)</span><span class="mval" id="mss">–</span></div><div class="mtrack"><i class="mfill green" id="mssbar"></i></div></div>
             <div class="mmult"><span class="mbig green" id="msm">–</span><span class="mdesc">throughput</span><span class="mbig dark" id="msacc">–</span><span class="mdesc">draft tokens accepted</span></div>
             <p class="mexplain" id="msexp"></p>
-            <div class="mlegend"><span><i class="green"></i>proposed by draft, accepted</span><span><i class="tan"></i>produced by target</span></div>
+            <div class="mlegend"><span><i class="draft"></i>draft-accepted</span><span><i class="target"></i>target-correction</span><span><i class="bonus"></i>bonus (free)</span></div>
             <div class="mini-text" id="mstext"></div>
           </div>
         </div>
@@ -410,11 +438,12 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         </div>
       </div>
     </div>
-    <div class="mlesson">The lesson in both: <b>throughput is not one number.</b> The KV cache turns a
-      quadratic cost linear, and its payoff grows with how many users you batch together. Speculative decoding
-      trades extra draft compute for fewer expensive target steps, and only wins when the draft agrees often
-      enough — try a numbered list versus a poem and watch the acceptance rate, and the speedup, move
-      together.</div>
+    <div class="mlesson">The lesson in both: <b>"faster" isn't one fixed number — it depends on how you use
+      the machine.</b> The KV cache just saves the model from redoing work it already did, and it helps more the
+      more people you serve at the same time. Speculative decoding lets a small, quick model guess the next few
+      words while the big model only checks the guesses — so it saves time only when the guesses are usually
+      right. Ask for something predictable, like a list of numbers, and the guessing works; ask for a poem, and
+      it doesn't.</div>
     <div class="msec-head"><em>Section 2</em> · serving many streams at once</div>
     <div class="mini-grid" style="margin-top:16px">
       <div class="mini-box">
@@ -422,7 +451,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
         <p class="desc">Static batching runs a whole batch to completion before admitting anyone new, so short
           requests sit idle in their slot. Continuous batching refills a slot the instant it frees up. (Run
           offline — sustained many-request load isn't reasonable to serve live.)</p>
-        <div class="mtabs" data-t="cb"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button></div>
+        <div class="mtabs" data-t="cb"><button class="mtab sel" data-p="diagram">Diagram</button><button class="mtab" data-p="graph">Graph</button><button class="mtab" data-p="table">Table</button></div>
         <div class="mtp" data-t="cb" data-p="diagram">
           <div class="mseg" id="cbseg"><button class="sel" data-m="static">Static</button><button data-m="cont">Continuous</button></div>
           <div class="mdiag" id="cbdiag"></div>
@@ -433,8 +462,12 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
           <div class="mlegend"><span><i class="tan"></i>static</span><span><i class="green"></i>continuous</span></div>
           <p class="mcap">Measured slot utilisation over time (batch 32, 80 req/s): static drains to idle while one straggler finishes; continuous holds the slots full.</p>
         </div>
+        <div class="mtp" data-t="cb" data-p="table" hidden>
+          <div class="mdiag" id="cbtablewrap" style="padding:6px 8px"><table id="cbtable"><thead><tr><th>batch · rate</th><th>static</th><th>cont.</th><th>static p95</th><th>cont. p95</th></tr></thead><tbody></tbody></table></div>
+          <p class="mcap">Measured req/s and p95 latency across batch size and arrival rate: continuous wins at every setting, and the gap widens as the batch grows.</p>
+        </div>
         <div class="mfoot"><span class="mbig green" id="cbbig">–</span><span class="mdesc">more throughput than static</span></div>
-        <div class="mmini-stats" id="cbstats"></div>
+        <div class="msub" id="cbsub"></div>
       </div>
       <div class="mini-box">
         <div class="mini-eyebrow">PagedAttention · offline study</div>
@@ -452,21 +485,15 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
           <p class="mcap">Measured wasted KV memory vs block size: the paged line stays far below the naive reserve-max (dashed) across every block size.</p>
         </div>
         <div class="mfoot"><span class="mbig green" id="pabig">–</span><span class="mdesc">more sequences fit in the same memory</span></div>
-        <div class="mmini-stats" id="pastats"></div>
+        <div class="msub three" id="pasub"></div>
       </div>
     </div>
-    <div class="mlesson">The lesson in both: <b>the fastest kernel is worthless if the machine sits idle or
-      half-empty.</b> Continuous batching attacks wasted <b>time</b> — it refuses to let a finished request
-      hold its slot hostage while one straggler runs on. PagedAttention attacks wasted <b>space</b> — it stops
-      reserving room for a length almost no request ever reaches. One keeps the compute busy, the other keeps
-      the memory full, and both cash out as the same prize: many more sequences served on the very same card.</div>
-    <div class="mclosing">Four switches, one question underneath them all — <b>what is the GPU actually
-      waiting for?</b> A single stream waits on memory, so recomputing is nearly free until the batch fills. A
-      big model waits on its own weights, so a smaller one can run ahead and be checked in a single pass. A
-      static batch waits on its slowest member; a reserved block waits on tokens that never arrive. Training
-      decides whether a model can answer; everything here decides whether anyone can afford to ask. And the
-      answer, every time, was the same: <b>don't make one step fast — make sure the expensive silicon is never
-      idle.</b></div>
+    <div class="mlesson">The lesson in both: <b>a fast chip is wasted if it's sitting idle or half-empty.</b>
+      Continuous batching fixes wasted <b>time</b> — the moment one request finishes, the next one takes its
+      seat instead of leaving it empty while a long request runs on. PagedAttention fixes wasted <b>space</b> —
+      it stops setting aside room for long answers that almost never come, and hands out memory only as it's
+      actually needed. One keeps the chip busy, the other keeps its memory full, and both let the very same card
+      serve many more people at once.</div>
   </div>
   <!-- ===== end TEST ===== -->
 
@@ -485,6 +512,10 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
 .zoom-close{position:absolute;top:12px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);font-size:21px;line-height:1;cursor:pointer}
 .zoom-close:hover{color:var(--ink)}
 .zoom-body svg{width:100%;height:auto;display:block}
+.zoom-body table{width:100%;border-collapse:collapse;font-size:15px}
+.zoom-body th,.zoom-body td{text-align:right;padding:10px 14px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;font-family:"JetBrains Mono",monospace}
+.zoom-body th:first-child,.zoom-body td:first-child{text-align:left;font-family:Figtree,sans-serif}
+.zoom-body thead th{color:var(--muted);font-size:12.5px;font-weight:700;font-family:Figtree,sans-serif}
 .zoom-cap{margin-top:16px;color:var(--muted);font-size:14.5px;line-height:1.55}
 </style>
 <div id="zoom-modal" class="zoom-modal" hidden>
@@ -666,25 +697,39 @@ paintE1();paintE2();
     return "Low acceptance → the draft keeps guessing wrong and the 7B redoes the work, so speculation can even lose.";
   }
 
-  $("mkvslider").oninput=function(){$("mkvb").textContent=this.value};
+  // ---- demo-availability status pill (reactive, in the spirit of the maximal cards) ----
+  function setStat(id,state){ // state: 'ok' | 'wake' | 'off'
+    const el=$(id);if(!el)return;el.classList.remove("ok","wake","off");el.classList.add(state);
+    el.title=state==="off"?"demo unavailable — click to retry":"live demo status";
+    el.lastElementChild.textContent=state==="ok"?"demo available":state==="wake"?"waking GPU…":"demo unavailable";
+  }
+  let kvAvail=true;
+  function setKvAvail(a){kvAvail=a;setStat("mkvstatus",a?"ok":"off");$("mkvrun").disabled=!a;}
+  $("mkvstatus").onclick=()=>{if(!kvAvail)setKvAvail(true);}; // click a grayed-out demo to retry
+
+  // ---- KV cache: batch-size buttons (1 → 64), replacing the slider ----
+  const KV_BATCHES=[1,2,4,8,16,32,64];let mkvBatch=16;
+  $("mkvbatset").innerHTML=KV_BATCHES.map(b=>`<button class="mbatb${b===mkvBatch?' sel':''}" data-b="${b}">${b}</button>`).join("");
+  [...$("mkvbatset").children].forEach(btn=>btn.onclick=()=>{
+    mkvBatch=+btn.dataset.b;$("mkvb").textContent=mkvBatch;
+    [...$("mkvbatset").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");});
+
   $("mkvrun").onclick=async function(){
-    const b=this,old=b.textContent,batch=+$("mkvslider").value;b.disabled=true;b.textContent="waking GPU… ~60s";
+    const b=this,old=b.textContent,batch=mkvBatch;b.disabled=true;b.textContent="waking GPU… ~60s";setStat("mkvstatus","wake");
     try{
       const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch,max_new_tokens:KV_TOKENS,context:512,t:TOKEN}));
       const d=await r.json();
-      if(d.error){$("mkvexp").textContent="demo unavailable: "+d.error;$("mkvout").classList.add("show");}
-      else{
-        const tot=batch*KV_TOKENS,tc=tot/d.cached_tok_s,tu=tot/d.uncached_tok_s,mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
-        $("mkvc").textContent=fmt(d.cached_tok_s)+" tok/s · "+tc.toFixed(3)+"s";
-        $("mkvu").textContent=fmt(d.uncached_tok_s)+" tok/s · "+tu.toFixed(3)+"s";
-        $("mkvcbar").style.width=(d.cached_tok_s/mx*100)+"%";$("mkvubar").style.width=(d.uncached_tok_s/mx*100)+"%";
-        $("mkvm").textContent=d.speedup.toFixed(2)+"×";$("mkvmd").textContent="faster with the cache at batch "+batch;
-        $("mkvexp").textContent=kvExplain(d.speedup,batch);
-        $("mkvtext").textContent=d.cached_text.trim();
-        $("mkvout").classList.add("show");
-      }
-    }catch(e){$("mkvexp").textContent="live call failed: "+e;$("mkvout").classList.add("show");}
-    b.textContent=old;b.disabled=false;
+      b.textContent=old;
+      if(d.error){$("mkvexp").textContent="demo unavailable: "+d.error;$("mkvout").classList.add("show");setKvAvail(false);return;}
+      const tot=batch*KV_TOKENS,tc=tot/d.cached_tok_s,tu=tot/d.uncached_tok_s,mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
+      $("mkvc").textContent=fmt(d.cached_tok_s)+" tok/s · "+tc.toFixed(3)+"s";
+      $("mkvu").textContent=fmt(d.uncached_tok_s)+" tok/s · "+tu.toFixed(3)+"s";
+      $("mkvcbar").style.width=(d.cached_tok_s/mx*100)+"%";$("mkvubar").style.width=(d.uncached_tok_s/mx*100)+"%";
+      $("mkvm").textContent=d.speedup.toFixed(2)+"×";$("mkvmd").textContent="faster with the cache at batch "+batch;
+      $("mkvexp").textContent=kvExplain(d.speedup,batch);
+      $("mkvtext").textContent=d.cached_text.trim();
+      $("mkvout").classList.add("show");setKvAvail(true);
+    }catch(e){b.textContent=old;$("mkvexp").textContent="live call failed: "+e;$("mkvout").classList.add("show");setKvAvail(false);}
   };
 
   const SP=[["Structured (high accept)","List the integers from 1 to 40, separated by commas."],
@@ -693,24 +738,28 @@ paintE1();paintE2();
   $("mspresets").innerHTML=SP.map((p,i)=>`<button class="mini-preset${i===0?' sel':''}">${p[0]}</button>`).join("");
   [...$("mspresets").children].forEach((btn,i)=>btn.onclick=()=>{
     [...$("mspresets").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");$("mspt").value=SP[i][1];});
+
+  let spAvail=true;
+  function setSpAvail(a){spAvail=a;setStat("msstatus",a?"ok":"off");$("msrun").disabled=!a;}
+  $("msstatus").onclick=()=>{if(!spAvail)setSpAvail(true);}; // click a grayed-out demo to retry
+
   $("msrun").onclick=async function(){
-    const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";
+    const b=this,old=b.textContent;b.disabled=true;b.textContent="waking GPU… ~60s";setStat("msstatus","wake");
     try{
       const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:$("mspt").value,k:4,max_new_tokens:SP_TOKENS,t:TOKEN}));
       const d=await r.json();
-      if(d.error){$("msexp").textContent="demo unavailable: "+d.error;$("msout").classList.add("show");}
-      else{
-        const tt=SP_TOKENS/d.target_tok_s,ts=SP_TOKENS/d.spec_tok_s,mx=Math.max(d.spec_tok_s,d.target_tok_s);
-        $("mst").textContent=fmt(d.target_tok_s)+" tok/s · "+tt.toFixed(3)+"s";
-        $("mss").textContent=fmt(d.spec_tok_s)+" tok/s · "+ts.toFixed(3)+"s";
-        $("mstbar").style.width=(d.target_tok_s/mx*100)+"%";$("mssbar").style.width=(d.spec_tok_s/mx*100)+"%";
-        $("msm").textContent=d.speedup.toFixed(2)+"×";$("msacc").textContent=Math.round(d.acceptance_rate*100)+"%";
-        $("msexp").textContent=spExplain(d.acceptance_rate);
-        $("mstext").innerHTML=d.tagged.map(t=>t.tag==="draft"?`<span class="acc">${esc(t.tok)}</span>`:`<span>${esc(t.tok)}</span>`).join("");
-        $("msout").classList.add("show");
-      }
-    }catch(e){$("msexp").textContent="live call failed: "+e;$("msout").classList.add("show");}
-    b.textContent=old;b.disabled=false;
+      b.textContent=old;
+      if(d.error){$("msexp").textContent="demo unavailable: "+d.error;$("msout").classList.add("show");setSpAvail(false);return;}
+      const tt=SP_TOKENS/d.target_tok_s,ts=SP_TOKENS/d.spec_tok_s,mx=Math.max(d.spec_tok_s,d.target_tok_s);
+      $("mst").textContent=fmt(d.target_tok_s)+" tok/s · "+tt.toFixed(3)+"s";
+      $("mss").textContent=fmt(d.spec_tok_s)+" tok/s · "+ts.toFixed(3)+"s";
+      $("mstbar").style.width=(d.target_tok_s/mx*100)+"%";$("mssbar").style.width=(d.spec_tok_s/mx*100)+"%";
+      $("msm").textContent=d.speedup.toFixed(2)+"×";$("msacc").textContent=Math.round(d.acceptance_rate*100)+"%";
+      $("msexp").textContent=spExplain(d.acceptance_rate);
+      // three producers, same style as the maximal card: draft-accepted / target-correction / bonus
+      $("mstext").innerHTML=d.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");
+      $("msout").classList.add("show");setSpAvail(true);
+    }catch(e){b.textContent=old;$("msexp").textContent="live call failed: "+e;$("msout").classList.add("show");setSpAvail(false);}
   };
 })();
 
@@ -762,11 +811,21 @@ paintE1();paintE2();
   [...$("cbseg").children].forEach(b=>b.onclick=()=>{[...$("cbseg").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");cbRender(b.dataset.m);});
   [...$("paseg").children].forEach(b=>b.onclick=()=>{[...$("paseg").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");paRender(b.dataset.m);});
 
+  const subc=(k,v,s)=>`<div class="msubc"><div class="k">${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`;
   $("cbbig").textContent=Math.round(D.exp3.cont_req_s/D.exp3.static_req_s)+"×";
-  $("cbstats").textContent=`${D.exp3.cont_req_s} vs ${D.exp3.static_req_s} req/s · p95 ${D.exp3.cont_p95}s vs ${D.exp3.static_p95}s`;
+  $("cbsub").innerHTML=
+    subc("throughput",`${D.exp3.cont_req_s} vs ${D.exp3.static_req_s}`,"req/s · cont vs static")+
+    subc("p95 latency",`${D.exp3.cont_p95} vs ${D.exp3.static_p95}`,"s · cont vs static");
   const paConc=D.exp4.vllm?D.exp4.vllm.conc:D.exp4.paged_conc;
   $("pabig").textContent=Math.round(paConc/D.exp4.naive_conc)+"×";
-  $("pastats").textContent=`${D.exp4.kv_kb} KB/token · ${D.exp4.naive_conc.toLocaleString()} → ${paConc.toLocaleString()} sequences`;
+  $("pasub").innerHTML=
+    subc("KV / token",D.exp4.kv_kb,"KB")+
+    subc("naive fits",D.exp4.naive_conc.toLocaleString(),"seqs")+
+    subc("paged fits",paConc.toLocaleString(),"seqs");
+
+  // continuous-batching Table tab: the measured batch×rate sweep
+  $("cbtable").querySelector("tbody").innerHTML=D.exp3.table.map(r=>
+    `<tr><td>B${r.B} · ${r.rate}/s</td><td>${r.s_req}</td><td>${r.c_req}</td><td>${r.s_p95}s</td><td>${r.c_p95}s</td></tr>`).join("");
 
   // Diagram | Graph tab switching
   document.querySelectorAll(".mtabs").forEach(bar=>{const t=bar.dataset.t;
@@ -799,11 +858,13 @@ paintE1();paintE2();
   // same clarity — the SVG is vector, so it scales up crisp)
   const zmodal=$("zoom-modal"),zbody=$("zoom-body"),zcap=$("zoom-cap");
   function zoomable(id,cap){const el=$(id);if(!el)return;el.classList.add("zoomable");el.title="Click to zoom";
-    el.addEventListener("click",()=>{const svg=el.querySelector("svg");if(!svg)return;
-      zbody.innerHTML=svg.outerHTML;zcap.textContent=cap;zmodal.hidden=false;});}
+    el.addEventListener("click",()=>{const svg=el.querySelector("svg"),tbl=el.querySelector("table");
+      const inner=svg?svg.outerHTML:tbl?tbl.outerHTML:null;if(!inner)return;
+      zbody.innerHTML=inner;zcap.textContent=cap;zmodal.hidden=false;});}
   zoomable("mkvchart","Measured cache speedup vs batch size: a wash at batch 1 (0.99x), climbing to ~9x by batch 16 as the batch fills the compute units.");
   zoomable("mspchart","Measured speculative speedup vs k for each prompt type: predictable prompts (code, copy) climb above parity; open-ended ones (explain, creative) fall below it.");
   zoomable("cbchart","Measured slot utilisation over time (batch 32, 80 req/s): static (tan) drains to idle while one straggler finishes; continuous (green) holds the slots full.");
+  zoomable("cbtablewrap","Measured throughput and p95 latency across batch size and arrival rate: continuous beats static at every setting, and the gap widens as the batch grows.");
   zoomable("pachart","Measured wasted KV memory vs block size: the paged line (green) stays far below the naive reserve-max (dashed, "+D.exp4.naive_waste+"%) at every block size.");
   if(zmodal){zmodal.addEventListener("click",e=>{if(e.target===zmodal||e.target.classList.contains("zoom-close"))zmodal.hidden=true;});
     document.addEventListener("keydown",e=>{if(e.key==="Escape")zmodal.hidden=true;});}

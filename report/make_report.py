@@ -12,10 +12,16 @@ from fpdf import FPDF
 ROOT = Path(__file__).resolve().parents[1]
 R = lambda name: json.loads((ROOT / "results" / name).read_text())
 
+def R_opt(name):
+    p = ROOT / "results" / name
+    return json.loads(p.read_text()) if p.exists() else None
+
 exp1 = R("exp1.json")
 exp2 = R("exp2.json")
 exp3 = R("exp3.json")
 exp4 = R("exp4.json")
+exp4n = R_opt("exp4_naive.json")
+exp4v = R_opt("exp4_vllm.json")
 gaunt = R("phase1_gauntlet.json")
 
 GPU = exp1["gpu_info"].get("name", "GPU")
@@ -147,8 +153,9 @@ img_row(["exp3_batching/utilisation_over_time.png", "exp4_paged/wasted_memory.pn
 pdf.set_font("Arial", "", 8)
 lines = [
     ("Exp 1", "Expected the cache to be a big win everywhere.",
-     "At batch 1 it is a wash (0.99x) — the uncached loop does 60x more arithmetic but the GPU was "
-     "memory-bound and idle, so the extra math is free; the cache only wins as the batch fills the ALUs."),
+     f"At batch 1 it is a wash ({b1:.2f}x) — the uncached loop does {exp1['token_positions']['ratio_uncached_over_cached']:.0f}x "
+     "more arithmetic but the GPU was memory-bound and idle, so the extra math is free; the cache only wins "
+     "as the batch fills the ALUs."),
     ("Exp 2", "Expected a 15x-smaller draft to give a big speedup.",
      f"Naive it was a slowdown: the 0.5B draft is kernel-launch-bound (step time tracks layers, not "
      f"params), so c={c:.2f} and no acceptance rate can win. The diagnosis, not the mechanism, is the work."),
@@ -170,6 +177,27 @@ for tag, exp, meas in lines:
     pdf.ln(0.5)
 
 pdf.ln(1)
+pdf.set_font("Arial", "B", 9)
+pdf.cell(0, 5, "Setup, diagnosis & cost", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Arial", "", 8.3)
+_d = exp2["diagnosis"]
+_kvkb = exp4["kv_bytes_per_token"] / 1024
+_kvh = (exp4n or {}).get("config", {}).get("num_key_value_heads", "?")
+_vc = int(exp4v["paged_concurrency_at_mean"]) if exp4v else None
+_nc = exp4["naive"]["concurrency"]
+pdf.multi_cell(0, 4.3,
+    f"Exp 1: gpt2 (125M), a {exp1['prompt_len']}-token prompt, {exp1['max_new_tokens']} generated tokens, "
+    f"batches 1-16, greedy. Exp 2: Qwen2.5-7B-Instruct (target, {_d['target_layers']} layers, "
+    f"{_d['target_step_ms']:.0f} ms/step) + Qwen2.5-0.5B-Instruct (draft, {_d['draft_layers']} layers, "
+    f"{_d['draft_step_ms']:.0f} ms/step), {exp2['max_new_tokens']} tokens, greedy -> measured c = {_d['c']:.2f}. "
+    f"I tried to bring c down by CUDA-graphing the draft (torch.compile reduce-overhead, then manual capture), but "
+    f"both crashed with device-side asserts on this torch 2.13 / transformers 5.15 stack, so I report the honest "
+    f"c = {_d['c']:.2f} rather than a number I could not reproduce. Exp 3 & 4: Qwen2.5-0.5B-Instruct "
+    f"(grouped-query attention, {_kvh} kv-heads -> {_kvkb:.0f} KB KV per token). Exp 3 is a discrete-event "
+    f"simulation over the real measured decode-step times (Poisson arrivals, heavy-tailed output lengths); Exp 4's "
+    + (f"paged concurrency is confirmed on the real vLLM engine ({_vc:,} sequences vs naive's {_nc}). " if _vc else "")
+    + f"All bf16 on one {GPU} via Modal; total spend ~$2.6.")
+pdf.ln(2)
 pdf.set_font("Arial", "B", 9)
 pdf.cell(0, 5, "The one measurement that changed how I think about serving:", new_x="LMARGIN", new_y="NEXT")
 pdf.set_font("Arial", "", 8.5)
