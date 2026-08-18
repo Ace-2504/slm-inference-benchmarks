@@ -71,7 +71,11 @@ def greedy_uncached(model, input_ids, max_new_tokens, record_steps=False):
         holder = {}
 
         def step():
-            holder["o"] = model(input_ids=seq, use_cache=False)
+            # logits_to_keep=1 on BOTH loops so the ONLY difference is the KV cache itself
+            # (greedy needs only the last logit). Without it, the uncached loop also pays a
+            # full (batch, seq, vocab) lm_head every step — extra work the cached loop skips,
+            # which both inflates the measured speedup and OOMs at high batch/context.
+            holder["o"] = model(input_ids=seq, use_cache=False, logits_to_keep=1)
 
         if record_steps:
             per_step.append(time_event(step))

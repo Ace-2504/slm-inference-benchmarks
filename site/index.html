@@ -367,7 +367,7 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
           <div class="mini-ctl">
             <div class="mlabel">Batch size (concurrent sequences): <b id="mkvb">16</b></div>
             <input id="mkvslider" type="range" min="1" max="64" value="16" step="1">
-            <div class="mslabels"><span>1</span><span>48 tokens each · greedy</span><span>64</span></div>
+            <div class="mslabels"><span>1</span><span>512-token context · 48 new tokens · greedy</span><span>64</span></div>
           </div>
           <button class="mini-run" id="mkvrun">Run benchmark →</button>
           <div class="mini-out" id="mkvout">
@@ -570,7 +570,7 @@ lineChart($("e1step"),[{y:ps1.cached,c:"var(--teal)"},{y:ps1.uncached,c:"var(--r
 $("e1sweep").dataset.xlab="batch size";sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})),"×","var(--violet)");
 $("e1go").onclick=async function(){
   const b=E1.batches[e1bi];this.disabled=true;setStatus("e1status","wake","waking GPU… first run ~60s");
-  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:$("e1gen").value,t:TOKEN}));
+  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:$("e1gen").value,context:$("e1ctx").value,t:TOKEN}));
     const d=await r.json();
     if(d.error){setStatus("e1status","off","demo: "+d.error);this.disabled=false;return}
     const mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
@@ -670,7 +670,7 @@ paintE1();paintE2();
   $("mkvrun").onclick=async function(){
     const b=this,old=b.textContent,batch=+$("mkvslider").value;b.disabled=true;b.textContent="waking GPU… ~60s";
     try{
-      const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch,max_new_tokens:KV_TOKENS,t:TOKEN}));
+      const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:"The future of computing is",batch,max_new_tokens:KV_TOKENS,context:512,t:TOKEN}));
       const d=await r.json();
       if(d.error){$("mkvexp").textContent="demo unavailable: "+d.error;$("mkvout").classList.add("show");}
       else{

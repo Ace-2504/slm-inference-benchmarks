@@ -25,6 +25,15 @@ EXP1_MODEL = "gpt2"
 TARGET_ID = "Qwen/Qwen2.5-7B-Instruct"
 DRAFT_ID = "Qwen/Qwen2.5-0.5B-Instruct"
 
+# seed text used to pad the exp-1 prompt to a chosen context length (matches run_exp1.py)
+_CONTEXT_SEED = (
+    "The history of computing is a history of moving work closer to where the data already "
+    "lives. Every generation of engineers rediscovers that the cost of a computation is rarely "
+    "the arithmetic itself but the waiting: waiting for memory, waiting for the network, waiting "
+    "for a lock. A processor that never stalls is a myth, and the art of systems work is deciding "
+    "which stalls are worth paying for. "
+)
+
 # --- gating + capping so a public endpoint can't run up the bill ---
 # Soft gate: the frontend sends this shared token; a bare URL hit without it is rejected.
 # (It lives in the page source, so it only stops casual/bot hammering — the hard ceiling
@@ -71,7 +80,7 @@ class Demo:
 
     @modal.fastapi_endpoint()
     def exp1(self, prompt: str = "The future of computing is", batch: int = 1,
-             max_new_tokens: int = 48, t: str = ""):
+             max_new_tokens: int = 48, context: int = 0, t: str = ""):
         import torch
         from fastapi.responses import JSONResponse
         from bench.decode_loops import greedy_cached, greedy_uncached
@@ -84,7 +93,17 @@ class Demo:
             return JSONResponse(status_code=gate[0], headers=_cors, content={"error": gate[1]})
         batch = max(1, min(int(batch), 64))
         max_new_tokens = max(1, min(int(max_new_tokens), 96))
+        context = max(0, min(int(context), 1024))
         ids = self.tok1(prompt, return_tensors="pt")["input_ids"].to(self.dev)
+        # Pad the prompt to `context` tokens (like the report + reference lab): the uncached
+        # loop recomputes the whole sequence every step, so the cache's payoff scales with
+        # context length. Without this the demo measures a tiny-context regime that does NOT
+        # match the report's 512-token measurement.
+        if context > ids.shape[1]:
+            seed_ids = self.tok1(_CONTEXT_SEED * 20, return_tensors="pt")["input_ids"].to(self.dev)
+            need = context - ids.shape[1]
+            ids = torch.cat([seed_ids[:, :need], ids], dim=1)
+        prompt_len = ids.shape[1]
         ids = ids.repeat(batch, 1)
         gen_c, _ = greedy_cached(self.m1, ids, max_new_tokens)
         gen_u, _ = greedy_uncached(self.m1, ids, max_new_tokens)
@@ -94,7 +113,7 @@ class Demo:
                        warmup=1, repeats=2)["median"]
         n = batch * max_new_tokens
         return JSONResponse(headers=_cors, content={
-            "batch": batch,
+            "batch": batch, "prompt_len": prompt_len,
             "cached_text": self.tok1.decode(gen_c[0]),
             "uncached_text": self.tok1.decode(gen_u[0]),
             "cached_tok_s": n / (cm / 1e3), "uncached_tok_s": n / (um / 1e3),

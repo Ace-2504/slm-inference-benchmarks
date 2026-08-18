@@ -308,6 +308,26 @@ trust paragraph as left-aligned body. → *Better: the report reads cleanly and 
 
 ---
 
+**E21 · Deep scan: report-vs-demo KV-cache mismatch (Harman ran batch-64 live → 2.5x, report shows 9.2x
+at batch 16).** Traced it end-to-end. **Root cause = context length, not a compute flaw:** `run_exp1.py`
+pads the prompt to **512 tokens**; the demo tokenized Harman's **~6-token** prompt with no padding. The
+uncached loop recomputes the whole sequence every step, so the cache's payoff scales with sequence length —
+proved live: 512-token prompt @ batch 16 → **11.5x** (reproduces the report), short prompt @ batch 64 →
+**2.2x** (reproduces what Harman saw). The report graph is accurate for a realistic 512-token context (the
+brief's calibration used ~587). **Also found a second, real issue while scanning:** `greedy_cached` used
+`logits_to_keep=1` but `greedy_uncached` computed the full `(batch, seq, vocab)` lm_head every step — an
+unfair asymmetry (extra work only the uncached side paid) that also **OOM'd** the demo (3 GB logits, only
+~3 GB free beside the Qwen models). Fixed `greedy_uncached` to `logits_to_keep=1` too, so the only difference
+between the loops is the KV cache itself. Re-ran exp1: speedup essentially unchanged (batch-16 9.17x→9.97x,
+within variance — the asymmetry hadn't materially inflated it), but the OOM is gone and the method is clean.
+**Fixes shipped:** demo endpoint gained a real `context` param that pads the prompt (like the reference lab);
+the main KV box's context slider now actually pads (was decorative); the minimal box sends context=512 to
+match the report; regenerated exp1 plots + data.js + report.pdf from the corrected run; redeployed. **Demo
+now matches the report** (batch 16 → ~9x both). → *Better: a confusing inconsistency is fully explained,
+one real fairness/OOM bug fixed, and web + report are consistent.*
+
+---
+
 ## Current status (as of last entry)
 
 - **Oriented** to the brief; four experiments + golden rules understood (E1).
