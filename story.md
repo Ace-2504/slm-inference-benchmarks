@@ -395,6 +395,19 @@ spend). Regenerated: still **2 pages**, 0 stray asterisks, numbers reconciled. F
 Harman's standing "do not commit frontend changes." → *Better: the report now opens on what was measured and
 closes on what it cost, and the assignment ships with a human note in Harman's own voice.*
 
+**E28 · The minimal design became a reusable skill: `harman-minimal-frontend`.** Harman's last request: turn
+the shipped minimal frontend into a highly detailed skill so any existing or new frontend can mimic it. Built
+at `~/.claude/skills/harman-minimal-frontend/` — a `SKILL.md` (the semantic green/tan/olive color language,
+Figtree + JetBrains Mono typography with every size, box anatomy, the **mandatory tab contract**: Benchmark/
+Run · Graph · Diagram where applicable, **Flowchart always and always last**, paired-bar results grammar,
+sentence-form section heads, lesson callouts, an 10-point verification checklist) plus three references
+extracted **verbatim from the shipped site**: `minimal.css` (drop-in tokens + every `m*` class + zoom modal),
+`box-skeleton.html` (both box variants + tab/status/zoom/run wiring JS), and `flowchart-grammar.md` (node
+palette, arrows, dashed loops, input props, two-lane rules, layman-caption register). The known gotchas are
+baked in as rules: `.mfill` must be `display:block`, pin the y-max before drawing reference lines, demo must
+measure the same configuration as the chart, and check the `<style>` block survives range deletes. → *Better:
+the design is now portable — one skill invocation reproduces it anywhere.*
+
 ---
 
 ## Current status (as of last entry)
