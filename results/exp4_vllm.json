@@ -1,0 +1,15 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "gpu_memory_utilization": 0.85,
+  "max_len": 2048,
+  "num_gpu_blocks": 89382,
+  "block_size": 16,
+  "kv_tokens_capacity": 1430112,
+  "mean_output_len": 93.9609375,
+  "paged_concurrency_at_mean": 15220.282364679471,
+  "throughput_tok_s": 3473.375562389816,
+  "throughput_req_s": 37.3214750880081,
+  "n_requests": 256,
+  "total_output_tokens": 23825,
+  "wall_s": 6.859321594238281
+}

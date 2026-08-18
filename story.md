@@ -194,8 +194,11 @@ under Standard Protection while team-suffixed URLs are SSO-gated. **Live + publi
 **(3)** The browser calls the Modal endpoints cross-origin, so added CORS (`Access-Control-Allow-Origin`) to
 the demo backend and redeployed; verified the header is present and both endpoints answer. **vLLM confirmation
 for Exp 4:** first run failed (`vllm 0.11.0` vs transformers 5.x tokenizer API); pinned `transformers==4.57.1`
-and re-ran. → *Worse then better: nearly left a broken yugioh arena behind; caught and reverted, and the
-demo now has its own public home.*
+and re-ran — **success**: the real engine reports **89,382 GPU KV blocks × 16 = 1.43 M KV tokens**, i.e.
+**15,220 concurrent sequences** at mean length 94 (vs naive's 801 → **~19×**, corroborating the arithmetic's
+~12×), sustaining **3,473 tok/s** at that concurrency — the memory saving turning into a speed saving.
+`results/exp4_vllm.json`. → *Worse then better: nearly left a broken yugioh arena behind; caught and reverted,
+the demo now has its own public home, and the paged side is confirmed on the real engine.*
 
 ---
 
@@ -219,5 +222,6 @@ demo now has its own public home.*
   concurrency (predicted 801 / OOM 889), block-size sweep. `results/exp4*.json` + plots.
 - **Phase 6 COMPLETE** (E13): live demo (Modal endpoints verified + Vercel deployed), **`report.pdf`** (1 pp),
   README reproduce-in-order, `costs.md` (≈$2.2 of $15).
-- **All six "what to submit" parts delivered.** Open: Vercel Deployment-Protection toggle (Harman's, to make
-  the demo public); optional vLLM real-engine confirmation for Exp 4's paged side.
+- **All six "what to submit" parts delivered + polish done** (E14): live demo **public** at
+  **https://harman-inference-lab.vercel.app** (CORS-enabled endpoints verified); Exp-4 paged side
+  **confirmed on real vLLM** (15,220 seqs, ~19× naive). No open items.
