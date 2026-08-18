@@ -81,6 +81,21 @@ pdf.set_draw_color(205)
 _yd = pdf.get_y()
 pdf.line(pdf.l_margin, _yd, pdf.w - pdf.r_margin, _yd)
 pdf.ln(3.5)
+# Setup section (top)
+_kkb = exp4["kv_bytes_per_token"] / 1024
+_kkh = (exp4n or {}).get("config", {}).get("num_key_value_heads", "?")
+pdf.set_font("Arial", "B", 9)
+pdf.set_text_color(30)
+pdf.cell(0, 5, "Setup", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Arial", "", 8.5)
+pdf.set_text_color(60)
+pdf.multi_cell(0, 4.3,
+    f"Exp 1 (KV cache): gpt2 (125M), a {exp1['prompt_len']}-token prompt, {exp1['max_new_tokens']} generated "
+    f"tokens, batch sizes 1-16, greedy. Exp 2 (speculative): Qwen2.5-7B-Instruct (target) + Qwen2.5-0.5B-"
+    f"Instruct (draft), {exp2['max_new_tokens']} generated tokens, greedy. Exp 3 & 4 (batching / paging): "
+    f"Qwen2.5-0.5B-Instruct (grouped-query attention, {_kkh} kv-heads -> {_kkb:.0f} KB KV per token). "
+    f"All bf16 on one {GPU} via Modal.")
+pdf.ln(2)
 # trust paragraph (body, left-aligned)
 pdf.set_font("Arial", "", 9)
 pdf.set_text_color(60)
@@ -176,27 +191,6 @@ for tag, exp, meas in lines:
     pdf.multi_cell(pdf.w - 2 * pdf.l_margin - 12, 4.2, meas, new_x="LMARGIN", new_y="NEXT")
     pdf.ln(0.5)
 
-pdf.ln(1)
-pdf.set_font("Arial", "B", 9)
-pdf.cell(0, 5, "Setup, diagnosis & cost", new_x="LMARGIN", new_y="NEXT")
-pdf.set_font("Arial", "", 8.3)
-_d = exp2["diagnosis"]
-_kvkb = exp4["kv_bytes_per_token"] / 1024
-_kvh = (exp4n or {}).get("config", {}).get("num_key_value_heads", "?")
-_vc = int(exp4v["paged_concurrency_at_mean"]) if exp4v else None
-_nc = exp4["naive"]["concurrency"]
-pdf.multi_cell(0, 4.3,
-    f"Exp 1: gpt2 (125M), a {exp1['prompt_len']}-token prompt, {exp1['max_new_tokens']} generated tokens, "
-    f"batches 1-16, greedy. Exp 2: Qwen2.5-7B-Instruct (target, {_d['target_layers']} layers, "
-    f"{_d['target_step_ms']:.0f} ms/step) + Qwen2.5-0.5B-Instruct (draft, {_d['draft_layers']} layers, "
-    f"{_d['draft_step_ms']:.0f} ms/step), {exp2['max_new_tokens']} tokens, greedy -> measured c = {_d['c']:.2f}. "
-    f"I tried to bring c down by CUDA-graphing the draft (torch.compile reduce-overhead, then manual capture), but "
-    f"both crashed with device-side asserts on this torch 2.13 / transformers 5.15 stack, so I report the honest "
-    f"c = {_d['c']:.2f} rather than a number I could not reproduce. Exp 3 & 4: Qwen2.5-0.5B-Instruct "
-    f"(grouped-query attention, {_kvh} kv-heads -> {_kvkb:.0f} KB KV per token). Exp 3 is a discrete-event "
-    f"simulation over the real measured decode-step times (Poisson arrivals, heavy-tailed output lengths); Exp 4's "
-    + (f"paged concurrency is confirmed on the real vLLM engine ({_vc:,} sequences vs naive's {_nc}). " if _vc else "")
-    + f"All bf16 on one {GPU} via Modal; total spend ~$2.6.")
 pdf.ln(2)
 pdf.set_font("Arial", "B", 9)
 pdf.cell(0, 5, "The one measurement that changed how I think about serving:", new_x="LMARGIN", new_y="NEXT")
@@ -207,6 +201,24 @@ pdf.multi_cell(0, 4.4,
     "waiting on weights, so 'wasted' compute is free — until you add enough concurrent sequences that "
     "arithmetic becomes the wall. Every one of these four techniques is really about the same thing: "
     "keeping the expensive, bandwidth-limited GPU busy with useful work instead of waiting or reserving.")
+
+pdf.ln(2)
+pdf.set_font("Arial", "B", 9)
+pdf.cell(0, 5, "Diagnosis and cost", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Arial", "", 8.3)
+_d = exp2["diagnosis"]
+_vc = int(exp4v["paged_concurrency_at_mean"]) if exp4v else None
+_nc = exp4["naive"]["concurrency"]
+pdf.multi_cell(0, 4.3,
+    f"Exp 2 measured c = draft-step / target-step = {_d['c']:.2f} (target {_d['target_step_ms']:.0f} ms/step over "
+    f"{_d['target_layers']} layers; draft {_d['draft_step_ms']:.0f} ms/step over {_d['draft_layers']} layers) - the "
+    f"0.5B draft is kernel-launch-bound, so no acceptance rate can win. I tried to bring c down by CUDA-graphing the "
+    f"draft (torch.compile reduce-overhead, then manual capture), but both crashed with device-side asserts on this "
+    f"torch 2.13 / transformers 5.15 stack, so I report the honest c = {_d['c']:.2f} rather than a number I could not "
+    f"reproduce. Exp 3 is a discrete-event simulation over the real measured decode-step times (Poisson arrivals, "
+    f"heavy-tailed output lengths); Exp 4's "
+    + (f"paged concurrency is confirmed on the real vLLM engine ({_vc:,} sequences vs naive's {_nc}). " if _vc else "")
+    + f"Total spend across the whole assignment: ~$2.6 on Modal L4.")
 
 out = ROOT / "report.pdf"
 pdf.output(str(out))

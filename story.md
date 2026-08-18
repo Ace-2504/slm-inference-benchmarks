@@ -360,6 +360,41 @@ impl; (9) removed the "Four switches…" closing paragraph. Verified live over a
 introspection (data.js needs a server, not file://): all buttons/tabs/zoom/status flows pass, no console
 errors. → *Better: the minimal section now mirrors the maximal one's affordances and reads simpler.*
 
+**E25 · Report deep-scan #2 — the missing scope Harman caught.** Harman asked where the report states the
+KV-cache prompt is 512 tokens. Answer: **nowhere** — and the scan surfaced more gaps: Exp-2 **step times**
+(60/25 ms) and the **c-fix attempt** were absent (both brief-required), **spend** was never logged
+(brief-required), the batch-1 speedup appeared as **three different values** (0.91× table / 0.99× hardcoded
+prose / 0.9× plot), models weren't named per experiment, the Exp-3 **simulation** nature and the Exp-4
+**vLLM confirmation** (15,220 vs 801) were undisclosed, and the KV-byte / GQA-`kv_heads` arithmetic wasn't
+shown. Fixed all: added a "Setup, diagnosis & cost" block, made the prose read numbers from JSON (no more
+hardcoded 0.99×), and stated the 512-token context. Regenerated report.pdf (still 2 pp). → *Better: every
+number is now scoped and reproducible; the brief-required items are present.*
+
+**E26 · Frontend: minimal-only + flowcharts.** Per Harman: **removed the four maximal experiment sections**,
+leaving only the compact minimal boxes (Section 1 KV+speculative, Section 2 batching+paging), and dropped the
+"— test · a minimal take —" line. The delete range swallowed the minimal `<style>` block (it sat between the
+last maximal section and `mini-wrap`) — caught it (boxes rendered unstyled), restored the 83-line CSS from the
+pre-delete commit. Made the two section headers **proper 23px headings** phrased as **sentences**. Added a
+**Flowchart tab** to each box using Harman's four v2 vector SVGs (KV / speculative / continuous / paged),
+click-to-zoom; then **enlarged the zoom** (920→1440 px) and rewrote the flowchart captions as **plain-language
+one-liners** with everyday analogies. All shared JS (`lineChart`/`sweepChart`/`timeChart`) kept so the
+minimal charts still render; verified no console errors each step; redeployed. → *Better: the shipped frontend
+is the minimal design, with live benchmarks, real charts, and layman flowcharts.*
+
+**E27 · Submission-turn deliverables: README + submission note + report restructure.** Harman asked for four
+things to package the assignment. (1) **README** refreshed — demo blurb now names all four boxes + Graph/
+Flowchart tabs (gated+capped); KV row reframed as the 512-token roofline (**60× arithmetic → ~10× at batch
+16, payoff scales with sequence length**); paged row cites the **real vLLM 15,220 vs 801 (~19×)**. (2) Wrote
+**`report/submission-note.md`** — a story-style message in Harman's voice (to Dr. Panat) walking the gauntlet
+(334× sync lie), the four experiments and each surprise, the honest KV demo/report mismatch (it was context
+length, not a bug), and the one-sentence lesson. (3) **Restructured `report.pdf`** per request: split the old
+combined "Setup, diagnosis & cost" paragraph into a **`Setup` section at the top** (models, prompt/gen lengths,
+GQA KV, hardware) and a **`Diagnosis and cost` section at the bottom**, placed **after** the "one measurement"
+close (c=0.43 diagnosis, step times, the failed CUDA-graph c-fix, the Exp-3 sim + Exp-4 vLLM basis, ~$2.6
+spend). Regenerated: still **2 pages**, 0 stray asterisks, numbers reconciled. Frontend left untouched per
+Harman's standing "do not commit frontend changes." → *Better: the report now opens on what was measured and
+closes on what it cost, and the assignment ships with a human note in Harman's own voice.*
+
 ---
 
 ## Current status (as of last entry)

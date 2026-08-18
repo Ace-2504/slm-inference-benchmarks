@@ -5,16 +5,17 @@ Modal), with timings that survive scrutiny. One inference pipeline, four control
 toggling exactly one thing. **The rule across all four: both sides must emit identical tokens before any
 speedup is claimed.**
 
-**🔴 Live demo:** https://harman-inference-lab.vercel.app — runs experiments 1 & 2 on a Modal L4 when you
-press a button (scale-to-zero, so the first request wakes the GPU). Exp 1 has a batch-size control and shows
-both modes' text + tok/s; Exp 2 streams the answer with each token coloured by who produced it.
+**🔴 Live demo:** https://harman-inference-lab.vercel.app — compact benchmark boxes for all four techniques.
+Experiments 1 & 2 run **live on a Modal L4** (gated + capped) when you press a button (scale-to-zero, so the
+first request wakes the GPU). Each box also has a **Graph** tab with the measured chart and a **Flowchart**
+tab — click any chart or flowchart to zoom.
 
 | # | Optimization | Headline finding |
 |---|--------------|------------------|
-| 1 | **KV cache** | At batch 1 the uncached loop does **60× more arithmetic yet finishes in the same time** (memory-bound); the cache only wins as the batch fills the ALUs (→ 9× at batch 16). |
+| 1 | **KV cache** | On a 512-token context: at batch 1 the uncached loop does **60× more arithmetic yet finishes in the same time** (memory-bound); the cache only wins as the batch fills the ALUs (→ **~10× at batch 16**). The payoff scales with sequence length — with a short prompt it's a wash even at high batch. |
 | 2 | **Speculative decoding** | Naive it's a **slowdown** — the 0.5B draft is kernel-launch-bound (`c≈0.43`); the diagnosis, not the mechanism, is the work. Exact modulo bf16 near-ties (gap 0.0). |
 | 3 | **Continuous batching** | Static isn't slow, it's **idle** — the batch drains to near-empty while one long request finishes; continuous holds slots full for **~3× throughput**. |
-| 4 | **PagedAttention** | Reserving max-length per sequence **wastes 91.8%** of KV; paging fits **~12× more sequences** from the same budget. |
+| 4 | **PagedAttention** | Reserving max-length per sequence **wastes 91.8%** of KV; paging fits **~12× more sequences** by arithmetic, **confirmed on the real vLLM engine at 15,220 vs 801 (~19×)**. |
 
 ## How the timings are trusted
 
