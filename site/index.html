@@ -1,412 +1,371 @@
 <!doctype html>
-<html lang="en" data-theme="paper">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SLM Inference Lab — what each trick is worth</title>
-<script>
-  (function(){try{var t=localStorage.getItem("reading-theme-v2");
-  if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-</script>
+<title>Inference Lab — what each trick is worth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ---- book-reading-theme tokens ---- */
-:root,[data-theme="paper"]{--bg:#f7f6f2;--bg-soft:#fbfaf7;--panel:#fff;--panel-2:#f2f1ec;
-  --border:#d9d6cd;--border-soft:#e6e4dc;--fg:#1c1e21;--fg-muted:#50555c;--fg-dim:#767b84;
-  --accent:#1d4ed8;--accent-2:#0f766e;--accent-3:#b45309;--grid:rgba(28,30,33,.018);
-  --glow-1:rgba(29,78,216,.025);--glow-2:rgba(15,118,110,.02)}
-[data-theme="sepia"]{--bg:#f2e9d8;--bg-soft:#f7f0e2;--panel:#faf4e6;--panel-2:#efe6d2;
-  --border:#d8cbb0;--border-soft:#e3d8c1;--fg:#33291c;--fg-muted:#62543f;--fg-dim:#86765d;
-  --accent:#9a3412;--accent-2:#166534;--accent-3:#6d28d9;--grid:rgba(51,41,28,.02);
-  --glow-1:rgba(154,52,18,.03);--glow-2:rgba(22,101,52,.02)}
-[data-theme="slate"]{--bg:#eaedf2;--bg-soft:#f2f4f8;--panel:#f8fafc;--panel-2:#edf0f5;
-  --border:#ccd3dd;--border-soft:#dde2ea;--fg:#1b2430;--fg-muted:#4c5765;--fg-dim:#727e8d;
-  --accent:#364fc7;--accent-2:#0e7490;--accent-3:#a21caf;--grid:rgba(27,36,48,.02);
-  --glow-1:rgba(54,79,199,.03);--glow-2:rgba(14,116,144,.025)}
-[data-theme="ink"]{--bg:#16181d;--bg-soft:#1a1d23;--panel:#1e222a;--panel-2:#242934;
-  --border:#333a48;--border-soft:#2a303c;--fg:#e4e8ef;--fg-muted:#a3acbb;--fg-dim:#7b8494;
-  --accent:#e3b25b;--accent-2:#5eead4;--accent-3:#a5b4fc;--grid:rgba(255,255,255,.02);
-  --glow-1:rgba(227,178,91,.04);--glow-2:rgba(94,234,212,.03)}
-[data-theme="paper"] .panel,[data-theme="sepia"] .panel,[data-theme="slate"] .panel,
-:root:not([data-theme]) .panel{box-shadow:0 1px 2px rgba(40,38,32,.05),0 6px 16px rgba(40,38,32,.06)}
-*{box-sizing:border-box;border-color:var(--border)}
-body{margin:0;background:var(--bg);color:var(--fg);line-height:1.65;-webkit-font-smoothing:antialiased;
-  font-family:ui-serif,Georgia,"Times New Roman",serif;transition:background-color .35s,color .35s}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background-image:radial-gradient(60rem 40rem at 80% -10%,var(--glow-1),transparent 60%),
-    radial-gradient(50rem 40rem at 0% 10%,var(--glow-2),transparent 55%),
-    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:100% 100%,100% 100%,44px 44px,44px 44px}
-.panel{background:linear-gradient(180deg,var(--panel),var(--bg-soft));border:1px solid var(--border);border-radius:14px}
-.panel,input,textarea,select,button{transition:background-color .35s,border-color .35s,color .35s}
-/* ---- layout ---- */
-.wrap{max-width:960px;margin:0 auto;padding:0 20px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;flex-wrap:wrap}
-.brand{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:700;font-size:15px;letter-spacing:.01em}
-.brand small{color:var(--fg-muted);font-weight:500}
-.right{display:flex;align-items:center;gap:12px}
-a.ghlink{font-family:ui-sans-serif,system-ui;font-size:13px;color:var(--fg-muted);text-decoration:none;
-  border:1px solid var(--border);border-radius:999px;padding:6px 12px}
-.theme-picker{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--border);
-  background:var(--panel);border-radius:999px;padding:6px 8px}
-.theme-dot{width:20px;height:20px;display:grid;place-items:center;background:transparent;border:0;border-radius:50%;cursor:pointer;padding:0}
-.theme-dot span{width:13px;height:13px;border-radius:50%;display:block}
+:root{
+  --bg:#faf9f6; --panel:#fff; --panel-2:#f8f7f3; --panel-3:#f0eee7;
+  --ink:#1e293b; --ink-soft:#334155; --muted:#64748b; --dim:#94a3b8;
+  --line:#e7e5e0; --line-soft:#efede7;
+  --teal:#0f766e; --rose:#e11d48; --amber:#f59e0b; --blue:#3b82f6; --violet:#7c3aed; --dark:#0f172a;
+  --amber-bg:#fffbeb;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;
+  font-size:17.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+a{color:var(--teal);text-decoration:none}
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.brand .mk{width:26px;height:26px;border-radius:8px;background:var(--dark);color:#fff;display:grid;
+  place-items:center;font-size:14px;font-weight:800}
+.brand small{color:var(--muted);font-weight:500;font-size:14px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);
+  border-radius:999px;padding:6px 13px}
+.chip.gh{color:var(--muted)}
 /* hero */
-.hero{padding:26px 0 8px}
-.hero h1{font-size:34px;line-height:1.15;margin:.1em 0 .3em;letter-spacing:-.01em}
-.hero .tag{font-family:ui-sans-serif,system-ui;color:var(--fg-muted);font-size:16px;max-width:60ch}
-.badge{display:inline-flex;align-items:center;gap:7px;font-family:ui-sans-serif,system-ui;font-size:12px;
-  font-weight:600;border-radius:999px;padding:5px 11px;border:1px solid var(--border);background:var(--panel-2)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--fg-dim)}
-.badge.live .dot{background:#16a34a;box-shadow:0 0 0 3px color-mix(in srgb,#16a34a 25%,transparent)}
-.badge.rec .dot{background:var(--accent-3)}
-/* strip of headline tiles */
-.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.hero{padding:22px 0 6px;max-width:44rem}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--teal);text-transform:uppercase}
+.hero h1{font-size:40px;line-height:1.1;letter-spacing:-.02em;margin:.18em 0 .32em;font-weight:800}
+.hero p{font-size:19px;color:var(--muted);margin:0}
+.hero b{color:var(--ink)}
+/* summary strip */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0 6px}
 @media(max-width:720px){.strip{grid-template-columns:repeat(2,1fr)}}
-.stat{padding:14px 16px}
-.stat .k{font-family:ui-sans-serif,system-ui;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
-.stat .v{font-family:ui-sans-serif,system-ui;font-weight:800;font-size:26px;font-variant-numeric:tabular-nums;margin-top:2px}
-.stat .s{font-family:ui-sans-serif,system-ui;font-size:12px;color:var(--fg-muted)}
-/* section */
-section{margin:34px 0}
-.kicker{font-family:ui-sans-serif,system-ui;font-size:12px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.09em;color:var(--accent)}
-section h2{font-size:26px;margin:.2em 0 .35em;letter-spacing:-.01em}
-.lead{color:var(--fg-muted);max-width:70ch}
-.exp{padding:20px;margin-top:14px}
-/* config row */
-.cfg{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;font-family:ui-sans-serif,system-ui;
-  padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border-soft)}
-.field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:12px;color:var(--fg-muted);font-weight:600}
-.field input[type=text],.field select{background:var(--bg-soft);border:1px solid var(--border);color:var(--fg);
-  border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit}
-.field.grow{flex:1;min-width:200px}
-.field.grow input{width:100%}
-.rangewrap{display:flex;align-items:center;gap:10px}
-input[type=range]{accent-color:var(--accent)}
-.rangeval{font-weight:800;font-variant-numeric:tabular-nums;min-width:1.4em;text-align:center}
-.btn-primary{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:700;
-  font-family:ui-sans-serif,system-ui;cursor:pointer;font-size:14px}
-.btn-primary:hover{filter:brightness(1.08)}.btn-primary:disabled{opacity:.5;cursor:default}
-[data-theme="ink"] .btn-primary{color:#14100a}
-/* result tiles + bars */
-.duo{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;font-family:ui-sans-serif,system-ui}
-@media(max-width:640px){.duo{grid-template-columns:1fr}}
-.tile{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:14px 16px}
-.tile .lab{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-muted);font-weight:700}
-.tile .big{font-weight:800;font-size:28px;font-variant-numeric:tabular-nums;margin:2px 0}
-.tile .unit{font-size:12px;color:var(--fg-dim)}
-.bar{height:8px;border-radius:5px;background:var(--border-soft);overflow:hidden;margin-top:8px}
-.bar>i{display:block;height:100%;border-radius:5px}
-.cached>i{background:var(--accent)}.uncached>i{background:var(--accent-3)}
-.mid{text-align:center}
-.mid .x{font-weight:800;font-size:30px;font-variant-numeric:tabular-nums}
-.mid .lab{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-muted);font-weight:700}
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;
-  padding:4px 10px;margin-top:8px;border:1px solid var(--border)}
-.pill.ok{color:var(--accent-2);background:color-mix(in srgb,var(--accent-2) 10%,transparent)}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;font-family:ui-sans-serif,system-ui}
-@media(max-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
-.mc{background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:10px;padding:11px 13px}
-.mc .k{font-size:11px;color:var(--fg-muted);font-weight:600}
-.mc .v{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;margin-top:2px}
-.mc .v small{font-size:12px;color:var(--fg-dim);font-weight:600}
-/* charts */
-.chart{margin-top:16px}
-.chart h4{font-family:ui-sans-serif,system-ui;font-size:13px;margin:0 0 6px;color:var(--fg-muted)}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stat .k{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.stat .v{font-weight:800;font-size:27px;letter-spacing:-.01em;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat .s{font-size:13px;color:var(--dim)}
+.stat.t{border-top:3px solid var(--teal)} .stat.r{border-top:3px solid var(--rose)}
+.stat.b{border-top:3px solid var(--blue)} .stat.v{border-top:3px solid var(--violet)}
+/* experiment card */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px;margin:24px 0;
+  box-shadow:0 1px 2px rgba(30,41,59,.03),0 10px 30px rgba(30,41,59,.04)}
+.card h2{font-size:27px;font-weight:800;letter-spacing:-.01em;margin:.1em 0 .1em}
+.sub{color:var(--muted);margin:0 0 14px;max-width:56rem}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-soft);
+  background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;margin-bottom:14px}
+.status .d{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.status.on .d{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.2)}
+.status.off .d{background:var(--amber)}
+.measured{font-size:13px;color:var(--muted);margin:-6px 0 14px}
+/* presets + controls */
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.preset{font-size:13.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);
+  border-radius:999px;padding:7px 14px;cursor:pointer}
+.preset:hover{border-color:var(--dim)}
+.preset.sel{background:var(--dark);color:#fff;border-color:var(--dark)}
+.controls{display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid var(--line-soft)}
+.ctl{display:flex;flex-direction:column;gap:7px}
+.ctl .cl{font-size:13px;color:var(--muted);font-weight:600}
+.ctl input[type=text]{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+  padding:9px 12px;font:inherit;font-size:15px;color:var(--ink);min-width:280px}
+.seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--ink-soft);font:inherit;font-weight:700;font-size:14px;
+  padding:6px 12px;border-radius:7px;cursor:pointer;font-variant-numeric:tabular-nums}
+.seg button.sel{background:var(--dark);color:#fff}
+.run{background:var(--dark);color:#fff;border:0;border-radius:999px;padding:11px 22px;font:inherit;
+  font-weight:700;font-size:15px;cursor:pointer}
+.run:hover{filter:brightness(1.12)}.run:disabled{opacity:.5;cursor:default}
+/* tok/s bars */
+.bars{display:flex;flex-direction:column;gap:12px;margin:4px 0}
+.barrow{display:grid;grid-template-columns:130px 1fr auto;gap:14px;align-items:center}
+.barrow .nm{font-size:14px;font-weight:600;color:var(--ink-soft)}
+.track{height:26px;background:var(--panel-2);border-radius:8px;overflow:hidden}
+.track>i{display:block;height:100%;border-radius:8px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.barrow .val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;min-width:96px;text-align:right}
+.fillT{background:linear-gradient(90deg,var(--teal),#14a89b)} .fillR{background:linear-gradient(90deg,var(--rose),#f43f5e)}
+.hint{font-size:13px;color:var(--dim);margin-top:8px}
+/* verdict row */
+.verdict{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 4px}
+.vpill{display:inline-flex;align-items:baseline;gap:7px;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:12px;padding:10px 14px}
+.vpill .n{font-size:12px;color:var(--muted);font-weight:600}
+.vpill .b{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:19px;font-variant-numeric:tabular-nums}
+.vpill.good{background:color-mix(in srgb,var(--teal) 8%,var(--panel));border-color:color-mix(in srgb,var(--teal) 30%,var(--line))}
+/* cards row */
+.mrow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+@media(max-width:640px){.mrow{grid-template-columns:repeat(2,1fr)}}
+.mc{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:12px 14px}
+.mc .k{font-size:12px;color:var(--muted);font-weight:600}
+.mc .v{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:19px;margin-top:3px;font-variant-numeric:tabular-nums}
+.mc .v small{font-size:12px;color:var(--dim)}
+/* chart */
+.chart{margin-top:18px}
+.chart h4{font-size:13.5px;font-weight:700;color:var(--ink-soft);margin:0 0 6px}
 .chart svg{width:100%;height:auto;display:block;overflow:visible}
-.legend{font-family:ui-sans-serif,system-ui;font-size:12px;color:var(--fg-muted);display:flex;gap:16px;flex-wrap:wrap}
-.legend b{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
+.legend b{display:inline-block;width:20px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
 /* token stream */
-.stream{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:2.1;
-  background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:12px;padding:14px 16px;
-  max-height:260px;overflow:auto;white-space:pre-wrap}
-.tok{padding:1px 2px;border-radius:3px;border-bottom:2px solid transparent}
-.tok.draft{background:color-mix(in srgb,var(--accent-2) 16%,transparent);border-color:var(--accent-2)}
-.tok.target{background:color-mix(in srgb,var(--accent-3) 18%,transparent);border-color:var(--accent-3)}
-.tok.bonus{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent)}
-/* table */
-table{width:100%;border-collapse:collapse;font-family:ui-sans-serif,system-ui;font-size:13px;margin-top:14px}
-th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--border-soft);font-variant-numeric:tabular-nums}
-th:first-child,td:first-child{text-align:left}
-thead th{color:var(--fg-muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
-tr.here td{background:color-mix(in srgb,var(--accent) 8%,transparent);font-weight:700}
-.formula{font-family:ui-monospace,monospace;background:var(--panel-2);border:1px solid var(--border-soft);
-  border-radius:8px;padding:10px 14px;margin-top:14px;font-size:14px;text-align:center}
-.note{font-family:ui-sans-serif,system-ui;font-size:13px;color:var(--fg-muted);margin-top:12px}
-.out{font-family:ui-monospace,monospace;font-size:12.5px;background:var(--bg);border:1px solid var(--border);
-  border-radius:10px;padding:12px 14px;color:var(--fg-muted);white-space:pre-wrap;max-height:120px;overflow:auto;margin-top:12px}
-footer{font-family:ui-sans-serif,system-ui;color:var(--fg-dim);font-size:13px;border-top:1px solid var(--border);
-  margin-top:40px;padding:22px 0 40px}
-code{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:5px;padding:1px 5px;font-size:.87em}
+.stream{font-family:"JetBrains Mono",monospace;font-size:14px;line-height:2.05;background:var(--panel-2);
+  border:1px solid var(--line-soft);border-radius:14px;padding:15px 17px;max-height:250px;overflow:auto;white-space:pre-wrap}
+.tok{padding:1px 2px;border-radius:4px}
+.tok.draft{background:color-mix(in srgb,var(--teal) 16%,transparent);box-shadow:inset 0 -2px 0 var(--teal)}
+.tok.target{background:color-mix(in srgb,var(--rose) 16%,transparent);box-shadow:inset 0 -2px 0 var(--rose)}
+.tok.bonus{background:color-mix(in srgb,var(--blue) 15%,transparent);box-shadow:inset 0 -2px 0 var(--blue)}
+.streamlab{font-size:12px;color:var(--dim);margin-top:8px}
+/* formula + table */
+.formula{font-family:"JetBrains Mono",monospace;background:var(--amber-bg);border:1px solid #f6e3b3;
+  border-radius:12px;padding:12px 16px;margin:16px 0 6px;text-align:center;font-size:14.5px;color:#78350f}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;
+  font-family:"JetBrains Mono",monospace}
+th:first-child,td:first-child{text-align:left;font-family:Figtree,sans-serif}
+thead th{color:var(--muted);font-size:12px;font-weight:700;font-family:Figtree,sans-serif}
+tr.here td{background:color-mix(in srgb,var(--teal) 8%,transparent);font-weight:700}
+.out{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:var(--panel-2);border:1px solid var(--line-soft);
+  border-radius:12px;padding:13px 15px;color:var(--muted);white-space:pre-wrap;max-height:120px;overflow:auto;margin-top:14px}
+/* tech panel */
+.tech{background:var(--dark);color:#e2e8f0;border-radius:22px;padding:26px;margin:24px 0}
+.tech h3{margin:0 0 6px;font-size:19px;font-weight:800;color:#fff}
+.tech p{color:#94a3b8;margin:0 0 14px;font-size:15.5px}
+.techchips{display:flex;gap:8px;flex-wrap:wrap}
+.tchip{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 11px;color:#cbd5e1}
+footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-top:34px;padding:22px 0 46px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar">
-    <div class="brand">SLM Inference Lab <small>· what each trick is worth · Harman Sandhu</small></div>
-    <div class="right">
-      <a class="ghlink" href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">GitHub ↗</a>
-      <div class="theme-picker" id="picker" role="radiogroup" aria-label="Color theme"></div>
+  <div class="top">
+    <div class="brand"><span class="mk">IL</span> Inference Lab <small>· Harman Sandhu</small></div>
+    <div class="nav">
+      <span class="chip">KV cache on / off</span>
+      <span class="chip">Speculative decoding</span>
+      <a class="chip gh" href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
 
   <div class="hero">
-    <span class="badge" id="status"><span class="dot"></span><span id="status-t">checking…</span></span>
-    <h1>Four inference tricks, measured — not quoted.</h1>
-    <p class="tag">One pipeline, four controlled experiments on an <b id="gpu">NVIDIA L4</b>. Each toggles
-      exactly one thing, and both sides are checked to emit the <b>same tokens</b> before any speedup is
-      claimed. Press a button to run experiments 1 &amp; 2 live; the numbers below are the recorded run.</p>
+    <div class="eyebrow">Real inference · measured, not quoted</div>
+    <h1>Four inference tricks, switched off and on.</h1>
+    <p>One pipeline on an <b id="gpu">NVIDIA L4</b>. Each experiment toggles exactly one thing and checks both
+      sides emit the <b>same tokens</b> before claiming a speedup. Press a button to run experiments 1 &amp; 2;
+      the numbers shown are the recorded run.</p>
   </div>
 
   <div class="strip" id="strip"></div>
 
   <!-- Experiment 1 -->
-  <section>
-    <div class="kicker">Experiment 1</div>
-    <h2>With and without the KV cache</h2>
-    <p class="lead">Two decode loops over the same model: one keeps the cache and feeds one token per step;
-      the other recomputes the whole growing sequence every step. Sweep the batch size — at batch 1 the
-      uncached loop does <b id="e1ratio">60×</b> more arithmetic yet finishes in the same time (the GPU is
-      memory-bound and idle). The gap only opens as the batch fills the compute units.</p>
-    <div class="panel exp">
-      <div class="cfg">
-        <div class="field grow"><label>prompt</label><input id="e1p" type="text" value="The future of computing is"></div>
-        <div class="field"><label>batch size · <span class="rangeval" id="e1bv">1</span></label>
-          <div class="rangewrap"><input id="e1b" type="range" min="0" max="4" value="0" step="1"></div></div>
-        <button class="btn-primary" id="e1go">Run both</button>
-      </div>
-      <div class="duo">
-        <div class="tile cached"><div class="lab">with cache</div><div class="big"><span id="e1c">–</span> <span class="unit">tok/s</span></div><div class="bar"><i id="e1cbar"></i></div></div>
-        <div class="mid"><div class="x" id="e1sp">–</div><div class="lab">cache speedup</div><div class="pill ok" id="e1match">✓ outputs match</div></div>
-        <div class="tile uncached"><div class="lab">no cache (recompute)</div><div class="big"><span id="e1u">–</span> <span class="unit">tok/s</span></div><div class="bar"><i id="e1ubar"></i></div></div>
-      </div>
-      <div class="cards">
-        <div class="mc"><div class="k">token-positions · cached</div><div class="v" id="e1tpc">–</div></div>
-        <div class="mc"><div class="k">token-positions · uncached</div><div class="v" id="e1tpu">–</div></div>
-        <div class="mc"><div class="k">wasted work</div><div class="v" id="e1waste">–<small>×</small></div></div>
-        <div class="mc"><div class="k">prompt / generated</div><div class="v" id="e1len">–</div></div>
-      </div>
-      <div class="chart">
-        <h4>Time per decoding step (ms) — this batch</h4>
-        <div id="e1step"></div>
-        <div class="legend"><span><b style="background:var(--accent)"></b>cached</span><span><b style="background:var(--accent-3)"></b>uncached</span></div>
-      </div>
-      <div class="chart">
-        <h4>Cache speedup vs batch size</h4>
-        <div id="e1sweep"></div>
-      </div>
-      <div class="out" id="e1text"></div>
+  <div class="card">
+    <h2>The KV cache, switched off</h2>
+    <p class="sub">One decode loop keeps the cache and feeds one token per step; the other recomputes the whole
+      growing sequence every step. At batch 1 the uncached loop does <b id="e1ratio">60×</b> more arithmetic yet
+      finishes in the same time — the GPU is memory-bound and idle. The gap opens only as the batch fills the
+      compute units.</p>
+    <span class="status" id="e1status"><span class="d"></span><span id="e1st">checking…</span></span>
+    <div class="presets" id="e1presets"></div>
+    <div class="controls">
+      <div class="ctl"><span class="cl">Prompt</span><input id="e1p" type="text" value="The future of computing is"></div>
+      <div class="ctl"><span class="cl">Sequences in the batch</span><div class="seg" id="e1seg"></div></div>
+      <button class="run" id="e1go">Run both</button>
     </div>
-  </section>
+    <div class="bars">
+      <div class="barrow"><span class="nm">with cache</span><div class="track"><i class="fillT" id="e1cbar"></i></div><span class="val" id="e1c">–</span></div>
+      <div class="barrow"><span class="nm">no cache</span><div class="track"><i class="fillR" id="e1ubar"></i></div><span class="val" id="e1u">–</span></div>
+    </div>
+    <p class="hint">bar length is tokens per second, so longer is faster</p>
+    <div class="verdict">
+      <span class="vpill good"><span class="n">cache speedup</span><span class="b" id="e1sp">–</span></span>
+      <span class="vpill" id="e1matchpill"><span class="n">outputs</span><span class="b" id="e1match">match ✓</span></span>
+    </div>
+    <div class="mrow">
+      <div class="mc"><div class="k">token-positions · cached</div><div class="v" id="e1tpc">–</div></div>
+      <div class="mc"><div class="k">token-positions · uncached</div><div class="v" id="e1tpu">–</div></div>
+      <div class="mc"><div class="k">wasted work</div><div class="v" id="e1waste">–</div></div>
+      <div class="mc"><div class="k">prompt / generated</div><div class="v" id="e1len">–</div></div>
+    </div>
+    <div class="chart"><h4>Time per decoding step (ms) — this batch</h4><div id="e1step"></div>
+      <div class="legend"><span><b style="background:var(--teal)"></b>cached</span><span><b style="background:var(--rose)"></b>uncached</span></div></div>
+    <div class="chart"><h4>Cache speedup vs batch size</h4><div id="e1sweep"></div></div>
+    <div class="out" id="e1text"></div>
+  </div>
 
   <!-- Experiment 2 -->
-  <section>
-    <div class="kicker">Experiment 2</div>
-    <h2>With and without speculative decoding</h2>
-    <p class="lead">A small draft model proposes <i>k</i> tokens; the big target verifies them in one forward
-      pass and keeps the longest correct prefix. It is exact (modulo bf16 near-ties). The catch:
-      the draft here is kernel-launch-bound, so <code>c = draft/target step = <b id="e2c">0.43</b></code>,
-      and the payoff swings hugely by prompt type. Pick one and watch who produced each token.</p>
-    <div class="panel exp">
-      <div class="cfg">
-        <div class="field grow"><label>prompt type</label>
-          <select id="e2sel"></select></div>
-        <div class="field"><label>draft length k · <span class="rangeval" id="e2kv">4</span></label>
-          <div class="rangewrap"><input id="e2k" type="range" min="1" max="8" value="4" step="1"></div></div>
-        <button class="btn-primary" id="e2go">Run plain vs speculative</button>
-      </div>
-      <div class="legend" style="margin-bottom:8px">
-        <span><b style="background:var(--accent-2)"></b>draft-accepted</span>
-        <span><b style="background:var(--accent-3)"></b>target-correction</span>
-        <span><b style="background:var(--accent)"></b>bonus (free)</span>
-      </div>
-      <div class="stream" id="e2stream"></div>
-      <div class="cards" style="grid-template-columns:repeat(4,1fr)">
-        <div class="mc"><div class="k">speedup</div><div class="v" id="e2sp">–<small>×</small></div></div>
-        <div class="mc"><div class="k">acceptance rate</div><div class="v" id="e2acc">–</div></div>
-        <div class="mc"><div class="k">tokens / target pass</div><div class="v" id="e2tpp">–</div></div>
-        <div class="mc"><div class="k">exact vs plain</div><div class="v" id="e2ex">–</div></div>
-      </div>
-      <div class="formula">speedup = tokens&nbsp;per&nbsp;pass / (1 + k · c) &nbsp;→&nbsp; predicted <b id="e2pred">–</b></div>
-      <table id="e2tab"><thead><tr><th>k</th><th>accept</th><th>tok/pass</th><th>spec tok/s</th><th>speedup</th><th>predicted</th></tr></thead><tbody></tbody></table>
-      <p class="note" id="e2diag"></p>
+  <div class="card">
+    <h2>Speculative decoding, live</h2>
+    <p class="sub">A small draft proposes <i>k</i> tokens; the 7B target verifies them in one pass and keeps the
+      longest correct prefix. Exact, modulo bf16 near-ties. The payoff swings hard by prompt type — the draft
+      here is launch-bound, so it doesn't always win.</p>
+    <span class="status" id="e2status"><span class="d"></span><span id="e2st">checking…</span></span>
+    <div class="measured mono" id="e2measured"></div>
+    <div class="presets" id="e2presets"></div>
+    <div class="controls">
+      <div class="ctl"><span class="cl">Draft length k, tokens guessed per round</span><div class="seg" id="e2seg"></div></div>
+      <button class="run" id="e2go">Run plain vs speculative</button>
     </div>
-  </section>
+    <div class="legend" style="margin-bottom:8px">
+      <span><b style="background:var(--teal)"></b>draft-accepted</span>
+      <span><b style="background:var(--rose)"></b>target-correction</span>
+      <span><b style="background:var(--blue)"></b>bonus (free)</span></div>
+    <div class="stream" id="e2stream"></div>
+    <div class="streamlab" id="e2streamlab"></div>
+    <div class="bars" style="margin-top:16px">
+      <div class="barrow"><span class="nm">speculative</span><div class="track"><i class="fillT" id="e2sbar"></i></div><span class="val" id="e2stps">–</span></div>
+      <div class="barrow"><span class="nm">target alone</span><div class="track"><i class="fillR" id="e2tbar"></i></div><span class="val" id="e2ttps">–</span></div>
+    </div>
+    <p class="hint">bar length is tokens per second, measured on this run</p>
+    <div class="verdict">
+      <span class="vpill good"><span class="n">speedup</span><span class="b" id="e2sp">–</span></span>
+      <span class="vpill"><span class="n">acceptance</span><span class="b" id="e2acc">–</span></span>
+      <span class="vpill"><span class="n">tokens / target pass</span><span class="b" id="e2tpp">–</span></span>
+      <span class="vpill"><span class="n">vs plain</span><span class="b" id="e2ex">–</span></span>
+    </div>
+    <div class="formula">speedup = tokens per pass / (1 + k · c) &nbsp;→&nbsp; predicted <b id="e2pred">–</b></div>
+    <table id="e2tab"><thead><tr><th>k</th><th>accept</th><th>tok/pass</th><th>spec tok/s</th><th>speedup</th><th>predicted</th></tr></thead><tbody></tbody></table>
+  </div>
 
-  <!-- offline experiments summary -->
-  <section>
-    <div class="kicker">Experiments 3 &amp; 4 · offline</div>
+  <!-- offline strip -->
+  <div class="card">
     <h2>Continuous batching &amp; PagedAttention</h2>
-    <p class="lead">Held offline (sustained multi-request GPU load isn't reasonable to serve to a visitor),
-      but measured the same way — see the report and repo for the plots.</p>
-    <div class="strip" id="strip2" style="grid-template-columns:repeat(2,1fr)"></div>
-  </section>
+    <p class="sub">Held offline — sustained multi-request GPU load isn't reasonable to serve to a visitor — but
+      measured the same way. Plots and numbers are in the report and repo.</p>
+    <div class="strip" style="margin:6px 0 0;grid-template-columns:repeat(2,1fr)" id="strip2"></div>
+  </div>
 
-  <div class="panel exp">
-    <div class="kicker">How it runs</div>
-    <p class="lead" style="margin-top:8px">Experiment 1 uses a 125M-class model; experiment 2 pairs
-      <b>Qwen2.5-7B-Instruct</b> (target) with <b>Qwen2.5-0.5B-Instruct</b> (draft), all bf16 on an L4 via
-      Modal. Every timer calls <code>cuda.synchronize()</code>, warms up, and repeats — validated by an
-      8-test gauntlet that shows an un-synchronised matmul under-reports its time by ~330×. Both sides of
-      every comparison are checked for identical tokens before any speedup is reported.</p>
+  <!-- tech -->
+  <div class="tech">
+    <h3>How it runs</h3>
+    <p>Experiment 1 uses a 125M-class model; experiment 2 pairs a 7B target with a 0.5B draft, all bf16 on an
+      L4 via Modal. Every timer synchronises, warms up and repeats — validated by an 8-test gauntlet showing an
+      un-synchronised matmul under-reports its time by ~330×. Both sides are checked for identical tokens first.</p>
+    <div class="techchips">
+      <span class="tchip">gpt2 (125M)</span><span class="tchip">Qwen/Qwen2.5-7B-Instruct</span>
+      <span class="tchip">Qwen/Qwen2.5-0.5B-Instruct</span><span class="tchip">torch.cuda.synchronize()</span>
+      <span class="tchip">bf16</span><span class="tchip">Modal · NVIDIA L4</span>
+    </div>
   </div>
 
   <footer>
-    Built by Harman Sandhu · all numbers on <span id="gpu2">NVIDIA L4</span> ·
-    <a class="ghlink" style="padding:3px 9px" href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">source &amp; report</a>
+    <span>Built by Harman Sandhu · all numbers on <span id="gpu2">NVIDIA L4</span></span>
+    <a href="https://github.com/Ace-2504/slm-inference-benchmarks" target="_blank" rel="noopener">source &amp; report ↗</a>
   </footer>
 </div>
 
 <script src="./data.js"></script>
 <script>
-const THEMES=[{id:"paper",name:"Paper",accents:["#1d4ed8","#0f766e","#b45309"]},
- {id:"sepia",name:"Sepia",accents:["#9a3412","#166534","#6d28d9"]},
- {id:"slate",name:"Slate",accents:["#364fc7","#0e7490","#a21caf"]},
- {id:"ink",name:"Ink",accents:["#e3b25b","#5eead4","#a5b4fc"]}];
-const KEY="reading-theme-v2",pk=document.getElementById("picker");
-const active=()=>document.documentElement.getAttribute("data-theme")||"paper";
-function choose(id){document.documentElement.setAttribute("data-theme",id);try{localStorage.setItem(KEY,id)}catch(e){}render()}
-function render(){pk.innerHTML="";THEMES.forEach(t=>{const b=document.createElement("button");
-  b.className="theme-dot";b.title=t.name;b.setAttribute("aria-label",t.name);b.setAttribute("role","radio");
-  b.setAttribute("aria-checked",t.id===active());const s=document.createElement("span");
-  s.style.background=`conic-gradient(${t.accents[0]} 0 33.3%,${t.accents[1]} 0 66.6%,${t.accents[2]} 0)`;
-  s.style.boxShadow=t.id===active()?"0 0 0 2px var(--bg),0 0 0 3.5px var(--fg)":"0 0 0 1px rgba(0,0,0,.25)";
-  b.appendChild(s);b.onclick=()=>choose(t.id);pk.appendChild(b)})}
-render();
-
 const D=window.DATA,$=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])).replace(/\n/g,"⏎\n");
 $("gpu").textContent=$("gpu2").textContent=D.gpu;
 $("e1ratio").textContent=D.exp1.tp.ratio+"×";
-$("e2c").textContent=D.exp2.c;
 
-// live endpoints (light up only if reachable)
-const EP={exp1:"https://ace-2504--a4-live-demo-demo-exp1.modal.run",
-          exp2:"https://ace-2504--a4-live-demo-demo-exp2.modal.run"};
+const EP={exp1:"https://ace-2504--a4-live-demo-demo-exp1.modal.run",exp2:"https://ace-2504--a4-live-demo-demo-exp2.modal.run"};
 let LIVE=false;
 (async()=>{try{const c=new AbortController();setTimeout(()=>c.abort(),4000);
-  const r=await fetch(EP.exp1+"?prompt=hi&batch=1&max_new_tokens=1",{signal:c.signal});
-  LIVE=r.ok}catch(e){LIVE=false}
-  const s=$("status"),t=$("status-t");
-  if(LIVE){s.className="badge live";t.textContent="Live GPUs — press Run"}
-  else{s.className="badge rec";t.textContent="Recorded run (live GPU demo offline)"}
+  const r=await fetch(EP.exp1+"?prompt=hi&batch=1&max_new_tokens=1",{signal:c.signal});LIVE=r.ok}catch(e){LIVE=false}
+  for(const [s,t] of [["e1status","e1st"],["e2status","e2st"]]){
+    const lab=s==="e1status"?"L4 ready · 125M model loaded":"L4 ready · 7B and 0.5B loaded";
+    if(LIVE){$(s).className="status on";$(t).textContent=lab}
+    else{$(s).className="status off";$(t).textContent="recorded run · live GPU demo offline"}}
 })();
 
-// headline strip
+// summary strips
+const bestSp=Math.max(...Object.values(D.exp2.prompts).flatMap(p=>p.by_k.map(k=>k.speedup)));
 $("strip").innerHTML=[
- ["KV cache","0.99→"+D.exp1.batches[D.exp1.batches.length-1].speedup+"×","batch 1 → 16 speedup"],
- ["Spec decode",Math.max(...Object.values(D.exp2.prompts).flatMap(p=>p.by_k.map(k=>k.speedup)))+"×","best case (code)"],
- ["Cont. batching",D.exp3.cont_req_s+"/"+D.exp3.static_req_s,"cont vs static req/s"],
- ["PagedAttn","~"+D.exp4.ratio+"×","more sequences fit"]
-].map(([k,v,s])=>`<div class="panel stat"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+ ["t","KV cache","0.99→"+D.exp1.batches.at(-1).speedup+"×","batch 1 → 16"],
+ ["r","Spec decode",bestSp+"×","best case (code)"],
+ ["b","Cont. batching",D.exp3.cont_req_s+"/"+D.exp3.static_req_s,"cont vs static req/s"],
+ ["v","PagedAttn","~"+D.exp4.ratio+"×","more sequences fit"]
+].map(([c,k,v,s])=>`<div class="stat ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
 $("strip2").innerHTML=[
- ["Continuous batching",D.exp3.cont_req_s+" vs "+D.exp3.static_req_s+" req/s","p95 latency "+D.exp3.cont_p95+"s vs "+D.exp3.static_p95+"s — static drains to idle"],
- ["PagedAttention","~"+D.exp4.ratio+"× concurrency",D.exp4.kv_kb+" KB/token · naive wastes "+D.exp4.naive_waste+"% reserving max length"]
-].map(([k,v,s])=>`<div class="panel stat"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+ ["b","Continuous batching",D.exp3.cont_req_s+" vs "+D.exp3.static_req_s+" req/s","p95 "+D.exp3.cont_p95+"s vs "+D.exp3.static_p95+"s — static drains to idle"],
+ ["v","PagedAttention","~"+D.exp4.ratio+"× concurrency",D.exp4.kv_kb+" KB/token · naive wastes "+D.exp4.naive_waste+"%"]
+].map(([c,k,v,s])=>`<div class="stat ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
 
-// ---- tiny SVG chart helpers ----
+// SVG charts
 function lineChart(el,series,ymax,xlab){
-  const W=680,H=200,pl=44,pr=12,pt=10,pb=28,iw=W-pl-pr,ih=H-pt-pb;
-  const n=Math.max(...series.map(s=>s.y.length));
+  const W=700,H=200,pl=44,pr=12,pt=10,pb=28,iw=W-pl-pr,ih=H-pt-pb,n=Math.max(...series.map(s=>s.y.length));
   const X=i=>pl+(n<=1?0:i/(n-1)*iw),Y=v=>pt+ih-(v/ymax)*ih;
-  const axis=`<line x1="${pl}" y1="${pt}" x2="${pl}" y2="${pt+ih}" stroke="var(--border)"/>
-    <line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="var(--border)"/>`;
   let ticks="";for(let g=0;g<=4;g++){const v=ymax*g/4,y=Y(v);
-    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--border-soft)"/>
-      <text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--fg-dim)" font-family="ui-sans-serif">${v>=10?Math.round(v):v.toFixed(1)}</text>`}
-  const paths=series.map(s=>`<path d="${s.y.map((v,i)=>(i?"L":"M")+X(i)+" "+Y(v)).join(" ")}" fill="none" stroke="${s.c}" stroke-width="2"/>`).join("");
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${ticks}${axis}${paths}
-    <text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--fg-muted)" font-family="ui-sans-serif">${xlab}</text></svg>`;
+    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/>
+      <text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${v>=10?Math.round(v):v.toFixed(1)}</text>`}
+  const paths=series.map(s=>`<path d="${s.y.map((v,i)=>(i?"L":"M")+X(i)+" "+Y(v)).join(" ")}" fill="none" stroke="${s.c}" stroke-width="2.2"/>`).join("");
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}<line x1="${pl}" y1="${pt}" x2="${pl}" y2="${pt+ih}" stroke="var(--line)"/><line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="var(--line)"/>${paths}<text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">${xlab}</text></svg>`;
 }
 function sweepChart(el,pts){
-  const W=680,H=200,pl=40,pr=14,pt=12,pb=30,iw=W-pl-pr,ih=H-pt-pb;
-  const ymax=Math.max(2,...pts.map(p=>p.y))*1.1;
+  const W=700,H=200,pl=40,pr=14,pt=14,pb=30,iw=W-pl-pr,ih=H-pt-pb,ymax=Math.max(2,...pts.map(p=>p.y))*1.12;
   const X=i=>pl+i/(pts.length-1)*iw,Y=v=>pt+ih-(v/ymax)*ih;
   let ticks="";for(let g=0;g<=4;g++){const v=ymax*g/4,y=Y(v);
-    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--border-soft)"/>
-      <text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--fg-dim)" font-family="ui-sans-serif">${v.toFixed(0)}×</text>`}
-  const par=`<line x1="${pl}" y1="${Y(1)}" x2="${pl+iw}" y2="${Y(1)}" stroke="var(--fg-dim)" stroke-dasharray="4 3"/>`;
-  const path=`<path d="${pts.map((p,i)=>(i?"L":"M")+X(i)+" "+Y(p.y)).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2.4"/>`;
-  const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.y)}" r="3.5" fill="var(--accent)"/>
-     <text x="${X(i)}" y="${Y(p.y)-9}" text-anchor="middle" font-size="10" fill="var(--fg)" font-family="ui-sans-serif" font-weight="700">${p.y}×</text>
-     <text x="${X(i)}" y="${pt+ih+16}" text-anchor="middle" font-size="10" fill="var(--fg-muted)" font-family="ui-sans-serif">${p.x}</text>`).join("");
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${ticks}${par}${path}${dots}
-    <text x="${pl+iw/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="var(--fg-muted)" font-family="ui-sans-serif">batch size</text></svg>`;
+    ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/><text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${v.toFixed(0)}×</text>`}
+  const par=`<line x1="${pl}" y1="${Y(1)}" x2="${pl+iw}" y2="${Y(1)}" stroke="var(--dim)" stroke-dasharray="4 3"/>`;
+  const path=`<path d="${pts.map((p,i)=>(i?"L":"M")+X(i)+" "+Y(p.y)).join(" ")}" fill="none" stroke="var(--teal)" stroke-width="2.6"/>`;
+  const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.y)}" r="3.6" fill="var(--teal)"/><text x="${X(i)}" y="${Y(p.y)-9}" text-anchor="middle" font-size="10.5" fill="var(--ink)" font-family="JetBrains Mono" font-weight="700">${p.y}×</text><text x="${X(i)}" y="${pt+ih+16}" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="JetBrains Mono">${p.x}</text>`).join("");
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}${par}${path}${dots}<text x="${pl+iw/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">batch size</text></svg>`;
 }
 
-// ---- Experiment 1 render ----
-const E1=D.exp1;
-function renderE1(bi,live){
-  const b=E1.batches[bi];
-  const mx=Math.max(b.cached_tps,b.uncached_tps);
-  $("e1c").textContent=b.cached_tps;$("e1u").textContent=b.uncached_tps;
+// Experiment 1
+const E1=D.exp1;let e1bi=0;
+$("e1seg").innerHTML=E1.batches.map((b,i)=>`<button data-i="${i}"${i===0?' class="sel"':''}>${b.bs}</button>`).join("");
+[...$("e1seg").children].forEach(btn=>btn.onclick=()=>{e1bi=+btn.dataset.i;
+  [...$("e1seg").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");renderE1()});
+const E1P=["The future of computing is","In a distributed system, the hardest part is","The best way to learn something new is"];
+$("e1presets").innerHTML=E1P.map((p,i)=>`<button class="preset${i===0?' sel':''}" data-p="${esc(p)}">${esc(p.slice(0,34))}…</button>`).join("");
+[...$("e1presets").children].forEach(b=>b.onclick=()=>{[...$("e1presets").children].forEach(x=>x.classList.remove("sel"));
+  b.classList.add("sel");$("e1p").value=b.dataset.p});
+function renderE1(){
+  const b=E1.batches[e1bi],mx=Math.max(b.cached_tps,b.uncached_tps);
+  $("e1c").textContent=b.cached_tps+" tok/s";$("e1u").textContent=b.uncached_tps+" tok/s";
   $("e1cbar").style.width=(b.cached_tps/mx*100)+"%";$("e1ubar").style.width=(b.uncached_tps/mx*100)+"%";
-  $("e1sp").textContent=b.speedup+"×";
-  $("e1match").style.display=b.match?"inline-flex":"none";
-  $("e1tpc").textContent=E1.tp.cached.toLocaleString();
-  $("e1tpu").textContent=E1.tp.uncached.toLocaleString();
-  $("e1waste").innerHTML=E1.tp.ratio+"<small>×</small>";
-  $("e1len").textContent=E1.prompt_len+" / "+E1.gen;
-  const ps=E1.per_step[b.bs];
-  const ymax=Math.max(...ps.cached,...ps.uncached)*1.1;
-  lineChart($("e1step"),[{y:ps.cached,c:"var(--accent)"},{y:ps.uncached,c:"var(--accent-3)"}],ymax,"decode step index");
+  $("e1sp").textContent=b.speedup+"×";$("e1matchpill").style.display=b.match?"inline-flex":"none";
+  $("e1tpc").textContent=E1.tp.cached.toLocaleString();$("e1tpu").textContent=E1.tp.uncached.toLocaleString();
+  $("e1waste").innerHTML=E1.tp.ratio+"<small>×</small>";$("e1len").textContent=E1.prompt_len+" / "+E1.gen;
+  const ps=E1.per_step[b.bs],ymax=Math.max(...ps.cached,...ps.uncached)*1.1;
+  lineChart($("e1step"),[{y:ps.cached,c:"var(--teal)"},{y:ps.uncached,c:"var(--rose)"}],ymax,"decode step index");
   sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})));
   $("e1text").textContent="cached output:  "+(E1.sample.cached||"").trim();
 }
-$("e1b").max=E1.batches.length-1;
-$("e1b").oninput=function(){$("e1bv").textContent=E1.batches[+this.value].bs;renderE1(+this.value,false)};
 $("e1go").onclick=async function(){
-  const bi=+$("e1b").value,b=E1.batches[bi];
-  if(!LIVE){renderE1(bi,false);return}
+  const b=E1.batches[e1bi];if(!LIVE){renderE1();return}
   this.disabled=true;$("e1sp").textContent="…";
-  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:48}));
-    const d=await r.json();const mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
-    $("e1c").textContent=d.cached_tok_s.toFixed(1);$("e1u").textContent=d.uncached_tok_s.toFixed(1);
+  try{const r=await fetch(EP.exp1+"?"+new URLSearchParams({prompt:$("e1p").value,batch:b.bs,max_new_tokens:48}));const d=await r.json();
+    const mx=Math.max(d.cached_tok_s,d.uncached_tok_s);
+    $("e1c").textContent=d.cached_tok_s.toFixed(1)+" tok/s";$("e1u").textContent=d.uncached_tok_s.toFixed(1)+" tok/s";
     $("e1cbar").style.width=(d.cached_tok_s/mx*100)+"%";$("e1ubar").style.width=(d.uncached_tok_s/mx*100)+"%";
     $("e1sp").textContent=d.speedup.toFixed(2)+"×";$("e1text").textContent="cached output:  "+d.cached_text.trim();
-  }catch(e){$("e1text").textContent="live call failed: "+e}
-  this.disabled=false;
+  }catch(e){$("e1text").textContent="live call failed: "+e}this.disabled=false;
 };
 
-// ---- Experiment 2 render ----
-const E2=D.exp2,PN=Object.keys(E2.prompts);
-const E2DEF=PN.includes("code")?"code":PN[0];
-$("e2sel").innerHTML=PN.map(n=>`<option value="${n}"${n===E2DEF?" selected":""}>${n}</option>`).join("");
-$("e2diag").innerHTML=`Diagnosis: target step <b>${E2.target_step_ms} ms</b> (${E2.target_layers} layers) vs
-  draft <b>${E2.draft_step_ms} ms</b> (${E2.draft_layers} layers) → c=${E2.c}. The draft is far above its
-  memory-bound ideal — it is kernel-launch-bound (step time tracks layers, not parameters), which is why no
-  acceptance rate wins here without CUDA-graphing the draft.`;
-function renderE2(name,k,live){
-  const p=E2.prompts[name],row=p.by_k.find(x=>x.k===k)||p.by_k[3];
-  if(p.tagged){$("e2stream").innerHTML=p.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("")
-    +`<div class="note" style="margin-top:6px">coloured stream shown for the k=${E2.tag_k} run</div>`;}
-  $("e2sp").innerHTML=row.speedup+"<small>×</small>";
-  $("e2acc").textContent=Math.round(row.accept*100)+"%";
-  $("e2tpp").textContent=row.tok_per_pass;
-  $("e2ex").textContent=row.match?"identical":"bf16 tie";
+// Experiment 2
+const E2=D.exp2,PN=Object.keys(E2.prompts);let e2name=PN.includes("code")?"code":PN[0],e2k=4;
+$("e2measured").textContent=`measured: 7B step ${E2.target_step_ms} ms · 0.5B step ${E2.draft_step_ms} ms · c = ${E2.c}`;
+const E2LAB={code:"Code (draft guesses well)",copy:"Copy a passage (near-perfect)",explain:"Explain a concept",creative:"Creative prose (draft struggles)"};
+$("e2presets").innerHTML=PN.map(n=>`<button class="preset${n===e2name?' sel':''}" data-n="${n}">${E2LAB[n]||n}</button>`).join("");
+[...$("e2presets").children].forEach(b=>b.onclick=()=>{e2name=b.dataset.n;
+  [...$("e2presets").children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");renderE2()});
+$("e2seg").innerHTML=[1,2,3,4,5,6,7,8].map(k=>`<button data-k="${k}"${k===4?' class="sel"':''}>${k}</button>`).join("");
+[...$("e2seg").children].forEach(btn=>btn.onclick=()=>{e2k=+btn.dataset.k;
+  [...$("e2seg").children].forEach(x=>x.classList.remove("sel"));btn.classList.add("sel");renderE2()});
+function renderE2(){
+  const p=E2.prompts[e2name],row=p.by_k.find(x=>x.k===e2k)||p.by_k[3];
+  if(p.tagged){$("e2stream").innerHTML=p.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");
+    $("e2streamlab").textContent=`coloured stream shown for the k=${E2.tag_k} run`;}
+  const st=row.spec_tps,tt=p.target_tps,mx=Math.max(st,tt);
+  $("e2stps").textContent=st+" tok/s";$("e2ttps").textContent=tt+" tok/s";
+  $("e2sbar").style.width=(st/mx*100)+"%";$("e2tbar").style.width=(tt/mx*100)+"%";
+  $("e2sp").textContent=row.speedup+"×";$("e2acc").textContent=Math.round(row.accept*100)+"%";
+  $("e2tpp").textContent=row.tok_per_pass;$("e2ex").textContent=row.match?"identical":"bf16 tie";
   $("e2pred").textContent=row.pred+"×";
-  $("e2tab").querySelector("tbody").innerHTML=p.by_k.map(x=>`<tr class="${x.k===k?"here":""}">
-    <td>${x.k}</td><td>${Math.round(x.accept*100)}%</td><td>${x.tok_per_pass}</td>
-    <td>${x.spec_tps}</td><td>${x.speedup}×</td><td>${x.pred}×</td></tr>`).join("");
+  $("e2tab").querySelector("tbody").innerHTML=p.by_k.map(x=>`<tr class="${x.k===e2k?'here':''}"><td>${x.k}</td><td>${Math.round(x.accept*100)}%</td><td>${x.tok_per_pass}</td><td>${x.spec_tps}</td><td>${x.speedup}×</td><td>${x.pred}×</td></tr>`).join("");
 }
-$("e2sel").onchange=function(){renderE2(this.value,+$("e2k").value,false)};
-$("e2k").oninput=function(){$("e2kv").textContent=this.value;renderE2($("e2sel").value,+this.value,false)};
 $("e2go").onclick=async function(){
-  const name=$("e2sel").value,k=+$("e2k").value;
-  if(!LIVE){renderE2(name,k,false);return}
-  this.disabled=true;
-  try{const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:E2.prompts[name].__p||name,k:k,max_new_tokens:64}));
-    const d=await r.json();
+  if(!LIVE){renderE2();return}this.disabled=true;
+  try{const r=await fetch(EP.exp2+"?"+new URLSearchParams({prompt:e2name,k:e2k,max_new_tokens:64}));const d=await r.json();
     $("e2stream").innerHTML=d.tagged.map(t=>`<span class="tok ${t.tag}">${esc(t.tok)}</span>`).join("");
-    $("e2sp").innerHTML=d.speedup.toFixed(2)+"<small>×</small>";$("e2acc").textContent=Math.round(d.acceptance_rate*100)+"%";
-  }catch(e){}
-  this.disabled=false;
+    $("e2sp").textContent=d.speedup.toFixed(2)+"×";$("e2acc").textContent=Math.round(d.acceptance_rate*100)+"%";
+  }catch(e){}this.disabled=false;
 };
 
-// initial paint
-renderE1(0,false);
-renderE2(E2DEF,4,false);
+renderE1();renderE2();
 </script>
 </body>
 </html>

@@ -226,6 +226,20 @@ offline, and a health-check lights up "Live GPUs" only if an endpoint is reachab
 (public). → *Better: the demo now teaches and looks the part, works fully offline on real data, and stays
 honest about whether it's live.*
 
+**E17 · Full end-to-end mimic of the Session-7 reference lab's design.** Harman asked to mimic
+`slm-inference-lab.vercel.app` end-to-end. Inspected the reference live via the browser (computed styles +
+DOM copy): warm paper **`#faf9f6`**, slate-800 ink, **Figtree** at **17.5px**, JetBrains Mono for data, pill
+buttons, teal(cached)/rose(uncached) accents, nav chips, per-experiment status chips ("L4 ready · 125M model
+loaded"), a **`measured: 7B step … · c = …`** line, preset-prompt pill buttons, a batch segmented control,
+horizontal tok/s bars ("bar length is tokens per second"), and a dark technical panel. Rebuilt
+`site/index.html` to match all of it — verified computed body font=Figtree, bg=#faf9f6, size=17.5px, pill
+run buttons (999px, #0f172a), 22px cards — but with **Harman's own data and branding, not Vizuara's**, and
+the **honest c=0.428** (not the reference's CUDA-graph'd 0.161, which I couldn't reproduce on this stack).
+Dropped the book-reading swatch picker to match the reference's single design. Still driven by the recorded
+`data.js`; live buttons light up only if an endpoint is reachable. Redeployed static ($0) to
+`harman-inference-lab.vercel.app`. → *Better: the demo now reads as the real lab, faithfully, without
+misrepresenting authorship or numbers.*
+
 ---
 
 ## Current status (as of last entry)
