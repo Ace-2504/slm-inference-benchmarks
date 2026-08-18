@@ -139,6 +139,89 @@ footer{color:var(--dim);font-size:14px;border-top:1px solid var(--line);margin-t
   <div class="strip" id="strip"></div>
 
   <!-- Experiment 1 -->
+  <!-- ===== TEST: minimal side-by-side variant (appended; existing design untouched) ===== -->
+  <style>
+  .mini-wrap{margin:44px 0 8px;--mgreen:#2f6b4f;--mtan:#c7ba98;--molive:#94823f;--mgreen-dk:#2a5c44}
+  .mini-head{text-align:center;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:16px}
+  .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+  @media(max-width:680px){.mini-grid{grid-template-columns:1fr}}
+  .mini-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(30,41,59,.03),0 8px 22px rgba(30,41,59,.04)}
+  .mini-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--molive);margin-bottom:9px}
+  .mini-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .mini-top .mini-eyebrow{margin-bottom:0}
+  .mstatus{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.01em;color:var(--muted);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap;margin-bottom:9px}
+  .mstatus .md{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+  .mstatus.ok .md{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)}
+  .mstatus.wake .md{background:var(--blue);animation:pulse 1s infinite}
+  .mstatus.off{cursor:pointer;color:#9a6a1a}.mstatus.off .md{background:var(--amber)}
+  .mbatset{display:flex;gap:6px;flex-wrap:wrap}
+  .mbatb{min-width:30px;height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font:inherit;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .mbatb:hover{border-color:var(--dim)}
+  .mbatb.sel{background:var(--mgreen-dk);color:#fff;border-color:transparent}
+  .msub{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .msub.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:420px){.msub.three{grid-template-columns:1fr 1fr}}
+  .msubc{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:9px 11px}
+  .msubc .k{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .msubc .v{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15.5px;color:var(--ink);margin-top:2px;font-variant-numeric:tabular-nums}
+  .msubc .v small{font-size:11px;color:var(--dim);font-weight:500}
+  .mini-box .desc{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.55}
+  .mini-box .desc b{color:var(--ink)}
+  .mini-ctl{margin-bottom:14px}
+  .mlabel{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .mlabel b{font-family:"JetBrains Mono",monospace;color:var(--ink)}
+  .mini-ctl input[type=range]{width:100%;accent-color:var(--mgreen);height:4px}
+  .mslabels{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-top:5px;font-family:"JetBrains Mono",monospace}
+  .mini-presets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .mini-preset{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer}
+  .mini-preset:hover{border-color:var(--dim)}.mini-preset.sel{border-color:var(--mgreen);box-shadow:0 0 0 1px var(--mgreen);color:var(--mgreen-dk)}
+  .mini-ta{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:58px;margin-bottom:14px}
+  .mini-run{background:var(--mgreen-dk);color:#fff;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;align-self:flex-start;box-shadow:0 5px 14px rgba(42,92,68,.22)}
+  .mini-run:hover{filter:brightness(1.12)}.mini-run:disabled{opacity:.6;cursor:default}
+  .mini-out{display:none;margin-top:22px}
+  .mini-out.show{display:block}
+  .mbar{margin-bottom:13px}
+  .mbar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--ink-soft);margin-bottom:7px;gap:10px}
+  .mval{color:var(--molive);font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;white-space:nowrap}
+  .mtrack{height:13px;background:var(--panel-2);border-radius:7px;overflow:hidden}
+  .mfill{display:block;height:100%;border-radius:7px;transition:width .55s cubic-bezier(.4,0,.2,1)}
+  .mfill.green{background:var(--mgreen)}.mfill.tan{background:var(--mtan)}
+  .mmult{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:16px 0 10px}
+  .mbig{font-family:"JetBrains Mono",monospace;font-weight:800;font-size:34px;line-height:1}
+  .mbig.green{color:var(--mgreen)}.mbig.dark{color:var(--ink);margin-left:14px}
+  .mdesc{font-size:13.5px;color:var(--muted)}
+  .mexplain{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.55}
+  .mout-lab{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+  .mlegend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+  .mlegend i.green{background:var(--mgreen)}.mlegend i.tan{background:var(--mtan)}
+  .mlegend i.draft{background:var(--teal)}.mlegend i.target{background:var(--rose)}.mlegend i.bonus{background:var(--blue)}
+  .mini-text{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;max-height:150px;overflow:auto;white-space:pre-wrap}
+  .mini-text .tok{padding:1px 2px;border-radius:3px}
+  .mini-text .tok.draft{background:color-mix(in srgb,var(--teal) 16%,transparent);box-shadow:inset 0 -2px 0 var(--teal)}
+  .mini-text .tok.target{background:color-mix(in srgb,var(--rose) 16%,transparent);box-shadow:inset 0 -2px 0 var(--rose)}
+  .mini-text .tok.bonus{background:color-mix(in srgb,var(--blue) 15%,transparent);box-shadow:inset 0 -2px 0 var(--blue)}
+  /* static-concept boxes (continuous batching / paging) */
+  .mseg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px}
+  .mseg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:6px 16px;border-radius:999px;cursor:pointer}
+  .mseg button.sel{background:var(--mgreen-dk);color:#fff}
+  .mdiag{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:12px 13px;margin-bottom:12px}
+  .mdiag svg{display:block;width:100%;height:auto}
+  .mfoot{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-top:auto}
+  .mmini-stats{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);margin-top:8px}
+  .mtabs{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:13px}
+  .mtab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:12.5px;padding:5px 15px;border-radius:999px;cursor:pointer}
+  .mtab.sel{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(30,41,59,.12)}
+  .mtp[hidden]{display:none}
+  .mcap{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+  .msec-head{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin:30px 0 14px;display:flex;align-items:center;gap:12px}
+  .msec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+  .msec-head em{color:var(--molive);font-style:normal;font-weight:700}
+  .mlesson{font-size:15px;line-height:1.65;color:var(--ink-soft);background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mgreen);border-radius:12px;padding:16px 20px;margin:16px 0 4px}
+  .mlesson b{color:var(--ink)}
+  .mclosing{font-size:16.5px;line-height:1.72;color:var(--ink-soft);text-align:center;max-width:53rem;margin:36px auto 6px;font-style:italic}
+  .mclosing b{color:var(--ink);font-style:normal}
+  </style>
   <div class="mini-wrap">
     <div class="msec-head"><em>Section 1</em> · making one stream faster</div>
     <div class="mini-grid">
