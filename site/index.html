@@ -332,8 +332,8 @@ function lineChart(el,series,ymax,xlab,unit){
   const paths=series.map(s=>`<path d="${s.y.map((v,i)=>(i?"L":"M")+X(i)+" "+Y(v)).join(" ")}" fill="none" stroke="${s.c}" stroke-width="2.2"/>`).join("");
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${ticks}<line x1="${pl}" y1="${pt}" x2="${pl}" y2="${pt+ih}" stroke="var(--line)"/><line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="var(--line)"/>${paths}<text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Figtree">${xlab}</text></svg>`;
 }
-function sweepChart(el,pts,unit,col){
-  const W=700,H=200,pl=40,pr=14,pt=14,pb=30,iw=W-pl-pr,ih=H-pt-pb,ymax=Math.max(2,...pts.map(p=>p.y))*1.12;
+function sweepChart(el,pts,unit,col,ymaxFixed){
+  const W=700,H=200,pl=40,pr=14,pt=14,pb=30,iw=W-pl-pr,ih=H-pt-pb,ymax=ymaxFixed||Math.max(2,...pts.map(p=>p.y))*1.12;
   const X=i=>pl+i/(pts.length-1)*iw,Y=v=>pt+ih-(v/ymax)*ih;
   let ticks="";for(let g=0;g<=4;g++){const v=ymax*g/4,y=Y(v);
     ticks+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--line-soft)"/><text x="${pl-6}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--dim)" font-family="JetBrains Mono">${v.toFixed(0)}${unit}</text>`}
@@ -370,7 +370,6 @@ function paintE1(){
 }
 const ps1=E1.per_step[E1.batches[0].bs];
 lineChart($("e1step"),[{y:ps1.cached,c:"var(--teal)"},{y:ps1.uncached,c:"var(--rose)"}],Math.max(...ps1.cached,...ps1.uncached)*1.1,"decode step index");
-sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})),"×","var(--violet)");
 $("e1sweep").dataset.xlab="batch size";sweepChart($("e1sweep"),E1.batches.map(x=>({x:x.bs,y:x.speedup})),"×","var(--violet)");
 $("e1go").onclick=async function(){
   const b=E1.batches[e1bi];this.disabled=true;setStatus("e1status","wake","waking GPU… first run ~60s");
@@ -439,10 +438,11 @@ $("e4nc").innerHTML=E4.naive_conc+" <small>seqs</small>";
 $("e4pc").innerHTML=(E4.vllm?E4.vllm.conc.toLocaleString():E4.paged_conc.toLocaleString())+" <small>seqs</small>";
 $("e4nw").innerHTML=E4.naive_waste+"<small>%</small>";
 (function(){const el=$("e4chart");el.dataset.xlab="block size (tokens)";
-  sweepChart(el,E4.sweep.map(s=>({x:s.block,y:s.waste})),"%","var(--violet)");
-  // overlay the naive-waste reference as a dashed line
+  // fixed y-axis of 100% so the naive-waste reference line (92%) fits INSIDE the chart
+  const YMAX=100;
+  sweepChart(el,E4.sweep.map(s=>({x:s.block,y:s.waste})),"%","var(--violet)",YMAX);
   const svg=el.querySelector("svg");if(svg){const W=700,pl=40,pr=14,iw=W-pl-pr,pt=14,ih=200-pt-30;
-    const ymax=Math.max(2,...E4.sweep.map(s=>s.waste))*1.12;const y=pt+ih-(E4.naive_waste/ymax)*ih;
+    const y=pt+ih-(E4.naive_waste/YMAX)*ih;
     svg.insertAdjacentHTML("beforeend",`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="var(--rose)" stroke-dasharray="5 4" stroke-width="2"/><text x="${pl+iw}" y="${y-5}" text-anchor="end" font-size="10" fill="var(--rose)" font-family="JetBrains Mono">naive ${E4.naive_waste}%</text>`);}
 })();
 
