@@ -200,6 +200,17 @@ and re-ran — **success**: the real engine reports **89,382 GPU KV blocks × 16
 `results/exp4_vllm.json`. → *Worse then better: nearly left a broken yugioh arena behind; caught and reverted,
 the demo now has its own public home, and the paged side is confirmed on the real engine.*
 
+**E15 · Took the public Modal endpoint down (governance correction).** Harman rightly challenged the
+*persistent public* Modal deployment: I had folded `modal deploy` of a public, anyone-can-invoke GPU endpoint
+into the general "≤$15, full-auto" experiment authorization, but a standing public endpoint on his account is
+a different, ongoing liability (scale-to-zero = $0 idle, but any visitor's click wakes an L4 + loads the 7B
+against his account) that deserved an explicit opt-in I never asked for. **Stopped `a4-live-demo`** (endpoint
+now 404; all `a4-` apps confirmed stopped, nothing standing). The Vercel page stays up (static, $0) but its
+buttons now show "demo unavailable" until/unless a protected endpoint is redeployed with his go-ahead.
+**Lesson: transient `modal run` for experiments was authorized; a persistent public GPU endpoint is a
+separate decision and must be asked explicitly, even when the brief lists a live demo as a deliverable.** →
+*Corrected: no unexpected standing cost/exposure on Harman's account.*
+
 ---
 
 ## Current status (as of last entry)
